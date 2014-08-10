@@ -1,0 +1,177 @@
+ /* --------------------------------------------------------------------------
+ * Prodigystudio  : Maleo - Multipurpose HTML Template
+ *  
+ * file           : menu.css
+ * Desc           : Maleo Framework - Component
+ * Version        : 1.0
+ * Date           : 07/21/2014
+ * Author         : Imam Firmansyah and Prodigystudio - team
+ * Author URI     : http://prodigystudio.net
+ * Email          : Hello@prodigystudio.net
+ *
+ * Prodigy Studio. Copyright 2014. All Rights Reserved.
+ * -------------------------------------------------------------------------- */
+
+/* ----- SmartMenus Core CSS ----- */
+.sm, .sm ul, .sm li { display: block; list-style: none; padding: 0; margin: 0; line-height: normal; direction: ltr; }
+
+ul.sm li { position: relative; }
+
+ul.sm a { position: relative; display: block; }
+
+ul.sm a.disabled { cursor: default; }
+
+ul.sm ul { position: absolute; top: -999999px; left: -800px; width: 100px; }
+
+ul.sm li { float: left; }
+
+ul.sm-rtl { direction: rtl; }
+
+ul.sm-rtl li { float: right; }
+
+ul.sm ul li, ul.sm-vertical li { float: none; }
+
+ul.sm a { white-space: nowrap; }
+
+ul.sm ul a, ul.sm-vertical a { white-space: normal; }
+
+* html ul.sm-vertical li { float: left; width: 100%; }
+
+* html ul.sm-vertical ul li { float: none; width: auto; }
+
+*:first-child + html ul.sm-vertical > li { float: left; width: 100%; }
+
+ul.sm ul.sm-nowrap > li > a { white-space: nowrap; }
+
+ul.sm:after { content: "\00a0"; display: block; height: 0; font: 0/0 serif; clear: both; visibility: hidden; overflow: hidden; }
+
+* html ul.sm { height: 1px; }
+
+*:first-child + html ul.sm { min-height: 1px; }
+
+ul.sm li *, ul.sm li *:before, ul.sm li *:after { -moz-box-sizing: content-box; -webkit-box-sizing: content-box; box-sizing: content-box; }
+
+ul.sm { -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+
+/* ----- Menu box ----- */
+.mo-menu { padding: 0 12px; background: white; }
+.mo-menu ul { padding: 5px 0px; background: white; -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; -webkit-box-shadow: 0 0px 9px rgba(0, 0, 0, 0.2); -moz-box-shadow: 0 0px 9px rgba(0, 0, 0, 0.2); box-shadow: 0 0px 9px rgba(0, 0, 0, 0.2); }
+
+/* first sub level carets */
+.mo-menu > li:first-child:after { content: ""; }
+.mo-menu > li:after { height: 4px; content: "\2022"; font-size: 10px; color: #afafaf; margin-top: -27px; position: relative; display: inline-block; float: left; left: -2px; }
+
+.mo-menu-vertical { padding: 10px 0; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; }
+
+/* no carets for vertical main */
+.mo-menu-vertical > li > ul:before, .mo-menu-vertical > li > ul:after { display: none; }
+
+/* ----- Menu items ----- */
+.mo-menu a { padding: 12px 18px; color: #afafaf; font-size: 14px; line-height: 17px; font-family: "Montserrat", sans-serif; text-decoration: none; }
+.mo-menu a:hover, .mo-menu a:focus, .mo-menu a:active, .mo-menu a.highlighted { color: #93B4EB; }
+
+.mo-menu-vertical a:hover, .mo-menu-vertical a:focus, .mo-menu-vertical a:active, .mo-menu-vertical a.highlighted { background: #fff; }
+
+.mo-menu-vertical a, .mo-menu ul a { padding: 10px 20px; }
+
+.mo-menu-vertical a.has-submenu, .mo-menu ul a.has-submenu { padding-right: 40px; }
+
+.mo-menu ul a { font-size: 13px; }
+
+.mo-menu ul a:hover, .mo-menu ul a:focus, .mo-menu ul a:active, .mo-menu ul a.highlighted { color: #93B4EB; background: white; }
+
+/* current items - add the class manually to some item or check the "markCurrentItem" script option */
+.mo-menu a.active, .mo-menu a.current, .mo-menu a.current:hover, .mo-menu a.current:focus, .mo-menu a.current:active { color: #93B4EB; }
+
+/* ----- Sub menu indicators ----- */
+.mo-menu a span.sub-arrow { top: 50%; }
+.mo-menu a span.sub-arrow:after { width: 0px; height: 0px; font-size: 10px; right: -7px; float: right; position: relative; }
+
+.mo-menu a:hover span.sub-arrow:after, .mo-menu a:focus span.sub-arrow:after, .mo-menu a:active span.sub-arrow:after, .mo-menu a.highlighted span.sub-arrow:after { color: #93B4EB; }
+
+.mo-menu-vertical a span.sub-arrow, .mo-menu ul a span.sub-arrow { top: 50%; }
+.mo-menu-vertical a span.sub-arrow:after, .mo-menu ul a span.sub-arrow:after { width: 0px; height: 0px; font-size: 10px; right: -7px; float: right; position: relative; font-family: "WebHostingHub-Glyphs"; font-style: normal; color: #afafaf; content: "\f488"; }
+
+/* ----- Scrolling arrows containers ----- */
+.mo-menu span.scroll-up, .mo-menu span.scroll-down { position: absolute; display: none; visibility: hidden; overflow: hidden; background: #fff; height: 20px; /* width and position will be automatically set by the script */ }
+
+.mo-menu span.scroll-up:hover, .mo-menu span.scroll-down:hover { background: #eee; }
+
+.mo-menu span.scroll-up-arrow, .mo-menu span.scroll-down-arrow { position: absolute; left: 50%; top: 50%; }
+.mo-menu span.scroll-up-arrow:after, .mo-menu span.scroll-down-arrow:after { top: -5px; left: -6px; float: right; width: 0px; height: 0px; font-size: 10px; position: relative; font-family: "WebHostingHub-Glyphs"; font-style: normal; color: #afafaf; content: "\f48a"; }
+
+.mo-menu span.scroll-up:hover span.scroll-up-arrow:after { color: #93B4EB; }
+
+.mo-menu span.scroll-down-arrow:after { top: -5px; float: right; width: 0px; height: 0px; font-size: 10px; position: relative; font-family: "WebHostingHub-Glyphs"; font-style: normal; color: #afafaf; content: "\f48b"; }
+
+.mo-menu span.scroll-down:hover span.scroll-down-arrow:after { color: #93B4EB; }
+
+/* Mega menu */
+.mo-menu, .mo-menu > li.mega-menu { font-family: "Montserrat", sans-serif; color: #afafaf; position: static !important; }
+
+/* carets for megamenu */
+.mo-menu > li.mega-menu a:before, .mo-menu > li.mega-menu a:after, .mo-menu > li.mega-menu a.highlighted:before, .mo-menu > li.mega-menu a.highlighted:after { -webkit-transition: all 4s ease-in-out; -moz-transition: all 4s ease-in-out; transition: all 4s ease-in-out; opacity: 0; }
+
+.mo-menu > li > ul.mega-menu { margin-right: 10px !important; margin-left: 10px !important; right: 0 !important; width: auto !important; max-width: none !important; }
+.mo-menu > li > ul.mega-menu:before { display: none; }
+.mo-menu > li > ul.mega-menu:after { display: none; }
+
+.mo-menu .mega-menu-content { padding: 10px 20px; float: left; text-align: left; }
+.mo-menu .mega-menu-content .column, .mo-menu .mega-menu-content .columns { padding-left: 0; padding-right: 0; }
+
+.mo-menu .mega-menu-sub-content { padding: 0px; font-family: "Open Sans", sans-serif; }
+
+.mo-menu .mega-menu-title { font-weight: bold; font-size: 14px; padding: 13px 0px; display: block; }
+
+.mo-menu .mega-menu-list { top: 0; left: 0; padding: 0; width: 100%; position: relative; border: none; box-shadow: none; display: block; }
+.mo-menu .mega-menu-list a { padding: 5px 0 5px 5px; }
+
+/* ----- Menu Responsivenes ----- */
+@media screen and (max-width: 850px) { .mo-menu:not(.mo-menu-vertical) > li > a { padding-left: 8px; padding-right: 8px; }
+  .mo-menu:not(.mo-menu-vertical) > li > a.has-submenu { padding-right: 25px; } }
+@media screen and (max-width: 750px) { .mo-menu:not(.mo-menu-vertical) > li > a { padding-left: 3px; padding-right: 3px; }
+  .mo-menu:not(.mo-menu-vertical) > li > a.has-submenu { padding-right: 25px; } }
+@media screen and (max-width: 700px) { .mo-menu a span.sub-arrow { top: 50%; }
+  .mo-menu a span.sub-arrow:after { background: red !important; width: 0px; height: 0px; font-size: 10px; float: right; position: relative; top: 5px; font-family: "WebHostingHub-Glyphs"; font-style: normal; color: #afafaf; content: "\f48b"; }
+  /* The following will make the sub menus collapsible for small screen devices (it's not recommended editing these) */
+  ul.mo-menu { width: auto !important; }
+  ul.mo-menu a { transition: none !important; -moz-transition: none !important; -webkit-transition: none !important; }
+  ul.mo-menu ul { display: none; position: static !important; top: auto !important; left: auto !important; margin-left: 0 !important; margin-top: 0 !important; width: auto !important; min-width: 0 !important; max-width: none !important; }
+  ul.mo-menu > li { float: none; clear: both; }
+  ul.mo-menu > li > a, ul.mo-menu ul.sm-nowrap > li > a { white-space: normal; }
+  ul.mo-menu iframe { display: none; }
+  /* maleo edit menu */
+  /* Uncomment this rule to disable completely the sub menus for small screen devices */
+  /*.sm-clean ul, .sm-clean span.sub-arrow, .sm-clean iframe { 	display:none !important; }*/
+  /* ----- Menu Box Responsivenes ----- */
+  .mo-menu { padding: 0; }
+  .mo-menu ul { border: 0; padding: 0; /* darken the background of the sub menus */ background: #fff; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+  /* no carets */
+  .mo-menu > li > ul:before, .mo-menu > li > ul:after { display: none; }
+  /* ----- Menu items Responsivenes ----- */
+  .mo-menu a { padding: 13px 5px 13px 28px !important; background: transparent !important; }
+  /* add some text indentation for the 2+ level sub menu items */
+  .mo-menu ul a { border-left: 8px solid transparent; }
+  .mo-menu ul ul a { border-left: 16px solid transparent; }
+  .mo-menu ul ul ul a { border-left: 24px solid transparent; }
+  .mo-menu ul ul ul ul a { border-left: 32px solid transparent; }
+  .mo-menu ul ul ul ul ul a { border-left: 40px solid transparent; }
+  /* ----- Mega menu Responsivenes ----- */
+  .mo-menu > li > ul.mega-menu { margin-right: 0px !important; margin-left: 0px !important; }
+  .mo-menu > li > ul.mega-menu > li { clear: both; }
+  .mo-menu .mega-menu-content { padding-top: 0px; padding-bottom: 0px; }
+  .mo-menu .mega-menu-content { padding: 0; }
+  .mo-menu .mega-menu-sub-content { padding: 0px 28px 13px; }
+  .mo-menu .mega-menu-title { padding: 13px 28px 13px 28px; }
+  .mo-menu .mega-menu-list li:last-child { border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+  .mo-menu .mega-menu-list li a:hover, .mo-menu .mega-menu-list li a:focus, .mo-menu .mega-menu-list li a:active { color: #93B4EB !important; }
+  .mo-menu > li.mega-menu a:hover:before, .mo-menu > li.mega-menu a:focus:before, .mo-menu > li.mega-menu a:active:before, .mo-menu > li.mega-menu a.highlighted:before { display: none; }
+  .mo-menu > li.mega-menu a:hover:after, .mo-menu > li.mega-menu a:focus:after, .mo-menu > li.mega-menu a:active:after, .mo-menu > li.mega-menu a.highlighted:after { display: none; }
+  /* ----- Sub menu indicators Responsivenes ----- */
+  .mo-menu a span.sub-arrow:after, .mo-menu ul a span.sub-arrow:after { right: 20px; }
+  .mo-menu ul a span.sub-arrow:after { font-family: "WebHostingHub-Glyphs"; font-style: normal; color: #afafaf; content: "\f48b"; }
+  /* Hide sub indicator when item is expanded - we enable the item link when it's expanded */
+  .mo-menu a.highlighted span.sub-arrow:after { font-family: "WebHostingHub-Glyphs"; font-style: normal; color: #afafaf; content: "\f48a"; }
+  /* ----- Items separators Responsivenes ----- */
+  .mo-menu li { border-top: 1px solid rgba(0, 0, 0, 0.05); }
+  .mo-menu > li:first-child { border-top: 0; } }

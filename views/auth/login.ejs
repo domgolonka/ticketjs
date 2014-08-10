@@ -1,0 +1,31 @@
+
+<section class="mo-content">
+    <div class="row">
+        <div class="large-6 medium-6 small-centered  medium-potrait-12 small-12 columns" id="contact-content">
+            <div class="panel">
+            <span class="heading-line mo-animate animated bounceIn" data-animate="bounceIn" style=""></span>
+            <h3 class="heading-contact mo-animate animated fadeInDown" data-animate="fadeInDown" style="">Sign In</h3>
+
+        <form class="mo-animate animated fadeInLeft" data-animate="fadeInLeft" action="/login" method="post">
+            <ul class="contact-form">
+                <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+                <li class="input-half left email-ico">
+                    <input type="text" name="email" class="form-control" placeholder="Enter Your Email" autofocus autocomplete="off" />
+                </li>
+                <li class="input-half right">
+                    <input type="password" name="password" class="form-control" placeholder="Enter password" />
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox" name="remember_me" value="1" class="checkbox"> Remember me
+                    </label>
+                </li>
+                <li>
+                <input type="submit" value="Sign in" class="button blue radius" data-animate="bounceIn" id="buttonsend" />
+                </li>
+            </ul>
+        </form>
+        </div>
+        </div>
+    </div>
+</section>

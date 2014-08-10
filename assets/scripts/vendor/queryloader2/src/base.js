@@ -1,0 +1,1 @@
+$.fn.queryLoader2=function(e){return this.each(function(){new QueryLoader2(this,e)})};

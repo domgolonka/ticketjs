@@ -1,0 +1,93 @@
+/* --------------------------------------------------------------------------
+ * Prodigystudio  : Maleo - Multipurpose HTML Template
+ *  
+ * file           : revolution-responsive.css
+ * Desc           : Maleo Template - CSS Responsive Plugin
+ * Version        : 1.0
+ * Date           : 07/21/2014
+ * Author         : Prodigystudio - team
+ * Author URI     : http://prodigystudio.net
+ * Email          : hello@prodigystudio.net
+ *
+ * Prodigy Studio. Copyright 2014. All Rights Reserved.
+ * -------------------------------------------------------------------------- */
+
+/********************************************************************************************* 
+-  SET THE SCREEN SIZES FOR THE BANNER IF YOU WISH TO MAKE THE BANNER RESPONSIVE    -
+**********************************************************************************************/
+
+/*   THE MEDIA CHOOSER TO SET DIFFERENT SIZES OF THE CONTAINER DEPENDING ON THE SCREEN SIZE    */
+
+/* --------------------------------------------------------------------------
+ *  Revolution Responsive - Table of Content
+    1. Notebook
+    2. Tablet Landscape
+    3. Tablet Potrait
+    4. Mobile Landscape
+    5. Mobile Potrait
+ * --------------------------------------------------------------------------*/
+ 
+/* Notebook */
+@media only screen and (max-width: 1280px) {
+  /* slider 1 */
+  .slider1-caption1, .slider1-caption2 { margin-left: -40px !important; }
+  .slider3-caption3, .slider3-caption4, .slider3-caption5 { margin-left: 40px !important; } }
+
+/* Tablet Landscape */
+@media only screen and (max-width: 1024px) { .banner { height: 440px !important; }
+  /* slider 1 */
+  .slider1-caption1 { margin-left: -30px !important; }
+  .slider1-caption1 h2 { font-size: 36px !important; }
+  .slider1-caption2 { margin-left: -30px !important; margin-top: -10px !important; }
+  .slider1-caption2 p { font-size: 13px !important; }
+  /* slider2 */
+  .slider2-caption1 { margin-left: -20px !important; }
+  .slider2-caption2 { margin-left: -30px !important; }
+  /* slider3 */
+  .slider3-caption2 { margin-top: 10px !important; }
+  .slider3-button { margin-top: 20px !important; margin-left: 20px !important; }
+}
+
+/* Table Potrait */
+@media only screen and (min-width: 768px) and (max-width: 959px) { .banner { height: 333px !important; }
+  /* slider 1 */
+  .slider1-caption1 { margin-left: -30px !important; }
+  .slider1-caption1 h2 { font-size: 32px !important; }
+  .slider1-caption2 { display: none !important; }
+  /* slider2 */
+  .slider2-caption1 { margin-left: 5px !important; }
+  .slider2-caption2 { margin-left: -105px !important; }
+  /* slider3 */
+  .slider3-caption1 { margin-left: 25px !important; }
+  .slider3-caption1 h2 { font-size: 34px !important; }
+  .slider3-caption2 { margin-top: 10px !important; margin-left: 40px !important; }
+  .slider3-caption2 h1 { font-size: 50px !important; }
+  .slider3-button { margin-left: 10px !important; margin-top: 20px !important; } 
+}
+
+/* Mobile Landscape */
+@media only screen and (min-width: 480px) and (max-width: 767px) { .banner { height: 245px !important; }
+  /* slider 1 */
+  .slider1-caption1, .slider1-caption2 { display: none !important; }
+  /* slider2 */
+  .slider2-caption1 { margin-left: -18px !important; }
+  .slider2-caption2 { margin-left: -62px !important; }
+  .slider2-caption2 h5 { font-size: 15px !important; }
+  /* slider3 */
+  .slider3-caption1, .slider3-caption2 { display: none !important; }
+  .slider3-button { margin-left: -30px !important; margin-top: -50px !important; } 
+}
+
+/* Mobile Potrait */
+@media only screen and (min-width: 0px) and (max-width: 479px) { .banner { height: 139px !important; }
+  /* slider 1 */
+  .slider1-caption1, .slider1-caption2 { display: none !important; }
+  /* slider2 */
+  .slider2-caption1 { margin-left: -8px !important; }
+  .slider2-caption2 { margin-left: -65px !important; }
+  .slider2-caption2 h5 { font-size: 11px !important; }
+  /* slider3 */
+  .slider3-caption1, .slider3-caption2 { display: none !important; }
+  .slider3-button { margin-left: -30px !important; margin-top: -20px !important; }
+  .slider3-button .slider-button.button { padding: 10px 15px !important; font-size: 13px !important; height: 40px !important; } 
+}
