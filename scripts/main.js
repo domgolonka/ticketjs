@@ -9,13 +9,13 @@ require.config({
         'angular': 'vendor/angular/angular.min',
         'angular.route': 'vendor/angular-route/angular-route.min',
         'angular.resource': 'vendor/angular-resource/angular-resource.min',
-        jquery: 'vendor/jquery/dist/jquery.min',
-        "fancybox": "vendor/fancybox",
-        "iCheck": "vendor/iCheck/icheck.min",
-        "jquery.parallax": "vendor/jquery.parallax/jquery.parallax",
-        "jquery.waypoints": "vendor/jquery-waypoints/waypoints.min",
-        "jquery.queryloader2": "vendor/queryloader2/jquery.queryloader2.min",
-        "eventEmitter": "vendor/eventEmitter/EventEmitter"
+       // jquery: 'vendor/jquery/dist/jquery.min',
+        //"fancybox": "vendor/fancybox",
+        //"iCheck": "vendor/iCheck/icheck.min",
+       // "jquery.parallax": "vendor/jquery.parallax/jquery.parallax",
+       // "jquery.waypoints": "vendor/jquery-waypoints/waypoints.min",
+        //"jquery.queryloader2": "vendor/queryloader2/jquery.queryloader2.min",
+       // "eventEmitter": "vendor/eventEmitter/EventEmitter"
     },
 
     /**
@@ -23,18 +23,14 @@ require.config({
      * require some fine tuning to dependency mgt'
      */
     'shim': {
-        "jquery": {
-            exports: "jQuery"
-        },
         'angular': {
-            'deps': ['jquery'],
             'exports': 'angular'
         },
-        //'socket.io': {
-        //    'exports': 'io'
-        //},
+        'socket.io': {
+            'exports': 'io'
+        },
         'sails.io': {
-            //'deps': ['socket.io'],
+            'deps': ['socket.io'],
             'exports': 'io'
         }
 

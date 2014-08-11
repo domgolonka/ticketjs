@@ -4,5 +4,65 @@
  * @link http://angular-ui.github.com
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
+// READ: http://docs-next.angularjs.org/guide/ie
+// element tags are statically defined in order to accommodate lazy-loading whereby directives are also unknown
 
-!function(u,e){"use strict";var i=["ngInclude","ngPluralize","ngView","ngSwitch","uiCurrency","uiCodemirror","uiDate","uiEvent","uiKeypress","uiKeyup","uiKeydown","uiMask","uiMapInfoWindow","uiMapMarker","uiMapPolyline","uiMapPolygon","uiMapRectangle","uiMapCircle","uiMapGroundOverlay","uiModal","uiReset","uiScrollfix","uiSelect2","uiShow","uiHide","uiToggle","uiSortable","uiTinymce"];u.myCustomTags=u.myCustomTags||[],i.push.apply(i,u.myCustomTags);for(var a=function(u){var e=[],i=u.replace(/([A-Z])/g,function(u){return" "+u.toLowerCase()}),a=i.split(" ");if(1===a.length){var r=a[0];e.push(r),e.push("x-"+r),e.push("data-"+r)}else{var n=a[0],o=a.slice(1).join("-");e.push(n+":"+o),e.push(n+"-"+o),e.push("x-"+n+"-"+o),e.push("data-"+n+"-"+o)}return e},r=0,n=i.length;n>r;r++)for(var o=a(i[r]),t=0,l=o.length;l>t;t++){var s=o[t];e.createElement(s)}}(window,document);
+// The ieshiv takes care of our ui.directives and AngularJS's ng-view, ng-include, ng-pluralize, ng-switch.
+// However, IF you have custom directives that can be used as html tags (yours or someone else's) then
+// add list of directives into <code>window.myCustomTags</code>
+
+// <!--[if lte IE 8]>
+//    <script>
+//    window.myCustomTags = [ 'yourCustomDirective', 'somebodyElsesDirective' ]; // optional
+//    </script>
+//    <script src="build/angular-ui-ieshiv.js"></script>
+// <![endif]-->
+
+(function (window, document) {
+  "use strict";
+
+  var tags = [ "ngInclude", "ngPluralize", "ngView", "ngSwitch", "uiCurrency", "uiCodemirror", "uiDate", "uiEvent",
+                "uiKeypress", "uiKeyup", "uiKeydown", "uiMask", "uiMapInfoWindow", "uiMapMarker", "uiMapPolyline",
+                "uiMapPolygon", "uiMapRectangle", "uiMapCircle", "uiMapGroundOverlay", "uiModal", "uiReset",
+                "uiScrollfix", "uiSelect2", "uiShow", "uiHide", "uiToggle", "uiSortable", "uiTinymce"
+                ];
+
+  window.myCustomTags =  window.myCustomTags || []; // externally defined by developer using angular-ui directives
+  tags.push.apply(tags, window.myCustomTags);
+
+  var toCustomElements = function (str) {
+    var result = [];
+    var dashed = str.replace(/([A-Z])/g, function ($1) {
+      return " " + $1.toLowerCase();
+    });
+    var tokens = dashed.split(" ");
+
+    // If a token is just a single name (i.e. no namespace) then we juse define the elements the name given
+    if (tokens.length === 1) {
+      var name = tokens[0];
+
+      result.push(name);
+      result.push("x-" + name);
+      result.push("data-" + name);
+    } else {
+      var ns = tokens[0];
+      var dirname = tokens.slice(1).join("-");
+
+      // this is finite list and it seemed senseless to create a custom method
+      result.push(ns + ":" + dirname);
+      result.push(ns + "-" + dirname);
+      result.push("x-" + ns + "-" + dirname);
+      result.push("data-" + ns + "-" + dirname);
+    }
+    return result;
+  };
+
+  for (var i = 0, tlen = tags.length; i < tlen; i++) {
+    var customElements = toCustomElements(tags[i]);
+    for (var j = 0, clen = customElements.length; j < clen; j++) {
+      var customElement = customElements[j];
+      document.createElement(customElement);
+    }
+  }
+
+})(window, document);

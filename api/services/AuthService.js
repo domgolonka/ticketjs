@@ -15,6 +15,7 @@ var randomstring = require("randomstring");
 // Remember me tokens, that are valid for single server instance
 var tokens = {};
 
+
 /**
  * Service method to consume single user remember me token.
  *

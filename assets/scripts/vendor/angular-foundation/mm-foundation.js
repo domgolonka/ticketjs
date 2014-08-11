@@ -1,2 +1,3280 @@
-angular.module("mm.foundation",["mm.foundation.accordion","mm.foundation.alert","mm.foundation.bindHtml","mm.foundation.buttons","mm.foundation.position","mm.foundation.dropdownToggle","mm.foundation.interchange","mm.foundation.transition","mm.foundation.modal","mm.foundation.offcanvas","mm.foundation.pagination","mm.foundation.tooltip","mm.foundation.popover","mm.foundation.progressbar","mm.foundation.rating","mm.foundation.tabs","mm.foundation.topbar","mm.foundation.tour","mm.foundation.typeahead"]),angular.module("mm.foundation.accordion",[]).constant("accordionConfig",{closeOthers:!0}).controller("AccordionController",["$scope","$attrs","accordionConfig",function(e,t,n){this.groups=[],this.closeOthers=function(i){var a=angular.isDefined(t.closeOthers)?e.$eval(t.closeOthers):n.closeOthers;a&&angular.forEach(this.groups,function(e){e!==i&&(e.isOpen=!1)})},this.addGroup=function(e){var t=this;this.groups.push(e),e.$on("$destroy",function(){t.removeGroup(e)})},this.removeGroup=function(e){var t=this.groups.indexOf(e);-1!==t&&this.groups.splice(this.groups.indexOf(e),1)}}]).directive("accordion",function(){return{restrict:"EA",controller:"AccordionController",transclude:!0,replace:!1,templateUrl:"template/accordion/accordion.html"}}).directive("accordionGroup",["$parse",function(e){return{require:"^accordion",restrict:"EA",transclude:!0,replace:!0,templateUrl:"template/accordion/accordion-group.html",scope:{heading:"@"},controller:function(){this.setHeading=function(e){this.heading=e}},link:function(t,n,i,a){var o,r;a.addGroup(t),t.isOpen=!1,i.isOpen&&(o=e(i.isOpen),r=o.assign,t.$parent.$watch(o,function(e){t.isOpen=!!e})),t.$watch("isOpen",function(e){e&&a.closeOthers(t),r&&r(t.$parent,e)})}}}]).directive("accordionHeading",function(){return{restrict:"EA",transclude:!0,template:"",replace:!0,require:"^accordionGroup",compile:function(e,t,n){return function(e,t,i,a){a.setHeading(n(e,function(){}))}}}}).directive("accordionTransclude",function(){return{require:"^accordionGroup",link:function(e,t,n,i){e.$watch(function(){return i[n.accordionTransclude]},function(e){e&&(t.html(""),t.append(e))})}}}),angular.module("mm.foundation.alert",[]).controller("AlertController",["$scope","$attrs",function(e,t){e.closeable="close"in t}]).directive("alert",function(){return{restrict:"EA",controller:"AlertController",templateUrl:"template/alert/alert.html",transclude:!0,replace:!0,scope:{type:"=",close:"&"}}}),angular.module("mm.foundation.bindHtml",[]).directive("bindHtmlUnsafe",function(){return function(e,t,n){t.addClass("ng-binding").data("$binding",n.bindHtmlUnsafe),e.$watch(n.bindHtmlUnsafe,function(e){t.html(e||"")})}}),angular.module("mm.foundation.buttons",[]).constant("buttonConfig",{activeClass:"active",toggleEvent:"click"}).controller("ButtonsController",["buttonConfig",function(e){this.activeClass=e.activeClass,this.toggleEvent=e.toggleEvent}]).directive("btnRadio",function(){return{require:["btnRadio","ngModel"],controller:"ButtonsController",link:function(e,t,n,i){var a=i[0],o=i[1];o.$render=function(){t.toggleClass(a.activeClass,angular.equals(o.$modelValue,e.$eval(n.btnRadio)))},t.bind(a.toggleEvent,function(){t.hasClass(a.activeClass)||e.$apply(function(){o.$setViewValue(e.$eval(n.btnRadio)),o.$render()})})}}}).directive("btnCheckbox",function(){return{require:["btnCheckbox","ngModel"],controller:"ButtonsController",link:function(e,t,n,i){function a(){return r(n.btnCheckboxTrue,!0)}function o(){return r(n.btnCheckboxFalse,!1)}function r(t,n){var i=e.$eval(t);return angular.isDefined(i)?i:n}var l=i[0],c=i[1];c.$render=function(){t.toggleClass(l.activeClass,angular.equals(c.$modelValue,a()))},t.bind(l.toggleEvent,function(){e.$apply(function(){c.$setViewValue(t.hasClass(l.activeClass)?o():a()),c.$render()})})}}}),angular.module("mm.foundation.position",[]).factory("$position",["$document","$window",function(e,t){function n(e,n){return e.currentStyle?e.currentStyle[n]:t.getComputedStyle?t.getComputedStyle(e)[n]:e.style[n]}function i(e){return"static"===(n(e,"position")||"static")}var a=function(t){for(var n=e[0],a=t.offsetParent||n;a&&a!==n&&i(a);)a=a.offsetParent;return a||n};return{position:function(t){var n=this.offset(t),i={top:0,left:0},o=a(t[0]);o!=e[0]&&(i=this.offset(angular.element(o)),i.top+=o.clientTop-o.scrollTop,i.left+=o.clientLeft-o.scrollLeft);var r=t[0].getBoundingClientRect();return{width:r.width||t.prop("offsetWidth"),height:r.height||t.prop("offsetHeight"),top:n.top-i.top,left:n.left-i.left}},offset:function(n){var i=n[0].getBoundingClientRect();return{width:i.width||n.prop("offsetWidth"),height:i.height||n.prop("offsetHeight"),top:i.top+(t.pageYOffset||e[0].body.scrollTop||e[0].documentElement.scrollTop),left:i.left+(t.pageXOffset||e[0].body.scrollLeft||e[0].documentElement.scrollLeft)}}}}]),angular.module("mm.foundation.dropdownToggle",["mm.foundation.position"]).directive("dropdownToggle",["$document","$location","$position",function(e,t,n){var i=null,a=angular.noop;return{restrict:"CA",scope:{dropdownToggle:"@"},link:function(t,o){var r=angular.element(e[0].querySelector(t.dropdownToggle));t.$watch("$location.path",function(){a()}),o.bind("click",function(l){r=angular.element(e[0].querySelector(t.dropdownToggle));var c=o===i;if(l.preventDefault(),l.stopPropagation(),i&&a(),!c&&!o.hasClass("disabled")&&!o.prop("disabled")){r.css("display","block");var s=n.offset(o),u=n.offset(angular.element(r[0].offsetParent));r.css({left:s.left-u.left+"px",top:s.top-u.top+s.height+"px"}),i=o,a=function(){e.unbind("click",a),r.css("display","none"),a=angular.noop,i=null},e.bind("click",a)}}),r&&r.css("display","none")}}}]),angular.module("mm.foundation.interchange",[]).factory("interchangeQueries",["$document",function(e){for(var t,n,i={"default":"only screen",landscape:"only screen and (orientation: landscape)",portrait:"only screen and (orientation: portrait)",retina:"only screen and (-webkit-min-device-pixel-ratio: 2),only screen and (min--moz-device-pixel-ratio: 2),only screen and (-o-min-device-pixel-ratio: 2/1),only screen and (min-device-pixel-ratio: 2),only screen and (min-resolution: 192dpi),only screen and (min-resolution: 2dppx)"},a="foundation-mq-",o=["small","medium","large","xlarge","xxlarge"],r=angular.element(e[0].querySelector("head")),l=0;l<o.length;l++)r.append('<meta class="'+a+o[l]+'" />'),t=getComputedStyle(r[0].querySelector("meta."+a+o[l])),n=t.fontFamily.replace(/^[\/\\'"]+|(;\s?})+|[\/\\'"]+$/g,""),i[o[l]]=n;return i}]).factory("interchangeQueriesManager",["interchangeQueries",function(e){return{add:function(t,n){return t&&n&&angular.isString(t)&&angular.isString(n)&&!e[t]?(e[t]=n,!0):!1}}}]).factory("interchangeTools",["$window","interchangeQueries",function(e,t){var n=function(e){for(var t,n=e.split(/\[(.*?)\]/),i=n.length,a=/^(.+)\,\ \((.+)\)$/,o={};i--;)n[i].replace(/[\W\d]+/,"").length>4&&(t=a.exec(n[i]),t&&3===t.length&&(o[t[2]]=t[1]));return o},i=function(n){var i,a,o;for(i in n)if(a=t[i]||i,o=e.matchMedia(a),o.matches)return n[i]};return{parseAttribute:n,findCurrentMediaFile:i}}]).directive("interchange",["$window","$rootScope","interchangeTools",function(e,t,n){var i=/[A-Za-z0-9-_]+\.(jpg|jpeg|png|gif|bmp|tiff)\ *,/i;return{restrict:"A",scope:!0,priority:450,compile:function(a,o){return"DIV"!==a[0].nodeName||i.test(o.interchange)||a.html('<ng-include src="currentFile"></ng-include>'),{pre:function(){},post:function(i,a,o){var r,l;switch(l=a&&a[0]&&a[0].nodeName,i.fileMap=n.parseAttribute(o.interchange),l){case"DIV":r=n.findCurrentMediaFile(i.fileMap),i.type=/[A-Za-z0-9-_]+\.(jpg|jpeg|png|gif|bmp|tiff)$/i.test(r)?"background":"include";break;case"IMG":i.type="image";break;default:return}var c=function(e){var o=n.findCurrentMediaFile(i.fileMap);if(!i.currentFile||i.currentFile!==o){switch(i.currentFile=o,i.type){case"image":a.attr("src",i.currentFile);break;case"background":a.css("background-image","url("+i.currentFile+")")}t.$emit("replace",a,i),e&&i.$apply()}};c(),e.addEventListener("resize",c),i.$on("$destroy",function(){e.removeEventListener("resize",c)})}}}}}]),angular.module("mm.foundation.transition",[]).factory("$transition",["$q","$timeout","$rootScope",function(e,t,n){function i(e){for(var t in e)if(void 0!==o.style[t])return e[t]}var a=function(i,o,r){r=r||{};var l=e.defer(),c=a[r.animation?"animationEndEventName":"transitionEndEventName"],s=function(){n.$apply(function(){i.unbind(c,s),l.resolve(i)})};return c&&i.bind(c,s),t(function(){angular.isString(o)?i.addClass(o):angular.isFunction(o)?o(i):angular.isObject(o)&&i.css(o),c||l.resolve(i)}),l.promise.cancel=function(){c&&i.unbind(c,s),l.reject("Transition cancelled")},l.promise},o=document.createElement("trans"),r={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd",transition:"transitionend"},l={WebkitTransition:"webkitAnimationEnd",MozTransition:"animationend",OTransition:"oAnimationEnd",transition:"animationend"};return a.transitionEndEventName=i(r),a.animationEndEventName=i(l),a}]),angular.module("mm.foundation.modal",["mm.foundation.transition"]).factory("$$stackedMap",function(){return{createNew:function(){var e=[];return{add:function(t,n){e.push({key:t,value:n})},get:function(t){for(var n=0;n<e.length;n++)if(t==e[n].key)return e[n]},keys:function(){for(var t=[],n=0;n<e.length;n++)t.push(e[n].key);return t},top:function(){return e[e.length-1]},remove:function(t){for(var n=-1,i=0;i<e.length;i++)if(t==e[i].key){n=i;break}return e.splice(n,1)[0]},removeTop:function(){return e.splice(e.length-1,1)[0]},length:function(){return e.length}}}}}).directive("modalBackdrop",["$modalStack","$timeout",function(e,t){return{restrict:"EA",replace:!0,templateUrl:"template/modal/backdrop.html",link:function(n){n.animate=!1,t(function(){n.animate=!0}),n.close=function(t){var n=e.getTop();n&&n.value.backdrop&&"static"!=n.value.backdrop&&t.target===t.currentTarget&&(t.preventDefault(),t.stopPropagation(),e.dismiss(n.key,"backdrop click"))}}}}]).directive("modalWindow",["$modalStack","$timeout",function(e,t){return{restrict:"EA",scope:{index:"@",animate:"="},replace:!0,transclude:!0,templateUrl:"template/modal/window.html",link:function(e,n,i){e.windowClass=i.windowClass||"",t(function(){e.animate=!0,n[0].focus()})}}}]).factory("$modalStack",["$transition","$timeout","$document","$compile","$rootScope","$$stackedMap",function(e,t,n,i,a,o){function r(){for(var e=-1,t=f.keys(),n=0;n<t.length;n++)f.get(t[n]).value.backdrop&&(e=n);return e}function l(e){var t=n.find("body").eq(0),i=f.get(e).value;f.remove(e),s(i.modalDomEl,i.modalScope,300,c),t.toggleClass(p,f.length()>0)}function c(){if(u&&-1==r()){var e=d;s(u,d,150,function(){e.$destroy(),e=null}),u=void 0,d=void 0}}function s(n,i,a,o){function r(){r.done||(r.done=!0,n.remove(),o&&o())}i.animate=!1;var l=e.transitionEndEventName;if(l){var c=t(r,a);n.bind(l,function(){t.cancel(c),r(),i.$apply()})}else t(r,0)}var u,d,p="modal-open",f=o.createNew(),m={};return a.$watch(r,function(e){d&&(d.index=e)}),n.bind("keydown",function(e){var t;27===e.which&&(t=f.top(),t&&t.value.keyboard&&a.$apply(function(){m.dismiss(t.key)}))}),m.open=function(e,t){f.add(e,{deferred:t.deferred,modalScope:t.scope,backdrop:t.backdrop,keyboard:t.keyboard});var o=n.find("body").eq(0),l=r();l>=0&&!u&&(d=a.$new(!0),d.index=l,u=i("<div modal-backdrop></div>")(d),o.append(u));var c=angular.element("<div modal-window></div>");c.attr("window-class",t.windowClass),c.attr("index",f.length()-1),c.attr("animate","animate"),c.html(t.content);var s=i(c)(t.scope);f.top().value.modalDomEl=s,o.append(s),o.addClass(p)},m.close=function(e,t){var n=f.get(e).value;n&&(n.deferred.resolve(t),l(e))},m.dismiss=function(e,t){var n=f.get(e).value;n&&(n.deferred.reject(t),l(e))},m.dismissAll=function(e){for(var t=this.getTop();t;)this.dismiss(t.key,e),t=this.getTop()},m.getTop=function(){return f.top()},m}]).provider("$modal",function(){var e={options:{backdrop:!0,keyboard:!0},$get:["$injector","$rootScope","$q","$http","$templateCache","$controller","$modalStack",function(t,n,i,a,o,r,l){function c(e){return e.template?i.when(e.template):a.get(e.templateUrl,{cache:o}).then(function(e){return e.data})}function s(e){var n=[];return angular.forEach(e,function(e){(angular.isFunction(e)||angular.isArray(e))&&n.push(i.when(t.invoke(e)))}),n}var u={};return u.open=function(t){var a=i.defer(),o=i.defer(),u={result:a.promise,opened:o.promise,close:function(e){l.close(u,e)},dismiss:function(e){l.dismiss(u,e)}};if(t=angular.extend({},e.options,t),t.resolve=t.resolve||{},!t.template&&!t.templateUrl)throw new Error("One of template or templateUrl options is required.");var d=i.all([c(t)].concat(s(t.resolve)));return d.then(function(e){var i=(t.scope||n).$new();i.$close=u.close,i.$dismiss=u.dismiss;var o,c={},s=1;t.controller&&(c.$scope=i,c.$modalInstance=u,angular.forEach(t.resolve,function(t,n){c[n]=e[s++]}),o=r(t.controller,c)),l.open(u,{scope:i,deferred:a,content:e[0],backdrop:t.backdrop,keyboard:t.keyboard,windowClass:t.windowClass})},function(e){a.reject(e)}),d.then(function(){o.resolve(!0)},function(){o.reject(!1)}),u},u}]};return e}),angular.module("mm.foundation.offcanvas",[]).directive("offCanvasWrap",["$window",function(e){return{scope:{},restrict:"C",link:function(t,n){var i=angular.element(e),a=t.sidebar=n;t.hide=function(){a.removeClass("move-left"),a.removeClass("move-right")},i.bind("resize.body",t.hide),t.$on("$destroy",function(){i.unbind("resize.body",t.hide)})},controller:["$scope",function(e){this.leftToggle=function(){e.sidebar.toggleClass("move-right")},this.rightToggle=function(){e.sidebar.toggleClass("move-left")},this.hide=function(){e.hide()}}]}}]).directive("leftOffCanvasToggle",[function(){return{require:"^offCanvasWrap",restrict:"C",link:function(e,t,n,i){t.on("click",function(){i.leftToggle()})}}}]).directive("rightOffCanvasToggle",[function(){return{require:"^offCanvasWrap",restrict:"C",link:function(e,t,n,i){t.on("click",function(){i.rightToggle()})}}}]).directive("exitOffCanvas",[function(){return{require:"^offCanvasWrap",restrict:"C",link:function(e,t,n,i){t.on("click",function(){i.hide()})}}}]).directive("offCanvasList",[function(){return{require:"^offCanvasWrap",restrict:"C",link:function(e,t,n,i){t.on("click",function(){i.hide()})}}}]),angular.module("mm.foundation.pagination",[]).controller("PaginationController",["$scope","$attrs","$parse","$interpolate",function(e,t,n,i){var a=this,o=t.numPages?n(t.numPages).assign:angular.noop;this.init=function(i){t.itemsPerPage?e.$parent.$watch(n(t.itemsPerPage),function(t){a.itemsPerPage=parseInt(t,10),e.totalPages=a.calculateTotalPages()}):this.itemsPerPage=i},this.noPrevious=function(){return 1===this.page},this.noNext=function(){return this.page===e.totalPages},this.isActive=function(e){return this.page===e},this.calculateTotalPages=function(){var t=this.itemsPerPage<1?1:Math.ceil(e.totalItems/this.itemsPerPage);return Math.max(t||0,1)},this.getAttributeValue=function(t,n,a){return angular.isDefined(t)?a?i(t)(e.$parent):e.$parent.$eval(t):n},this.render=function(){this.page=parseInt(e.page,10)||1,this.page>0&&this.page<=e.totalPages&&(e.pages=this.getPages(this.page,e.totalPages))},e.selectPage=function(t){!a.isActive(t)&&t>0&&t<=e.totalPages&&(e.page=t,e.onSelectPage({page:t}))},e.$watch("page",function(){a.render()}),e.$watch("totalItems",function(){e.totalPages=a.calculateTotalPages()}),e.$watch("totalPages",function(t){o(e.$parent,t),a.page>t?e.selectPage(t):a.render()})}]).constant("paginationConfig",{itemsPerPage:10,boundaryLinks:!1,directionLinks:!0,firstText:"First",previousText:"Previous",nextText:"Next",lastText:"Last",rotate:!0}).directive("pagination",["$parse","paginationConfig",function(e,t){return{restrict:"EA",scope:{page:"=",totalItems:"=",onSelectPage:" &"},controller:"PaginationController",templateUrl:"template/pagination/pagination.html",replace:!0,link:function(n,i,a,o){function r(e,t,n,i){return{number:e,text:t,active:n,disabled:i}}var l,c=o.getAttributeValue(a.boundaryLinks,t.boundaryLinks),s=o.getAttributeValue(a.directionLinks,t.directionLinks),u=o.getAttributeValue(a.firstText,t.firstText,!0),d=o.getAttributeValue(a.previousText,t.previousText,!0),p=o.getAttributeValue(a.nextText,t.nextText,!0),f=o.getAttributeValue(a.lastText,t.lastText,!0),m=o.getAttributeValue(a.rotate,t.rotate);o.init(t.itemsPerPage),a.maxSize&&n.$parent.$watch(e(a.maxSize),function(e){l=parseInt(e,10),o.render()}),o.getPages=function(e,t){var n=[],i=1,a=t,g=angular.isDefined(l)&&t>l;g&&(m?(i=Math.max(e-Math.floor(l/2),1),a=i+l-1,a>t&&(a=t,i=a-l+1)):(i=(Math.ceil(e/l)-1)*l+1,a=Math.min(i+l-1,t)));for(var h=i;a>=h;h++){var v=r(h,h,o.isActive(h),!1);n.push(v)}if(g&&!m){if(i>1){var $=r(i-1,"...",!1,!1);n.unshift($)}if(t>a){var b=r(a+1,"...",!1,!1);n.push(b)}}if(s){var y=r(e-1,d,!1,o.noPrevious());n.unshift(y);var k=r(e+1,p,!1,o.noNext());n.push(k)}if(c){var x=r(1,u,!1,o.noPrevious());n.unshift(x);var C=r(t,f,!1,o.noNext());n.push(C)}return n}}}}]).constant("pagerConfig",{itemsPerPage:10,previousText:"« Previous",nextText:"Next »",align:!0}).directive("pager",["pagerConfig",function(e){return{restrict:"EA",scope:{page:"=",totalItems:"=",onSelectPage:" &"},controller:"PaginationController",templateUrl:"template/pagination/pager.html",replace:!0,link:function(t,n,i,a){function o(e,t,n,i,a){return{number:e,text:t,disabled:n,previous:c&&i,next:c&&a}}var r=a.getAttributeValue(i.previousText,e.previousText,!0),l=a.getAttributeValue(i.nextText,e.nextText,!0),c=a.getAttributeValue(i.align,e.align);a.init(e.itemsPerPage),a.getPages=function(e){return[o(e-1,r,a.noPrevious(),!0,!1),o(e+1,l,a.noNext(),!1,!0)]}}}}]),angular.module("mm.foundation.tooltip",["mm.foundation.position","mm.foundation.bindHtml"]).provider("$tooltip",function(){function e(e){var t=/[A-Z]/g,n="-";return e.replace(t,function(e,t){return(t?n:"")+e.toLowerCase()})}var t={placement:"top",animation:!0,popupDelay:0},n={mouseenter:"mouseleave",click:"click",focus:"blur"},i={};this.options=function(e){angular.extend(i,e)},this.setTriggers=function(e){angular.extend(n,e)},this.$get=["$window","$compile","$timeout","$parse","$document","$position","$interpolate",function(a,o,r,l,c,s,u){return function(a,d,p){function f(e){var t=e||m.trigger||p,i=n[t]||t;return{show:t,hide:i}}var m=angular.extend({},t,i),g=e(a),h=u.startSymbol(),v=u.endSymbol(),$="<div "+g+'-popup title="'+h+"tt_title"+v+'" content="'+h+"tt_content"+v+'" placement="'+h+"tt_placement"+v+'" animation="tt_animation" is-open="tt_isOpen"></div>';return{restrict:"EA",scope:!0,compile:function(){var e=o($);return function(t,n,i){function o(){t.tt_isOpen?p():u()}function u(){(!T||t.$eval(i[d+"Enable"]))&&(t.tt_popupDelay?(k=r(g,t.tt_popupDelay,!1),k.then(function(e){e()})):g()())}function p(){t.$apply(function(){h()})}function g(){return t.tt_content?(v(),y&&r.cancel(y),b.css({top:0,left:0,display:"block"}),x?c.find("body").append(b):n.after(b),P(),t.tt_isOpen=!0,t.$digest(),P):angular.noop}function h(){t.tt_isOpen=!1,r.cancel(k),t.tt_animation?y=r($,500):$()}function v(){b&&$(),b=e(t,function(){}),t.$digest()}function $(){b&&(b.remove(),b=null)}var b,y,k,x=angular.isDefined(m.appendToBody)?m.appendToBody:!1,C=f(void 0),w=!1,T=angular.isDefined(i[d+"Enable"]),P=function(){var e,i,a,o;switch(e=x?s.offset(n):s.position(n),i=b.prop("offsetWidth"),a=b.prop("offsetHeight"),t.tt_placement){case"right":o={top:e.top+e.height/2-a/2,left:e.left+e.width+10};break;case"bottom":o={top:e.top+e.height+10,left:e.left};break;case"left":o={top:e.top+e.height/2-a/2,left:e.left-i-10};break;default:o={top:e.top-a-10,left:e.left}}o.top+="px",o.left+="px",b.css(o)};t.tt_isOpen=!1,i.$observe(a,function(e){t.tt_content=e,!e&&t.tt_isOpen&&h()}),i.$observe(d+"Title",function(e){t.tt_title=e}),i.$observe(d+"Placement",function(e){t.tt_placement=angular.isDefined(e)?e:m.placement}),i.$observe(d+"PopupDelay",function(e){var n=parseInt(e,10);t.tt_popupDelay=isNaN(n)?m.popupDelay:n});var A=function(){w&&(n.unbind(C.show,u),n.unbind(C.hide,p))},E=function(){};i.$observe(d+"Trigger",function(e){A(),E(),C=f(e),angular.isFunction(C.show)?E=t.$watch(function(){return C.show(t,n,i)},function(e){return r(e?g:h)}):C.show===C.hide?n.bind(C.show,o):(n.bind(C.show,u),n.bind(C.hide,p)),w=!0});var S=t.$eval(i[d+"Animation"]);t.tt_animation=angular.isDefined(S)?!!S:m.animation,i.$observe(d+"AppendToBody",function(e){x=angular.isDefined(e)?l(e)(t):x}),x&&t.$on("$locationChangeSuccess",function(){t.tt_isOpen&&h()}),t.$on("$destroy",function(){r.cancel(y),r.cancel(k),A(),E(),$()})}}}}}]}).directive("tooltipPopup",function(){return{restrict:"EA",replace:!0,scope:{content:"@",placement:"@",animation:"&",isOpen:"&"},templateUrl:"template/tooltip/tooltip-popup.html"}}).directive("tooltip",["$tooltip",function(e){return e("tooltip","tooltip","mouseenter")}]).directive("tooltipHtmlUnsafePopup",function(){return{restrict:"EA",replace:!0,scope:{content:"@",placement:"@",animation:"&",isOpen:"&"},templateUrl:"template/tooltip/tooltip-html-unsafe-popup.html"}}).directive("tooltipHtmlUnsafe",["$tooltip",function(e){return e("tooltipHtmlUnsafe","tooltip","mouseenter")}]),angular.module("mm.foundation.popover",["mm.foundation.tooltip"]).directive("popoverPopup",function(){return{restrict:"EA",replace:!0,scope:{title:"@",content:"@",placement:"@",animation:"&",isOpen:"&"},templateUrl:"template/popover/popover.html"}}).directive("popover",["$tooltip",function(e){return e("popover","popover","click")}]),angular.module("mm.foundation.progressbar",["mm.foundation.transition"]).constant("progressConfig",{animate:!0,max:100}).controller("ProgressController",["$scope","$attrs","progressConfig","$transition",function(e,t,n,i){var a=this,o=[],r=angular.isDefined(t.max)?e.$parent.$eval(t.max):n.max,l=angular.isDefined(t.animate)?e.$parent.$eval(t.animate):n.animate;this.addBar=function(e,t){var n=0,i=e.$parent.$index;angular.isDefined(i)&&o[i]&&(n=o[i].value),o.push(e),this.update(t,e.value,n),e.$watch("value",function(e,n){e!==n&&a.update(t,e,n)}),e.$on("$destroy",function(){a.removeBar(e)})},this.update=function(e,t,n){var a=this.getPercentage(t);l?(e.css("width",this.getPercentage(n)+"%"),i(e,{width:a+"%"})):e.css({transition:"none",width:a+"%"})},this.removeBar=function(e){o.splice(o.indexOf(e),1)},this.getPercentage=function(e){return Math.round(100*e/r)}}]).directive("progress",function(){return{restrict:"EA",replace:!0,transclude:!0,controller:"ProgressController",require:"progress",scope:{},template:'<div class="progress" ng-transclude></div>'}}).directive("bar",function(){return{restrict:"EA",replace:!0,transclude:!0,require:"^progress",scope:{value:"=",type:"@"},templateUrl:"template/progressbar/bar.html",link:function(e,t,n,i){i.addBar(e,t)}}}).directive("progressbar",function(){return{restrict:"EA",replace:!0,transclude:!0,controller:"ProgressController",scope:{value:"=",type:"@"},templateUrl:"template/progressbar/progressbar.html",link:function(e,t,n,i){i.addBar(e,angular.element(t.children()[0]))}}}),angular.module("mm.foundation.rating",[]).constant("ratingConfig",{max:5,stateOn:null,stateOff:null}).controller("RatingController",["$scope","$attrs","$parse","ratingConfig",function(e,t,n,i){this.maxRange=angular.isDefined(t.max)?e.$parent.$eval(t.max):i.max,this.stateOn=angular.isDefined(t.stateOn)?e.$parent.$eval(t.stateOn):i.stateOn,this.stateOff=angular.isDefined(t.stateOff)?e.$parent.$eval(t.stateOff):i.stateOff,this.createRateObjects=function(e){for(var t={stateOn:this.stateOn,stateOff:this.stateOff},n=0,i=e.length;i>n;n++)e[n]=angular.extend({index:n},t,e[n]);return e},e.range=this.createRateObjects(angular.isDefined(t.ratingStates)?angular.copy(e.$parent.$eval(t.ratingStates)):new Array(this.maxRange)),e.rate=function(t){e.value===t||e.readonly||(e.value=t)},e.enter=function(t){e.readonly||(e.val=t),e.onHover({value:t})},e.reset=function(){e.val=angular.copy(e.value),e.onLeave()},e.$watch("value",function(t){e.val=t}),e.readonly=!1,t.readonly&&e.$parent.$watch(n(t.readonly),function(t){e.readonly=!!t})}]).directive("rating",function(){return{restrict:"EA",scope:{value:"=",onHover:"&",onLeave:"&"},controller:"RatingController",templateUrl:"template/rating/rating.html",replace:!0}}),angular.module("mm.foundation.tabs",[]).controller("TabsetController",["$scope",function(e){var t=this,n=t.tabs=e.tabs=[];t.select=function(e){angular.forEach(n,function(e){e.active=!1}),e.active=!0},t.addTab=function(e){n.push(e),(1===n.length||e.active)&&t.select(e)},t.removeTab=function(e){var i=n.indexOf(e);if(e.active&&n.length>1){var a=i==n.length-1?i-1:i+1;t.select(n[a])}n.splice(i,1)}}]).directive("tabset",function(){return{restrict:"EA",transclude:!0,replace:!0,scope:{},controller:"TabsetController",templateUrl:"template/tabs/tabset.html",link:function(e,t,n){e.vertical=angular.isDefined(n.vertical)?e.$parent.$eval(n.vertical):!1,e.justified=angular.isDefined(n.justified)?e.$parent.$eval(n.justified):!1,e.type=angular.isDefined(n.type)?e.$parent.$eval(n.type):"tabs"}}}).directive("tab",["$parse",function(e){return{require:"^tabset",restrict:"EA",replace:!0,templateUrl:"template/tabs/tab.html",transclude:!0,scope:{heading:"@",onSelect:"&select",onDeselect:"&deselect"},controller:function(){},compile:function(t,n,i){return function(t,n,a,o){var r,l;a.active?(r=e(a.active),l=r.assign,t.$parent.$watch(r,function(e,n){e!==n&&(t.active=!!e)}),t.active=r(t.$parent)):l=r=angular.noop,t.$watch("active",function(e){l(t.$parent,e),e?(o.select(t),t.onSelect()):t.onDeselect()}),t.disabled=!1,a.disabled&&t.$parent.$watch(e(a.disabled),function(e){t.disabled=!!e}),t.select=function(){t.disabled||(t.active=!0)},o.addTab(t),t.$on("$destroy",function(){o.removeTab(t)}),t.$transcludeFn=i}}}}]).directive("tabHeadingTransclude",[function(){return{restrict:"A",require:"^tab",link:function(e,t){e.$watch("headingElement",function(e){e&&(t.html(""),t.append(e))})}}}]).directive("tabContentTransclude",function(){function e(e){return e.tagName&&(e.hasAttribute("tab-heading")||e.hasAttribute("data-tab-heading")||"tab-heading"===e.tagName.toLowerCase()||"data-tab-heading"===e.tagName.toLowerCase())}return{restrict:"A",require:"^tabset",link:function(t,n,i){var a=t.$eval(i.tabContentTransclude);a.$transcludeFn(a.$parent,function(t){angular.forEach(t,function(t){e(t)?a.headingElement=t:n.append(t)})})}}}),angular.module("mm.foundation.topbar",[]).factory("closest",[function(){return function(e,t){for(var n=function(e,t){for(var n=(e.parentNode||e.document).querySelectorAll(t),i=-1;n[++i]&&n[i]!=e;);return!!n[i]},i=e[0];i;){if(n(i,t))return angular.element(i);i=i.parentElement}return!1}}]).directive("topBar",["$timeout","$compile","$window","$document",function(e,t,n,i){var a=angular.element(n),o=angular.element(i[0].querySelector("head"));o.append('<meta class="foundation-mq-topbar" />'),o.append('<meta class="foundation-mq-small" />'),o.append('<meta class="foundation-mq-medium" />'),o.append('<meta class="foundation-mq-large" />');var r=n.matchMedia||function(e){var t,n=e.documentElement,i=n.firstElementChild||n.firstChild,a=e.createElement("body"),o=e.createElement("div");return o.id="mq-test-1",o.style.cssText="position:absolute;top:-100em",a.style.background="none",a.appendChild(o),function(e){return o.innerHTML='&shy;<style media="'+e+'"> #mq-test-1 { width: 42px; }</style>',n.insertBefore(a,i),t=42===o.offsetWidth,n.removeChild(a),{matches:t,media:e}}}(i[0]);return{scope:{stickyClass:"@",backText:"@",stickyOn:"=",customBackText:"=",isHover:"=",mobileShowParentLink:"=",scrolltop:"="},restrict:"EA",replace:!0,templateUrl:"template/topbar/top-bar.html",transclude:!0,link:function(e,t){var r=e.topbar=t,l=r.parent(),c=/^[\/\\'"]+|(;\s?})+|[\/\\'"]+$/g,s=(e.mediaQueries={topbar:getComputedStyle(o[0].querySelector("meta.foundation-mq-topbar")).fontFamily.replace(c,""),small:getComputedStyle(o[0].querySelector("meta.foundation-mq-small")).fontFamily.replace(c,""),medium:getComputedStyle(o[0].querySelector("meta.foundation-mq-medium")).fontFamily.replace(c,""),large:getComputedStyle(o[0].querySelector("meta.foundation-mq-large")).fontFamily.replace(c,"")},angular.element(i[0].querySelector("body"))),u=e.isSticky=function(){var t=l.hasClass(e.settings.stickyClass);return t&&"all"===e.settings.stickyOn?!0:t&&small()&&"small"===e.settings.stickyOn?!0:t&&medium()&&"medium"===e.settings.stickyOn?!0:t&&large()&&"large"===e.settings.stickyOn?!0:!1},d=function(){if(e.stickyTopbar&&e.isSticky()){var t=angular.element(i[0].querySelector("."+e.settings.stickyClass)),n=p;a.scrollTop()>n&&!t.hasClass("fixed")?(t.addClass("fixed"),s.css("padding-top",e.originalHeight+"px")):a.scrollTop()<=n&&t.hasClass("fixed")&&(t.removeClass("fixed"),s.css("padding-top",""))}};if(e.toggle=function(t){if(!e.breakpoint())return!1;var i=void 0===t?!r.hasClass("expanded"):t;i?r.addClass("expanded"):r.removeClass("expanded"),e.settings.scrolltop?!i&&r.hasClass("fixed")?(r.parent().addClass("fixed"),r.removeClass("fixed"),s.css("padding-top",e.originalHeight+"px")):i&&r.parent().hasClass("fixed")&&(r.parent().removeClass("fixed"),r.addClass("fixed"),s.css("padding-top",""),n.scrollTo(0,0)):(u()&&r.parent().addClass("fixed"),r.parent().hasClass("fixed")&&(i?(r.addClass("fixed"),r.parent().addClass("expanded"),s.css("padding-top",e.originalHeight+"px")):(r.removeClass("fixed"),r.parent().removeClass("expanded"),d())))},l.hasClass("fixed")||u()){e.stickyTopbar=!0,e.height=l[0].offsetHeight;var p=l[0].getBoundingClientRect().top}else e.height=r[0].offsetHeight;e.originalHeight=e.height,e.$watch("height",function(e){e?r.css("height",e+"px"):r.css("height","")}),a.bind("resize",function(){var t=angular.element(r[0].querySelectorAll("section"));angular.forEach(t,function(e){angular.element(e.querySelectorAll("li.moved")).removeClass("moved")}),r.removeClass("expanded"),e.height="",e.$apply()}),a.bind("scroll",function(){d(),e.$apply()}),e.$on("$destroy",function(){a.unbind("scroll"),a.unbind("resize")}),l.hasClass("fixed")&&s.css("padding-top",e.originalHeight+"px")},controller:["$window","$scope","closest",function(t,n,a){n.settings={},n.settings.stickyClass=n.stickyClass||"sticky",n.settings.backText=n.backText||"Back",n.settings.stickyOn=n.stickyOn||"all",n.settings.customBackText=void 0===n.customBackText?!0:n.customBackText,n.settings.isHover=void 0===n.isHover?!0:n.isHover,n.settings.mobileShowParentLink=void 0===n.mobileShowParentLink?!0:n.mobileShowParentLink,n.settings.scrolltop=void 0===n.scrolltop?!0:n.scrolltop,this.settings=n.settings,n.index=0;var o=function(e){var t=e.offsetHeight,n=e.currentStyle||getComputedStyle(e);return t+=parseInt(n.marginTop,10)+parseInt(n.marginBottom,10)},l=n.breakpoint=this.breakpoint=function(){return!r(n.mediaQueries.topbar).matches},c=[];this.addSection=function(e){c.push(e)},this.removeSection=function(e){var t=c.indexOf(e);t>-1&&c.splice(t,1)};var s=/rtl/i.test(i.find("html").attr("dir"))?"right":"left";n.$watch("index",function(e){for(var t=0;t<c.length;t++)c[t].move(s,e)}),this.toggle=function(e){n.toggle(e);for(var t=0;t<c.length;t++)c[t].reset();n.index=0,n.height="",n.$apply()},this.back=function(t){if(!(n.index<1)&&l()){var i=angular.element(t.currentTarget),r=a(i,"li.moved"),c=r.parent();n.index=n.index-1,n.height=0===n.index?"":n.originalHeight+o(c[0]),e(function(){r.removeClass("moved")},300)}},this.forward=function(e){if(!l())return!1;var t=angular.element(e.currentTarget),i=a(t,"li");i.addClass("moved"),n.height=n.originalHeight+o(t.parent()[0].querySelector("ul")),n.index=n.index+1,n.$apply()}}]}}]).directive("toggleTopBar",["closest",function(e){return{scope:{},require:"^topBar",restrict:"A",replace:!0,templateUrl:"template/topbar/toggle-top-bar.html",transclude:!0,link:function(t,n,i,a){n.bind("click",function(t){var n=e(angular.element(t.currentTarget),"li");n.hasClass("back")||n.hasClass("has-dropdown")||a.toggle()}),t.$on("$destroy",function(){n.unbind("click")})}}}]).directive("topBarSection",["$compile","closest",function(e,t){return{scope:{},require:"^topBar",restrict:"EA",replace:!0,templateUrl:"template/topbar/top-bar-section.html",transclude:!0,link:function(e,n,i,a){var o=n;
-e.reset=function(){angular.element(o[0].querySelectorAll("li.moved")).removeClass("moved")},e.move=function(e,t){o.css("left"===e?{left:-100*t+"%"}:{right:-100*t+"%"})},a.addSection(e),e.$on("$destroy",function(){a.removeSection(e)});var r=o[0].querySelectorAll("li>a");angular.forEach(r,function(n){var i=angular.element(n),o=t(i,"li");o.hasClass("has-dropdown")||o.hasClass("back")||o.hasClass("title")||(i.bind("click",function(){a.toggle(!1)}),e.$on("$destroy",function(){i.bind("click")}))})}}}]).directive("hasDropdown",[function(){return{scope:{},require:["^topBar"],restrict:"A",templateUrl:"template/topbar/has-dropdown.html",replace:!0,transclude:!0,link:function(e,t,n,i){var a=i[0],o=i[1];e.triggerLink=t.children("a")[0];var r=angular.element(e.triggerLink);r.bind("click",function(e){a.forward(e)}),e.$on("$destroy",function(){r.unbind("click")}),t.bind("mouseenter",function(){a.settings.isHover&&!a.breakpoint()&&t.addClass("not-click")}),t.bind("click",function(){a.settings.isHover||a.breakpoint()||t.toggleClass("not-click")}),t.bind("mouseleave",function(){t.removeClass("not-click")}),e.$on("$destroy",function(){t.unbind("click"),t.unbind("mouseenter"),t.unbind("mouseleave"),o.removeDropdown(e)})},controller:["$window","$scope",function(e,t){this.triggerLink=t.triggerLink}]}}]).directive("topBarDropdown",["$compile",function(e){return{scope:{},require:["^topBar","^hasDropdown"],restrict:"A",replace:!0,templateUrl:"template/topbar/top-bar-dropdown.html",transclude:!0,link:function(t,n,i,a){var o=a[0],r=a[1],l=angular.element(r.triggerLink),c=l.attr("href");t.linkText=l.text(),t.back=function(e){o.back(e)},t.backText=o.settings.customBackText?o.settings.backText:"&laquo; "+l.html();var s;s=angular.element(o.settings.mobileShowParentLink&&c&&c.length>1?'<li class="title back js-generated"><h5><a href="#" ng-click="back($event);">{{backText}}</a></h5></li><li><a class="parent-link js-generated" href="'+c+'">{{linkText}}</a></li>':'<li class="title back js-generated"><h5><a href="" ng-click="back($event);">{{backText}}</a></h5></li>'),e(s)(t),n.prepend(s)}}}]),angular.module("mm.foundation.tour",["mm.foundation.position","mm.foundation.tooltip"]).service("$tour",["$window",function(e){function t(){return parseInt(e.localStorage.getItem("mm.tour.step"),10)}function n(t){i=t,e.localStorage.setItem("mm.tour.step",t)}var i=t(),a={};this.add=function(e,t){a[e]=t},this.has=function(e){return!!a[e]},this.isActive=function(){return i>0},this.current=function(e){return e?void n(i):i},this.start=function(){n(1)},this.next=function(){n(i+1)},this.end=function(){n(0)}}]).directive("stepTextPopup",["$tour",function(e){return{restrict:"EA",replace:!0,scope:{title:"@",content:"@",placement:"@",animation:"&",isOpen:"&"},templateUrl:"template/tour/tour.html",link:function(t,n){t.isLastStep=function(){return!e.has(e.current()+1)},t.endTour=function(){n.remove(),e.end()},t.nextStep=function(){n.remove(),e.next()}}}}]).directive("stepText",["$position","$tooltip","$tour","$window",function(e,t,n,i){function a(e){var t=e[0].getBoundingClientRect();return t.top>=0&&t.left>=0&&t.bottom<=i.innerHeight-80&&t.right<=i.innerWidth}function o(t,o,r){var l=parseInt(r.stepIndex,10);if(n.isActive()&&l&&(n.add(l,r),l===n.current())){if(!a(o)){var c=e.offset(o);i.scrollTo(0,c.top-i.innerHeight/2)}return!0}return!1}return t("stepText","step",o)}]),angular.module("mm.foundation.typeahead",["mm.foundation.position","mm.foundation.bindHtml"]).factory("typeaheadParser",["$parse",function(e){var t=/^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;return{parse:function(n){var i=n.match(t);if(!i)throw new Error("Expected typeahead specification in form of '_modelValue_ (as _label_)? for _item_ in _collection_' but got '"+n+"'.");return{itemName:i[3],source:e(i[4]),viewMapper:e(i[2]||i[1]),modelMapper:e(i[1])}}}}]).directive("typeahead",["$compile","$parse","$q","$timeout","$document","$position","typeaheadParser",function(e,t,n,i,a,o,r){var l=[9,13,27,38,40];return{require:"ngModel",link:function(c,s,u,d){var p,f=c.$eval(u.typeaheadMinLength)||1,m=c.$eval(u.typeaheadWaitMs)||0,g=c.$eval(u.typeaheadEditable)!==!1,h=t(u.typeaheadLoading).assign||angular.noop,v=t(u.typeaheadOnSelect),$=u.typeaheadInputFormatter?t(u.typeaheadInputFormatter):void 0,b=u.typeaheadAppendToBody?t(u.typeaheadAppendToBody):!1,y=t(u.ngModel).assign,k=r.parse(u.typeahead),x=angular.element("<div typeahead-popup></div>");x.attr({matches:"matches",active:"activeIdx",select:"select(activeIdx)",query:"query",position:"position"}),angular.isDefined(u.typeaheadTemplateUrl)&&x.attr("template-url",u.typeaheadTemplateUrl);var C=c.$new();c.$on("$destroy",function(){C.$destroy()});var w=function(){C.matches=[],C.activeIdx=-1},T=function(e){var t={$viewValue:e};h(c,!0),n.when(k.source(c,t)).then(function(n){if(e===d.$viewValue&&p){if(n.length>0){C.activeIdx=0,C.matches.length=0;for(var i=0;i<n.length;i++)t[k.itemName]=n[i],C.matches.push({label:k.viewMapper(C,t),model:n[i]});C.query=e,C.position=b?o.offset(s):o.position(s),C.position.top=C.position.top+s.prop("offsetHeight")}else w();h(c,!1)}},function(){w(),h(c,!1)})};w(),C.query=void 0;var P;d.$parsers.unshift(function(e){return p=!0,e&&e.length>=f?m>0?(P&&i.cancel(P),P=i(function(){T(e)},m)):T(e):(h(c,!1),w()),g?e:e?void d.$setValidity("editable",!1):(d.$setValidity("editable",!0),e)}),d.$formatters.push(function(e){var t,n,i={};return $?(i.$model=e,$(c,i)):(i[k.itemName]=e,t=k.viewMapper(c,i),i[k.itemName]=void 0,n=k.viewMapper(c,i),t!==n?t:e)}),C.select=function(e){var t,n,i={};i[k.itemName]=n=C.matches[e].model,t=k.modelMapper(c,i),y(c,t),d.$setValidity("editable",!0),v(c,{$item:n,$model:t,$label:k.viewMapper(c,i)}),w(),s[0].focus()},s.bind("keydown",function(e){0!==C.matches.length&&-1!==l.indexOf(e.which)&&(e.preventDefault(),40===e.which?(C.activeIdx=(C.activeIdx+1)%C.matches.length,C.$digest()):38===e.which?(C.activeIdx=(C.activeIdx?C.activeIdx:C.matches.length)-1,C.$digest()):13===e.which||9===e.which?C.$apply(function(){C.select(C.activeIdx)}):27===e.which&&(e.stopPropagation(),w(),C.$digest()))}),s.bind("blur",function(){p=!1});var A=function(e){s[0]!==e.target&&(w(),C.$digest())};a.bind("click",A),c.$on("$destroy",function(){a.unbind("click",A)});var E=e(x)(C);b?a.find("body").append(E):s.after(E)}}}]).directive("typeaheadPopup",function(){return{restrict:"EA",scope:{matches:"=",query:"=",active:"=",position:"=",select:"&"},replace:!0,templateUrl:"template/typeahead/typeahead-popup.html",link:function(e,t,n){e.templateUrl=n.templateUrl,e.isOpen=function(){return e.matches.length>0},e.isActive=function(t){return e.active==t},e.selectActive=function(t){e.active=t},e.selectMatch=function(t){e.select({activeIdx:t})}}}}).directive("typeaheadMatch",["$http","$templateCache","$compile","$parse",function(e,t,n,i){return{restrict:"EA",scope:{index:"=",match:"=",query:"="},link:function(a,o,r){var l=i(r.templateUrl)(a.$parent)||"template/typeahead/typeahead-match.html";e.get(l,{cache:t}).success(function(e){o.replaceWith(n(e.trim())(a))})}}}]).filter("typeaheadHighlight",function(){function e(e){return e.replace(/([.?*+^$[\]\\(){}|-])/g,"\\$1")}return function(t,n){return n?t.replace(new RegExp(e(n),"gi"),"<strong>$&</strong>"):t}});
+/*
+ * angular-mm-foundation
+ * http://madmimi.github.io/angular-foundation/
+
+ * Version: 0.3.0 - 2014-07-14
+ * License: MIT
+ */
+angular.module("mm.foundation", ["mm.foundation.accordion","mm.foundation.alert","mm.foundation.bindHtml","mm.foundation.buttons","mm.foundation.position","mm.foundation.dropdownToggle","mm.foundation.interchange","mm.foundation.transition","mm.foundation.modal","mm.foundation.offcanvas","mm.foundation.pagination","mm.foundation.tooltip","mm.foundation.popover","mm.foundation.progressbar","mm.foundation.rating","mm.foundation.tabs","mm.foundation.topbar","mm.foundation.tour","mm.foundation.typeahead"]);
+angular.module('mm.foundation.accordion', [])
+
+.constant('accordionConfig', {
+  closeOthers: true
+})
+
+.controller('AccordionController', ['$scope', '$attrs', 'accordionConfig', function ($scope, $attrs, accordionConfig) {
+
+  // This array keeps track of the accordion groups
+  this.groups = [];
+
+  // Ensure that all the groups in this accordion are closed, unless close-others explicitly says not to
+  this.closeOthers = function(openGroup) {
+    var closeOthers = angular.isDefined($attrs.closeOthers) ? $scope.$eval($attrs.closeOthers) : accordionConfig.closeOthers;
+    if ( closeOthers ) {
+      angular.forEach(this.groups, function (group) {
+        if ( group !== openGroup ) {
+          group.isOpen = false;
+        }
+      });
+    }
+  };
+  
+  // This is called from the accordion-group directive to add itself to the accordion
+  this.addGroup = function(groupScope) {
+    var that = this;
+    this.groups.push(groupScope);
+
+    groupScope.$on('$destroy', function (event) {
+      that.removeGroup(groupScope);
+    });
+  };
+
+  // This is called from the accordion-group directive when to remove itself
+  this.removeGroup = function(group) {
+    var index = this.groups.indexOf(group);
+    if ( index !== -1 ) {
+      this.groups.splice(this.groups.indexOf(group), 1);
+    }
+  };
+
+}])
+
+// The accordion directive simply sets up the directive controller
+// and adds an accordion CSS class to itself element.
+.directive('accordion', function () {
+  return {
+    restrict:'EA',
+    controller:'AccordionController',
+    transclude: true,
+    replace: false,
+    templateUrl: 'template/accordion/accordion.html'
+  };
+})
+
+// The accordion-group directive indicates a block of html that will expand and collapse in an accordion
+.directive('accordionGroup', ['$parse', function($parse) {
+  return {
+    require:'^accordion',         // We need this directive to be inside an accordion
+    restrict:'EA',
+    transclude:true,              // It transcludes the contents of the directive into the template
+    replace: true,                // The element containing the directive will be replaced with the template
+    templateUrl:'template/accordion/accordion-group.html',
+    scope:{ heading:'@' },        // Create an isolated scope and interpolate the heading attribute onto this scope
+    controller: function() {
+      this.setHeading = function(element) {
+        this.heading = element;
+      };
+    },
+    link: function(scope, element, attrs, accordionCtrl) {
+      var getIsOpen, setIsOpen;
+
+      accordionCtrl.addGroup(scope);
+
+      scope.isOpen = false;
+      
+      if ( attrs.isOpen ) {
+        getIsOpen = $parse(attrs.isOpen);
+        setIsOpen = getIsOpen.assign;
+
+        scope.$parent.$watch(getIsOpen, function(value) {
+          scope.isOpen = !!value;
+        });
+      }
+
+      scope.$watch('isOpen', function(value) {
+        if ( value ) {
+          accordionCtrl.closeOthers(scope);
+        }
+        if ( setIsOpen ) {
+          setIsOpen(scope.$parent, value);
+        }
+      });
+    }
+  };
+}])
+
+// Use accordion-heading below an accordion-group to provide a heading containing HTML
+// <accordion-group>
+//   <accordion-heading>Heading containing HTML - <img src="..."></accordion-heading>
+// </accordion-group>
+.directive('accordionHeading', function() {
+  return {
+    restrict: 'EA',
+    transclude: true,   // Grab the contents to be used as the heading
+    template: '',       // In effect remove this element!
+    replace: true,
+    require: '^accordionGroup',
+    compile: function(element, attr, transclude) {
+      return function link(scope, element, attr, accordionGroupCtrl) {
+        // Pass the heading to the accordion-group controller
+        // so that it can be transcluded into the right place in the template
+        // [The second parameter to transclude causes the elements to be cloned so that they work in ng-repeat]
+        accordionGroupCtrl.setHeading(transclude(scope, function() {}));
+      };
+    }
+  };
+})
+
+// Use in the accordion-group template to indicate where you want the heading to be transcluded
+// You must provide the property on the accordion-group controller that will hold the transcluded element
+// <div class="accordion-group">
+//   <div class="accordion-heading" ><a ... accordion-transclude="heading">...</a></div>
+//   ...
+// </div>
+.directive('accordionTransclude', function() {
+  return {
+    require: '^accordionGroup',
+    link: function(scope, element, attr, controller) {
+      scope.$watch(function() { return controller[attr.accordionTransclude]; }, function(heading) {
+        if ( heading ) {
+          element.html('');
+          element.append(heading);
+        }
+      });
+    }
+  };
+});
+
+angular.module("mm.foundation.alert", [])
+
+.controller('AlertController', ['$scope', '$attrs', function ($scope, $attrs) {
+  $scope.closeable = 'close' in $attrs;
+}])
+
+.directive('alert', function () {
+  return {
+    restrict:'EA',
+    controller:'AlertController',
+    templateUrl:'template/alert/alert.html',
+    transclude:true,
+    replace:true,
+    scope: {
+      type: '=',
+      close: '&'
+    }
+  };
+});
+
+angular.module('mm.foundation.bindHtml', [])
+
+  .directive('bindHtmlUnsafe', function () {
+    return function (scope, element, attr) {
+      element.addClass('ng-binding').data('$binding', attr.bindHtmlUnsafe);
+      scope.$watch(attr.bindHtmlUnsafe, function bindHtmlUnsafeWatchAction(value) {
+        element.html(value || '');
+      });
+    };
+  });
+
+angular.module('mm.foundation.buttons', [])
+
+.constant('buttonConfig', {
+  activeClass: 'active',
+  toggleEvent: 'click'
+})
+
+.controller('ButtonsController', ['buttonConfig', function(buttonConfig) {
+  this.activeClass = buttonConfig.activeClass;
+  this.toggleEvent = buttonConfig.toggleEvent;
+}])
+
+.directive('btnRadio', function () {
+  return {
+    require: ['btnRadio', 'ngModel'],
+    controller: 'ButtonsController',
+    link: function (scope, element, attrs, ctrls) {
+      var buttonsCtrl = ctrls[0], ngModelCtrl = ctrls[1];
+
+      //model -> UI
+      ngModelCtrl.$render = function () {
+        element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, scope.$eval(attrs.btnRadio)));
+      };
+
+      //ui->model
+      element.bind(buttonsCtrl.toggleEvent, function () {
+        if (!element.hasClass(buttonsCtrl.activeClass)) {
+          scope.$apply(function () {
+            ngModelCtrl.$setViewValue(scope.$eval(attrs.btnRadio));
+            ngModelCtrl.$render();
+          });
+        }
+      });
+    }
+  };
+})
+
+.directive('btnCheckbox', function () {
+  return {
+    require: ['btnCheckbox', 'ngModel'],
+    controller: 'ButtonsController',
+    link: function (scope, element, attrs, ctrls) {
+      var buttonsCtrl = ctrls[0], ngModelCtrl = ctrls[1];
+
+      function getTrueValue() {
+        return getCheckboxValue(attrs.btnCheckboxTrue, true);
+      }
+
+      function getFalseValue() {
+        return getCheckboxValue(attrs.btnCheckboxFalse, false);
+      }
+      
+      function getCheckboxValue(attributeValue, defaultValue) {
+        var val = scope.$eval(attributeValue);
+        return angular.isDefined(val) ? val : defaultValue;
+      }
+
+      //model -> UI
+      ngModelCtrl.$render = function () {
+        element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, getTrueValue()));
+      };
+
+      //ui->model
+      element.bind(buttonsCtrl.toggleEvent, function () {
+        scope.$apply(function () {
+          ngModelCtrl.$setViewValue(element.hasClass(buttonsCtrl.activeClass) ? getFalseValue() : getTrueValue());
+          ngModelCtrl.$render();
+        });
+      });
+    }
+  };
+});
+
+angular.module('mm.foundation.position', [])
+
+/**
+ * A set of utility methods that can be use to retrieve position of DOM elements.
+ * It is meant to be used where we need to absolute-position DOM elements in
+ * relation to other, existing elements (this is the case for tooltips, popovers,
+ * typeahead suggestions etc.).
+ */
+  .factory('$position', ['$document', '$window', function ($document, $window) {
+
+    function getStyle(el, cssprop) {
+      if (el.currentStyle) { //IE
+        return el.currentStyle[cssprop];
+      } else if ($window.getComputedStyle) {
+        return $window.getComputedStyle(el)[cssprop];
+      }
+      // finally try and get inline style
+      return el.style[cssprop];
+    }
+
+    /**
+     * Checks if a given element is statically positioned
+     * @param element - raw DOM element
+     */
+    function isStaticPositioned(element) {
+      return (getStyle(element, "position") || 'static' ) === 'static';
+    }
+
+    /**
+     * returns the closest, non-statically positioned parentOffset of a given element
+     * @param element
+     */
+    var parentOffsetEl = function (element) {
+      var docDomEl = $document[0];
+      var offsetParent = element.offsetParent || docDomEl;
+      while (offsetParent && offsetParent !== docDomEl && isStaticPositioned(offsetParent) ) {
+        offsetParent = offsetParent.offsetParent;
+      }
+      return offsetParent || docDomEl;
+    };
+
+    return {
+      /**
+       * Provides read-only equivalent of jQuery's position function:
+       * http://api.jquery.com/position/
+       */
+      position: function (element) {
+        var elBCR = this.offset(element);
+        var offsetParentBCR = { top: 0, left: 0 };
+        var offsetParentEl = parentOffsetEl(element[0]);
+        if (offsetParentEl != $document[0]) {
+          offsetParentBCR = this.offset(angular.element(offsetParentEl));
+          offsetParentBCR.top += offsetParentEl.clientTop - offsetParentEl.scrollTop;
+          offsetParentBCR.left += offsetParentEl.clientLeft - offsetParentEl.scrollLeft;
+        }
+
+        var boundingClientRect = element[0].getBoundingClientRect();
+        return {
+          width: boundingClientRect.width || element.prop('offsetWidth'),
+          height: boundingClientRect.height || element.prop('offsetHeight'),
+          top: elBCR.top - offsetParentBCR.top,
+          left: elBCR.left - offsetParentBCR.left
+        };
+      },
+
+      /**
+       * Provides read-only equivalent of jQuery's offset function:
+       * http://api.jquery.com/offset/
+       */
+      offset: function (element) {
+        var boundingClientRect = element[0].getBoundingClientRect();
+        return {
+          width: boundingClientRect.width || element.prop('offsetWidth'),
+          height: boundingClientRect.height || element.prop('offsetHeight'),
+          top: boundingClientRect.top + ($window.pageYOffset || $document[0].body.scrollTop || $document[0].documentElement.scrollTop),
+          left: boundingClientRect.left + ($window.pageXOffset || $document[0].body.scrollLeft  || $document[0].documentElement.scrollLeft)
+        };
+      }
+    };
+  }]);
+
+/*
+ * dropdownToggle - Provides dropdown menu functionality
+ * @restrict class or attribute
+ * @example:
+
+   <a dropdown-toggle="#dropdown-menu">My Dropdown Menu</a>
+   <ul id="dropdown-menu" class="f-dropdown">
+     <li ng-repeat="choice in dropChoices">
+       <a ng-href="{{choice.href}}">{{choice.text}}</a>
+     </li>
+   </ul>
+ */
+angular.module('mm.foundation.dropdownToggle', [ 'mm.foundation.position' ])
+
+.directive('dropdownToggle', ['$document', '$location', '$position', function ($document, $location, $position) {
+  var openElement = null,
+      closeMenu   = angular.noop;
+  return {
+    restrict: 'CA',
+    scope: {
+      dropdownToggle: '@'
+    },
+    link: function(scope, element, attrs) {
+      var dropdown = angular.element($document[0].querySelector(scope.dropdownToggle));
+
+      scope.$watch('$location.path', function() { closeMenu(); });
+      element.bind('click', function (event) {
+        dropdown = angular.element($document[0].querySelector(scope.dropdownToggle));
+        var elementWasOpen = (element === openElement);
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (!!openElement) {
+          closeMenu();
+        }
+
+        if (!elementWasOpen && !element.hasClass('disabled') && !element.prop('disabled')) {
+          dropdown.css('display', 'block');
+
+          var offset = $position.offset(element);
+          var parentOffset = $position.offset(angular.element(dropdown[0].offsetParent));
+
+          dropdown.css({
+            left: offset.left - parentOffset.left + 'px',
+            top: offset.top - parentOffset.top + offset.height + 'px'
+          });
+
+          openElement = element;
+          closeMenu = function (event) {
+            $document.unbind('click', closeMenu);
+            dropdown.css('display', 'none');
+            closeMenu = angular.noop;
+            openElement = null;
+          };
+          $document.bind('click', closeMenu);
+        }
+      });
+
+      if (dropdown) {
+        dropdown.css('display', 'none');
+      }
+    }
+  };
+}]);
+
+/**
+ * @ngdoc service
+ * @name mm.foundation.interchange
+ * @description
+ *
+ * Package containing all services and directives
+ * about the `interchange` module
+ */
+angular.module('mm.foundation.interchange', [])
+
+  /**
+   * @ngdoc function
+   * @name mm.foundation.interchange.interchageQuery
+   * @function interchageQuery
+   * @description
+   *
+   * this service inject meta tags objects in the head
+   * to get the list of media queries from Foundation
+   * stylesheets.
+   *
+   * @return {object} Queries list name => mediaQuery
+   */
+  .factory('interchangeQueries', ['$document', function ($document) {
+    var element,
+      mediaSize,
+      formatList = {
+      'default': 'only screen',
+      landscape : 'only screen and (orientation: landscape)',
+      portrait : 'only screen and (orientation: portrait)',
+      retina : 'only screen and (-webkit-min-device-pixel-ratio: 2),' +
+        'only screen and (min--moz-device-pixel-ratio: 2),' +
+        'only screen and (-o-min-device-pixel-ratio: 2/1),' +
+        'only screen and (min-device-pixel-ratio: 2),' +
+        'only screen and (min-resolution: 192dpi),' +
+        'only screen and (min-resolution: 2dppx)'
+    },
+    classPrefix = 'foundation-mq-',
+    classList = ['small', 'medium', 'large', 'xlarge', 'xxlarge'],
+    head = angular.element($document[0].querySelector('head'));
+
+    for (var i = 0; i < classList.length; i++) {
+      head.append('<meta class="' + classPrefix + classList[i] + '" />');
+      element = getComputedStyle(head[0].querySelector('meta.' + classPrefix + classList[i]));
+      mediaSize = element.fontFamily.replace(/^[\/\\'"]+|(;\s?})+|[\/\\'"]+$/g, '');
+      formatList[classList[i]] = mediaSize;
+    }
+    return formatList;
+  }])
+
+  /**
+   * @ngdoc function
+   * @name mm.foundation.interchange.interchangeQueriesManager
+   * @function interchangeQueriesManager
+   * @description
+   *
+   * interface to add and remove named queries
+   * in the interchangeQueries list
+   */
+  .factory('interchangeQueriesManager', ['interchangeQueries', function (interchangeQueries) {
+    return {
+      /**
+       * @ngdoc method
+       * @name interchangeQueriesManager#add
+       * @methodOf mm.foundation.interchange.interchangeQueriesManager
+       * @description
+       *
+       * Add a custom media query in the `interchangeQueries`
+       * factory. This method does not allow to update an existing
+       * media query.
+       *
+       * @param {string} name MediaQuery name
+       * @param {string} media MediaQuery
+       * @returns {boolean} True if the insert is a success
+       */
+      add: function (name, media) {
+        if (!name || !media ||
+          !angular.isString(name) || !angular.isString(media) ||
+          !!interchangeQueries[name]) {
+          return false;
+        }
+        interchangeQueries[name] = media;
+        return true;
+      }
+    };
+  }])
+
+  /**
+   * @ngdoc function
+   * @name mm.foundation.interchange.interchangeTools
+   * @function interchangeTools
+   * @description
+   *
+   * Tools to help with the `interchange` module.
+   */
+  .factory('interchangeTools', ['$window', 'interchangeQueries', function ($window, namedQueries) {
+
+    /**
+     * @ngdoc method
+     * @name interchangeTools#parseAttribute
+     * @methodOf mm.foundation.interchange.interchangeTools
+     * @description
+     *
+     * Attribute parser to transform an `interchange` attribute
+     * value to an object with media query (name or query) as key,
+     * and file to use as value.
+     *
+     * ```
+     * {
+     *   small: 'bridge-500.jpg',
+     *   large: 'bridge-1200.jpg'
+     * }
+     * ```
+     *
+     * @param {string} value Interchange query string
+     * @returns {object} Attribute parsed
+     */
+    var parseAttribute = function (value) {
+      var raw = value.split(/\[(.*?)\]/),
+        i = raw.length,
+        breaker = /^(.+)\,\ \((.+)\)$/,
+        breaked,
+        output = {};
+
+      while (i--) {
+        if (raw[i].replace(/[\W\d]+/, '').length > 4) {
+          breaked = breaker.exec(raw[i]);
+          if (!!breaked && breaked.length === 3) {
+            output[breaked[2]] = breaked[1];
+          }
+        }
+      }
+      return output;
+    };
+
+    /**
+     * @ngdoc method
+     * @name interchangeTools#findCurrentMediaFile
+     * @methodOf mm.foundation.interchange.interchangeTools
+     * @description
+     *
+     * Find the current item to display from a file list
+     * (object returned by `parseAttribute`) and the
+     * current page dimensions.
+     *
+     * ```
+     * {
+     *   small: 'bridge-500.jpg',
+     *   large: 'bridge-1200.jpg'
+     * }
+     * ```
+     *
+     * @param {object} files Parsed version of `interchange` attribute
+     * @returns {string} File to display (or `undefined`)
+     */
+    var findCurrentMediaFile = function (files) {
+      var file, media, match;
+      for (file in files) {
+        media = namedQueries[file] || file;
+        match = $window.matchMedia(media);
+        if (match.matches) {
+          return files[file];
+        }
+      }
+      return;
+    };
+
+    return {
+      parseAttribute: parseAttribute,
+      findCurrentMediaFile: findCurrentMediaFile
+    };
+  }])
+
+  /**
+   * @ngdoc directive
+   * @name mm.foundation.interchange.directive:interchange
+   * @restrict A
+   * @element DIV|IMG
+   * @priority 450
+   * @scope true
+   * @description
+   *
+   * Interchange directive, following the same features as
+   * ZURB documentation. The directive is splitted in 3 parts.
+   *
+   * 1. This directive use `compile` and not `link` for a simple
+   * reason: if the method is applied on a DIV element to
+   * display a template, the compile method will inject an ng-include.
+   * Because using a `templateUrl` or `template` to do it wouldn't
+   * be appropriate for all cases (`IMG` or dynamic backgrounds).
+   * And doing it in `link` is too late to be applied.
+   *
+   * 2. In the `compile:post`, the attribute is parsed to find
+   * out the type of content to display.
+   *
+   * 3. At the start and on event `resize`, the method `replace`
+   * is called to reevaluate which file is supposed to be displayed
+   * and update the value if necessary. The methd will also
+   * trigger a `replace` event.
+   */
+  .directive('interchange', ['$window', '$rootScope', 'interchangeTools', function ($window, $rootScope, interchangeTools) {
+
+    var pictureFilePattern = /[A-Za-z0-9-_]+\.(jpg|jpeg|png|gif|bmp|tiff)\ *,/i;
+
+    return {
+      restrict: 'A',
+      scope: true,
+      priority: 450,
+      compile: function compile($element, attrs) {
+        // Set up the attribute to update
+        if ($element[0].nodeName === 'DIV' && !pictureFilePattern.test(attrs.interchange)) {
+          $element.html('<ng-include src="currentFile"></ng-include>');
+        }
+
+        return {
+          pre: function preLink($scope, $element, attrs) {},
+          post: function postLink($scope, $element, attrs) {
+            var currentFile, nodeName;
+
+            // Set up the attribute to update
+            nodeName = $element && $element[0] && $element[0].nodeName;
+            $scope.fileMap = interchangeTools.parseAttribute(attrs.interchange);
+
+            // Find the type of interchange
+            switch (nodeName) {
+            case 'DIV':
+              // If the tag is a div, we test the current file to see if it's picture
+              currentFile = interchangeTools.findCurrentMediaFile($scope.fileMap);
+              if (/[A-Za-z0-9-_]+\.(jpg|jpeg|png|gif|bmp|tiff)$/i.test(currentFile)) {
+                $scope.type = 'background';
+              }
+              else {
+                $scope.type = 'include';
+              }
+              break;
+
+            case 'IMG':
+              $scope.type = 'image';
+              break;
+
+            default:
+              return;
+            }
+
+            var replace = function (e) {
+              // The the new file to display (exit if the same)
+              var currentFile = interchangeTools.findCurrentMediaFile($scope.fileMap);
+              if (!!$scope.currentFile && $scope.currentFile === currentFile) {
+                return;
+              }
+
+              // Set up the new file
+              $scope.currentFile = currentFile;
+              switch ($scope.type) {
+              case 'image':
+                $element.attr('src', $scope.currentFile);
+                break;
+
+              case 'background':
+                $element.css('background-image', 'url(' + $scope.currentFile + ')');
+                break;
+              }
+
+              // Trigger events
+              $rootScope.$emit('replace', $element, $scope);
+              if (!!e) {
+                $scope.$apply();
+              }
+            };
+
+            // Start
+            replace();
+            $window.addEventListener('resize', replace);
+            $scope.$on('$destroy', function () {
+              $window.removeEventListener('resize', replace);
+            });
+          }
+        };
+      }
+    };
+  }]);
+
+angular.module('mm.foundation.transition', [])
+
+/**
+ * $transition service provides a consistent interface to trigger CSS 3 transitions and to be informed when they complete.
+ * @param  {DOMElement} element  The DOMElement that will be animated.
+ * @param  {string|object|function} trigger  The thing that will cause the transition to start:
+ *   - As a string, it represents the css class to be added to the element.
+ *   - As an object, it represents a hash of style attributes to be applied to the element.
+ *   - As a function, it represents a function to be called that will cause the transition to occur.
+ * @return {Promise}  A promise that is resolved when the transition finishes.
+ */
+.factory('$transition', ['$q', '$timeout', '$rootScope', function($q, $timeout, $rootScope) {
+
+  var $transition = function(element, trigger, options) {
+    options = options || {};
+    var deferred = $q.defer();
+    var endEventName = $transition[options.animation ? "animationEndEventName" : "transitionEndEventName"];
+
+    var transitionEndHandler = function(event) {
+      $rootScope.$apply(function() {
+        element.unbind(endEventName, transitionEndHandler);
+        deferred.resolve(element);
+      });
+    };
+
+    if (endEventName) {
+      element.bind(endEventName, transitionEndHandler);
+    }
+
+    // Wrap in a timeout to allow the browser time to update the DOM before the transition is to occur
+    $timeout(function() {
+      if ( angular.isString(trigger) ) {
+        element.addClass(trigger);
+      } else if ( angular.isFunction(trigger) ) {
+        trigger(element);
+      } else if ( angular.isObject(trigger) ) {
+        element.css(trigger);
+      }
+      //If browser does not support transitions, instantly resolve
+      if ( !endEventName ) {
+        deferred.resolve(element);
+      }
+    });
+
+    // Add our custom cancel function to the promise that is returned
+    // We can call this if we are about to run a new transition, which we know will prevent this transition from ending,
+    // i.e. it will therefore never raise a transitionEnd event for that transition
+    deferred.promise.cancel = function() {
+      if ( endEventName ) {
+        element.unbind(endEventName, transitionEndHandler);
+      }
+      deferred.reject('Transition cancelled');
+    };
+
+    return deferred.promise;
+  };
+
+  // Work out the name of the transitionEnd event
+  var transElement = document.createElement('trans');
+  var transitionEndEventNames = {
+    'WebkitTransition': 'webkitTransitionEnd',
+    'MozTransition': 'transitionend',
+    'OTransition': 'oTransitionEnd',
+    'transition': 'transitionend'
+  };
+  var animationEndEventNames = {
+    'WebkitTransition': 'webkitAnimationEnd',
+    'MozTransition': 'animationend',
+    'OTransition': 'oAnimationEnd',
+    'transition': 'animationend'
+  };
+  function findEndEventName(endEventNames) {
+    for (var name in endEventNames){
+      if (transElement.style[name] !== undefined) {
+        return endEventNames[name];
+      }
+    }
+  }
+  $transition.transitionEndEventName = findEndEventName(transitionEndEventNames);
+  $transition.animationEndEventName = findEndEventName(animationEndEventNames);
+  return $transition;
+}]);
+
+angular.module('mm.foundation.modal', ['mm.foundation.transition'])
+
+/**
+ * A helper, internal data structure that acts as a map but also allows getting / removing
+ * elements in the LIFO order
+ */
+  .factory('$$stackedMap', function () {
+    return {
+      createNew: function () {
+        var stack = [];
+
+        return {
+          add: function (key, value) {
+            stack.push({
+              key: key,
+              value: value
+            });
+          },
+          get: function (key) {
+            for (var i = 0; i < stack.length; i++) {
+              if (key == stack[i].key) {
+                return stack[i];
+              }
+            }
+          },
+          keys: function() {
+            var keys = [];
+            for (var i = 0; i < stack.length; i++) {
+              keys.push(stack[i].key);
+            }
+            return keys;
+          },
+          top: function () {
+            return stack[stack.length - 1];
+          },
+          remove: function (key) {
+            var idx = -1;
+            for (var i = 0; i < stack.length; i++) {
+              if (key == stack[i].key) {
+                idx = i;
+                break;
+              }
+            }
+            return stack.splice(idx, 1)[0];
+          },
+          removeTop: function () {
+            return stack.splice(stack.length - 1, 1)[0];
+          },
+          length: function () {
+            return stack.length;
+          }
+        };
+      }
+    };
+  })
+
+/**
+ * A helper directive for the $modal service. It creates a backdrop element.
+ */
+  .directive('modalBackdrop', ['$modalStack', '$timeout', function ($modalStack, $timeout) {
+    return {
+      restrict: 'EA',
+      replace: true,
+      templateUrl: 'template/modal/backdrop.html',
+      link: function (scope) {
+
+        scope.animate = false;
+
+        //trigger CSS transitions
+        $timeout(function () {
+          scope.animate = true;
+        });
+
+        scope.close = function (evt) {
+          var modal = $modalStack.getTop();
+          if (modal && modal.value.backdrop && modal.value.backdrop != 'static' && (evt.target === evt.currentTarget)) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            $modalStack.dismiss(modal.key, 'backdrop click');
+          }
+        };
+      }
+    };
+  }])
+
+  .directive('modalWindow', ['$modalStack', '$timeout', function ($modalStack, $timeout) {
+    return {
+      restrict: 'EA',
+      scope: {
+        index: '@',
+        animate: '='
+      },
+      replace: true,
+      transclude: true,
+      templateUrl: 'template/modal/window.html',
+      link: function (scope, element, attrs) {
+        scope.windowClass = attrs.windowClass || '';
+
+        $timeout(function () {
+          // trigger CSS transitions
+          scope.animate = true;
+          // focus a freshly-opened modal
+          element[0].focus();
+        });
+      }
+    };
+  }])
+
+  .factory('$modalStack', ['$transition', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap',
+    function ($transition, $timeout, $document, $compile, $rootScope, $$stackedMap) {
+
+      var OPENED_MODAL_CLASS = 'modal-open';
+
+      var backdropDomEl, backdropScope;
+      var openedWindows = $$stackedMap.createNew();
+      var $modalStack = {};
+
+      function backdropIndex() {
+        var topBackdropIndex = -1;
+        var opened = openedWindows.keys();
+        for (var i = 0; i < opened.length; i++) {
+          if (openedWindows.get(opened[i]).value.backdrop) {
+            topBackdropIndex = i;
+          }
+        }
+        return topBackdropIndex;
+      }
+
+      $rootScope.$watch(backdropIndex, function(newBackdropIndex){
+        if (backdropScope) {
+          backdropScope.index = newBackdropIndex;
+        }
+      });
+
+      function removeModalWindow(modalInstance) {
+
+        var body = $document.find('body').eq(0);
+        var modalWindow = openedWindows.get(modalInstance).value;
+
+        //clean up the stack
+        openedWindows.remove(modalInstance);
+
+        //remove window DOM element
+        removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, 300, checkRemoveBackdrop);
+        body.toggleClass(OPENED_MODAL_CLASS, openedWindows.length() > 0);
+      }
+
+      function checkRemoveBackdrop() {
+          //remove backdrop if no longer needed
+          if (backdropDomEl && backdropIndex() == -1) {
+            var backdropScopeRef = backdropScope;
+            removeAfterAnimate(backdropDomEl, backdropScope, 150, function () {
+              backdropScopeRef.$destroy();
+              backdropScopeRef = null;
+            });
+            backdropDomEl = undefined;
+            backdropScope = undefined;
+          }
+      }
+
+      function removeAfterAnimate(domEl, scope, emulateTime, done) {
+        // Closing animation
+        scope.animate = false;
+
+        var transitionEndEventName = $transition.transitionEndEventName;
+        if (transitionEndEventName) {
+          // transition out
+          var timeout = $timeout(afterAnimating, emulateTime);
+
+          domEl.bind(transitionEndEventName, function () {
+            $timeout.cancel(timeout);
+            afterAnimating();
+            scope.$apply();
+          });
+        } else {
+          // Ensure this call is async
+          $timeout(afterAnimating, 0);
+        }
+
+        function afterAnimating() {
+          if (afterAnimating.done) {
+            return;
+          }
+          afterAnimating.done = true;
+
+          domEl.remove();
+          if (done) {
+            done();
+          }
+        }
+      }
+
+      $document.bind('keydown', function (evt) {
+        var modal;
+
+        if (evt.which === 27) {
+          modal = openedWindows.top();
+          if (modal && modal.value.keyboard) {
+            $rootScope.$apply(function () {
+              $modalStack.dismiss(modal.key);
+            });
+          }
+        }
+      });
+
+      $modalStack.open = function (modalInstance, modal) {
+
+        openedWindows.add(modalInstance, {
+          deferred: modal.deferred,
+          modalScope: modal.scope,
+          backdrop: modal.backdrop,
+          keyboard: modal.keyboard
+        });
+
+        var body = $document.find('body').eq(0),
+            currBackdropIndex = backdropIndex();
+
+        if (currBackdropIndex >= 0 && !backdropDomEl) {
+          backdropScope = $rootScope.$new(true);
+          backdropScope.index = currBackdropIndex;
+          backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
+          body.append(backdropDomEl);
+        }
+          
+        var angularDomEl = angular.element('<div modal-window></div>');
+        angularDomEl.attr('window-class', modal.windowClass);
+        angularDomEl.attr('index', openedWindows.length() - 1);
+        angularDomEl.attr('animate', 'animate');
+        angularDomEl.html(modal.content);
+
+        var modalDomEl = $compile(angularDomEl)(modal.scope);
+        openedWindows.top().value.modalDomEl = modalDomEl;
+        body.append(modalDomEl);
+        body.addClass(OPENED_MODAL_CLASS);
+      };
+
+      $modalStack.close = function (modalInstance, result) {
+        var modalWindow = openedWindows.get(modalInstance).value;
+        if (modalWindow) {
+          modalWindow.deferred.resolve(result);
+          removeModalWindow(modalInstance);
+        }
+      };
+
+      $modalStack.dismiss = function (modalInstance, reason) {
+        var modalWindow = openedWindows.get(modalInstance).value;
+        if (modalWindow) {
+          modalWindow.deferred.reject(reason);
+          removeModalWindow(modalInstance);
+        }
+      };
+
+      $modalStack.dismissAll = function (reason) {
+        var topModal = this.getTop();
+        while (topModal) {
+          this.dismiss(topModal.key, reason);
+          topModal = this.getTop();
+        }
+      };
+
+      $modalStack.getTop = function () {
+        return openedWindows.top();
+      };
+
+      return $modalStack;
+    }])
+
+  .provider('$modal', function () {
+
+    var $modalProvider = {
+      options: {
+        backdrop: true, //can be also false or 'static'
+        keyboard: true
+      },
+      $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$modalStack',
+        function ($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
+
+          var $modal = {};
+
+          function getTemplatePromise(options) {
+            return options.template ? $q.when(options.template) :
+              $http.get(options.templateUrl, {cache: $templateCache}).then(function (result) {
+                return result.data;
+              });
+          }
+
+          function getResolvePromises(resolves) {
+            var promisesArr = [];
+            angular.forEach(resolves, function (value, key) {
+              if (angular.isFunction(value) || angular.isArray(value)) {
+                promisesArr.push($q.when($injector.invoke(value)));
+              }
+            });
+            return promisesArr;
+          }
+
+          $modal.open = function (modalOptions) {
+
+            var modalResultDeferred = $q.defer();
+            var modalOpenedDeferred = $q.defer();
+
+            //prepare an instance of a modal to be injected into controllers and returned to a caller
+            var modalInstance = {
+              result: modalResultDeferred.promise,
+              opened: modalOpenedDeferred.promise,
+              close: function (result) {
+                $modalStack.close(modalInstance, result);
+              },
+              dismiss: function (reason) {
+                $modalStack.dismiss(modalInstance, reason);
+              }
+            };
+
+            //merge and clean up options
+            modalOptions = angular.extend({}, $modalProvider.options, modalOptions);
+            modalOptions.resolve = modalOptions.resolve || {};
+
+            //verify options
+            if (!modalOptions.template && !modalOptions.templateUrl) {
+              throw new Error('One of template or templateUrl options is required.');
+            }
+
+            var templateAndResolvePromise =
+              $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
+
+
+            templateAndResolvePromise.then(function resolveSuccess(tplAndVars) {
+
+              var modalScope = (modalOptions.scope || $rootScope).$new();
+              modalScope.$close = modalInstance.close;
+              modalScope.$dismiss = modalInstance.dismiss;
+
+              var ctrlInstance, ctrlLocals = {};
+              var resolveIter = 1;
+
+              //controllers
+              if (modalOptions.controller) {
+                ctrlLocals.$scope = modalScope;
+                ctrlLocals.$modalInstance = modalInstance;
+                angular.forEach(modalOptions.resolve, function (value, key) {
+                  ctrlLocals[key] = tplAndVars[resolveIter++];
+                });
+
+                ctrlInstance = $controller(modalOptions.controller, ctrlLocals);
+              }
+
+              $modalStack.open(modalInstance, {
+                scope: modalScope,
+                deferred: modalResultDeferred,
+                content: tplAndVars[0],
+                backdrop: modalOptions.backdrop,
+                keyboard: modalOptions.keyboard,
+                windowClass: modalOptions.windowClass
+              });
+
+            }, function resolveError(reason) {
+              modalResultDeferred.reject(reason);
+            });
+
+            templateAndResolvePromise.then(function () {
+              modalOpenedDeferred.resolve(true);
+            }, function () {
+              modalOpenedDeferred.reject(false);
+            });
+
+            return modalInstance;
+          };
+
+          return $modal;
+        }]
+    };
+
+    return $modalProvider;
+  });
+
+angular.module("mm.foundation.offcanvas", [])
+    .directive('offCanvasWrap', ['$window', function ($window) {
+        return {
+            scope: {},
+            restrict: 'C',
+            link: function ($scope, element, attrs) {
+                var win = angular.element($window);
+                var sidebar = $scope.sidebar = element;
+
+                $scope.hide = function () {
+                    sidebar.removeClass('move-left');
+                    sidebar.removeClass('move-right');
+                };
+
+                win.bind("resize.body", $scope.hide);
+
+                $scope.$on('$destroy', function() {
+                    win.unbind("resize.body", $scope.hide);
+                });
+
+            },
+            controller: ['$scope', function($scope) {
+
+                this.leftToggle = function() {
+                    $scope.sidebar.toggleClass("move-right");
+                };
+
+                this.rightToggle = function() {
+                    $scope.sidebar.toggleClass("move-left");
+                };
+
+                this.hide = function() {
+                    $scope.hide();
+                };
+            }]
+        };
+    }])
+    .directive('leftOffCanvasToggle', [function () {
+        return {
+            require: '^offCanvasWrap',
+            restrict: 'C',
+            link: function ($scope, element, attrs, offCanvasWrap) {
+                element.on('click', function () {
+                    offCanvasWrap.leftToggle();
+                });
+            }
+        };
+    }])
+    .directive('rightOffCanvasToggle', [function () {
+        return {
+            require: '^offCanvasWrap',
+            restrict: 'C',
+            link: function ($scope, element, attrs, offCanvasWrap) {
+                element.on('click', function () {
+                    offCanvasWrap.rightToggle();
+                });
+            }
+        };
+    }])
+       .directive('exitOffCanvas', [function () {
+        return {
+            require: '^offCanvasWrap',
+            restrict: 'C',
+            link: function ($scope, element, attrs, offCanvasWrap) {
+                element.on('click', function () {
+                    offCanvasWrap.hide();
+                });
+            }
+        };
+    }])
+    .directive('offCanvasList', [function () {
+        return {
+            require: '^offCanvasWrap',
+            restrict: 'C',
+            link: function ($scope, element, attrs, offCanvasWrap) {
+                element.on('click', function () {
+                    offCanvasWrap.hide();
+                });
+            }
+        };
+    }]);
+
+angular.module('mm.foundation.pagination', [])
+
+.controller('PaginationController', ['$scope', '$attrs', '$parse', '$interpolate', function ($scope, $attrs, $parse, $interpolate) {
+  var self = this,
+      setNumPages = $attrs.numPages ? $parse($attrs.numPages).assign : angular.noop;
+
+  this.init = function(defaultItemsPerPage) {
+    if ($attrs.itemsPerPage) {
+      $scope.$parent.$watch($parse($attrs.itemsPerPage), function(value) {
+        self.itemsPerPage = parseInt(value, 10);
+        $scope.totalPages = self.calculateTotalPages();
+      });
+    } else {
+      this.itemsPerPage = defaultItemsPerPage;
+    }
+  };
+
+  this.noPrevious = function() {
+    return this.page === 1;
+  };
+  this.noNext = function() {
+    return this.page === $scope.totalPages;
+  };
+
+  this.isActive = function(page) {
+    return this.page === page;
+  };
+
+  this.calculateTotalPages = function() {
+    var totalPages = this.itemsPerPage < 1 ? 1 : Math.ceil($scope.totalItems / this.itemsPerPage);
+    return Math.max(totalPages || 0, 1);
+  };
+
+  this.getAttributeValue = function(attribute, defaultValue, interpolate) {
+    return angular.isDefined(attribute) ? (interpolate ? $interpolate(attribute)($scope.$parent) : $scope.$parent.$eval(attribute)) : defaultValue;
+  };
+
+  this.render = function() {
+    this.page = parseInt($scope.page, 10) || 1;
+    if (this.page > 0 && this.page <= $scope.totalPages) {
+      $scope.pages = this.getPages(this.page, $scope.totalPages);
+    }
+  };
+
+  $scope.selectPage = function(page) {
+    if ( ! self.isActive(page) && page > 0 && page <= $scope.totalPages) {
+      $scope.page = page;
+      $scope.onSelectPage({ page: page });
+    }
+  };
+
+  $scope.$watch('page', function() {
+    self.render();
+  });
+
+  $scope.$watch('totalItems', function() {
+    $scope.totalPages = self.calculateTotalPages();
+  });
+
+  $scope.$watch('totalPages', function(value) {
+    setNumPages($scope.$parent, value); // Readonly variable
+
+    if ( self.page > value ) {
+      $scope.selectPage(value);
+    } else {
+      self.render();
+    }
+  });
+}])
+
+.constant('paginationConfig', {
+  itemsPerPage: 10,
+  boundaryLinks: false,
+  directionLinks: true,
+  firstText: 'First',
+  previousText: 'Previous',
+  nextText: 'Next',
+  lastText: 'Last',
+  rotate: true
+})
+
+.directive('pagination', ['$parse', 'paginationConfig', function($parse, config) {
+  return {
+    restrict: 'EA',
+    scope: {
+      page: '=',
+      totalItems: '=',
+      onSelectPage:' &'
+    },
+    controller: 'PaginationController',
+    templateUrl: 'template/pagination/pagination.html',
+    replace: true,
+    link: function(scope, element, attrs, paginationCtrl) {
+
+      // Setup configuration parameters
+      var maxSize,
+      boundaryLinks  = paginationCtrl.getAttributeValue(attrs.boundaryLinks,  config.boundaryLinks      ),
+      directionLinks = paginationCtrl.getAttributeValue(attrs.directionLinks, config.directionLinks     ),
+      firstText      = paginationCtrl.getAttributeValue(attrs.firstText,      config.firstText,     true),
+      previousText   = paginationCtrl.getAttributeValue(attrs.previousText,   config.previousText,  true),
+      nextText       = paginationCtrl.getAttributeValue(attrs.nextText,       config.nextText,      true),
+      lastText       = paginationCtrl.getAttributeValue(attrs.lastText,       config.lastText,      true),
+      rotate         = paginationCtrl.getAttributeValue(attrs.rotate,         config.rotate);
+
+      paginationCtrl.init(config.itemsPerPage);
+
+      if (attrs.maxSize) {
+        scope.$parent.$watch($parse(attrs.maxSize), function(value) {
+          maxSize = parseInt(value, 10);
+          paginationCtrl.render();
+        });
+      }
+
+      // Create page object used in template
+      function makePage(number, text, isActive, isDisabled) {
+        return {
+          number: number,
+          text: text,
+          active: isActive,
+          disabled: isDisabled
+        };
+      }
+
+      paginationCtrl.getPages = function(currentPage, totalPages) {
+        var pages = [];
+
+        // Default page limits
+        var startPage = 1, endPage = totalPages;
+        var isMaxSized = ( angular.isDefined(maxSize) && maxSize < totalPages );
+
+        // recompute if maxSize
+        if ( isMaxSized ) {
+          if ( rotate ) {
+            // Current page is displayed in the middle of the visible ones
+            startPage = Math.max(currentPage - Math.floor(maxSize/2), 1);
+            endPage   = startPage + maxSize - 1;
+
+            // Adjust if limit is exceeded
+            if (endPage > totalPages) {
+              endPage   = totalPages;
+              startPage = endPage - maxSize + 1;
+            }
+          } else {
+            // Visible pages are paginated with maxSize
+            startPage = ((Math.ceil(currentPage / maxSize) - 1) * maxSize) + 1;
+
+            // Adjust last page if limit is exceeded
+            endPage = Math.min(startPage + maxSize - 1, totalPages);
+          }
+        }
+
+        // Add page number links
+        for (var number = startPage; number <= endPage; number++) {
+          var page = makePage(number, number, paginationCtrl.isActive(number), false);
+          pages.push(page);
+        }
+
+        // Add links to move between page sets
+        if ( isMaxSized && ! rotate ) {
+          if ( startPage > 1 ) {
+            var previousPageSet = makePage(startPage - 1, '...', false, false);
+            pages.unshift(previousPageSet);
+          }
+
+          if ( endPage < totalPages ) {
+            var nextPageSet = makePage(endPage + 1, '...', false, false);
+            pages.push(nextPageSet);
+          }
+        }
+
+        // Add previous & next links
+        if (directionLinks) {
+          var previousPage = makePage(currentPage - 1, previousText, false, paginationCtrl.noPrevious());
+          pages.unshift(previousPage);
+
+          var nextPage = makePage(currentPage + 1, nextText, false, paginationCtrl.noNext());
+          pages.push(nextPage);
+        }
+
+        // Add first & last links
+        if (boundaryLinks) {
+          var firstPage = makePage(1, firstText, false, paginationCtrl.noPrevious());
+          pages.unshift(firstPage);
+
+          var lastPage = makePage(totalPages, lastText, false, paginationCtrl.noNext());
+          pages.push(lastPage);
+        }
+
+        return pages;
+      };
+    }
+  };
+}])
+
+.constant('pagerConfig', {
+  itemsPerPage: 10,
+  previousText: '« Previous',
+  nextText: 'Next »',
+  align: true
+})
+
+.directive('pager', ['pagerConfig', function(config) {
+  return {
+    restrict: 'EA',
+    scope: {
+      page: '=',
+      totalItems: '=',
+      onSelectPage:' &'
+    },
+    controller: 'PaginationController',
+    templateUrl: 'template/pagination/pager.html',
+    replace: true,
+    link: function(scope, element, attrs, paginationCtrl) {
+
+      // Setup configuration parameters
+      var previousText = paginationCtrl.getAttributeValue(attrs.previousText, config.previousText, true),
+      nextText         = paginationCtrl.getAttributeValue(attrs.nextText,     config.nextText,     true),
+      align            = paginationCtrl.getAttributeValue(attrs.align,        config.align);
+
+      paginationCtrl.init(config.itemsPerPage);
+
+      // Create page object used in template
+      function makePage(number, text, isDisabled, isPrevious, isNext) {
+        return {
+          number: number,
+          text: text,
+          disabled: isDisabled,
+          previous: ( align && isPrevious ),
+          next: ( align && isNext )
+        };
+      }
+
+      paginationCtrl.getPages = function(currentPage) {
+        return [
+          makePage(currentPage - 1, previousText, paginationCtrl.noPrevious(), true, false),
+          makePage(currentPage + 1, nextText, paginationCtrl.noNext(), false, true)
+        ];
+      };
+    }
+  };
+}]);
+
+/**
+ * The following features are still outstanding: animation as a
+ * function, placement as a function, inside, support for more triggers than
+ * just mouse enter/leave, html tooltips, and selector delegation.
+ */
+angular.module( 'mm.foundation.tooltip', [ 'mm.foundation.position', 'mm.foundation.bindHtml' ] )
+
+/**
+ * The $tooltip service creates tooltip- and popover-like directives as well as
+ * houses global options for them.
+ */
+.provider( '$tooltip', function () {
+  // The default options tooltip and popover.
+  var defaultOptions = {
+    placement: 'top',
+    animation: true,
+    popupDelay: 0
+  };
+
+  // Default hide triggers for each show trigger
+  var triggerMap = {
+    'mouseenter': 'mouseleave',
+    'click': 'click',
+    'focus': 'blur'
+  };
+
+  // The options specified to the provider globally.
+  var globalOptions = {};
+  
+  /**
+   * `options({})` allows global configuration of all tooltips in the
+   * application.
+   *
+   *   var app = angular.module( 'App', ['mm.foundation.tooltip'], function( $tooltipProvider ) {
+   *     // place tooltips left instead of top by default
+   *     $tooltipProvider.options( { placement: 'left' } );
+   *   });
+   */
+	this.options = function( value ) {
+		angular.extend( globalOptions, value );
+	};
+
+  /**
+   * This allows you to extend the set of trigger mappings available. E.g.:
+   *
+   *   $tooltipProvider.setTriggers( 'openTrigger': 'closeTrigger' );
+   */
+  this.setTriggers = function setTriggers ( triggers ) {
+    angular.extend( triggerMap, triggers );
+  };
+
+  /**
+   * This is a helper function for translating camel-case to snake-case.
+   */
+  function snake_case(name){
+    var regexp = /[A-Z]/g;
+    var separator = '-';
+    return name.replace(regexp, function(letter, pos) {
+      return (pos ? separator : '') + letter.toLowerCase();
+    });
+  }
+
+  /**
+   * Returns the actual instance of the $tooltip service.
+   * TODO support multiple triggers
+   */
+  this.$get = [ '$window', '$compile', '$timeout', '$parse', '$document', '$position', '$interpolate', function ( $window, $compile, $timeout, $parse, $document, $position, $interpolate ) {
+    return function $tooltip ( type, prefix, defaultTriggerShow ) {
+      var options = angular.extend( {}, defaultOptions, globalOptions );
+
+      /**
+       * Returns an object of show and hide triggers.
+       *
+       * If a trigger is supplied,
+       * it is used to show the tooltip; otherwise, it will use the `trigger`
+       * option passed to the `$tooltipProvider.options` method; else it will
+       * default to the trigger supplied to this directive factory.
+       *
+       * The hide trigger is based on the show trigger. If the `trigger` option
+       * was passed to the `$tooltipProvider.options` method, it will use the
+       * mapped trigger from `triggerMap` or the passed trigger if the map is
+       * undefined; otherwise, it uses the `triggerMap` value of the show
+       * trigger; else it will just use the show trigger.
+       */
+      function getTriggers ( trigger ) {
+        var show = trigger || options.trigger || defaultTriggerShow;
+        var hide = triggerMap[show] || show;
+        return {
+          show: show,
+          hide: hide
+        };
+      }
+
+      var directiveName = snake_case( type );
+
+      var startSym = $interpolate.startSymbol();
+      var endSym = $interpolate.endSymbol();
+      var template = 
+        '<div '+ directiveName +'-popup '+
+          'title="'+startSym+'tt_title'+endSym+'" '+
+          'content="'+startSym+'tt_content'+endSym+'" '+
+          'placement="'+startSym+'tt_placement'+endSym+'" '+
+          'animation="tt_animation" '+
+          'is-open="tt_isOpen"'+
+          '>'+
+        '</div>';
+
+      return {
+        restrict: 'EA',
+        scope: true,
+        compile: function (tElem, tAttrs) {
+          var tooltipLinker = $compile( template );
+
+          return function link ( scope, element, attrs ) {
+            var tooltip;
+            var transitionTimeout;
+            var popupTimeout;
+            var appendToBody = angular.isDefined( options.appendToBody ) ? options.appendToBody : false;
+            var triggers = getTriggers( undefined );
+            var hasRegisteredTriggers = false;
+            var hasEnableExp = angular.isDefined(attrs[prefix+'Enable']);
+
+            var positionTooltip = function (){
+              var position,
+                ttWidth,
+                ttHeight,
+                ttPosition;
+              // Get the position of the directive element.
+              position = appendToBody ? $position.offset( element ) : $position.position( element );
+
+              // Get the height and width of the tooltip so we can center it.
+              ttWidth = tooltip.prop( 'offsetWidth' );
+              ttHeight = tooltip.prop( 'offsetHeight' );
+
+              // Calculate the tooltip's top and left coordinates to center it with
+              // this directive.
+              switch ( scope.tt_placement ) {
+                case 'right':
+                  ttPosition = {
+                    top: position.top + position.height / 2 - ttHeight / 2,
+                    left: position.left + position.width + 10
+                  };
+                  break;
+                case 'bottom':
+                  ttPosition = {
+                    top: position.top + position.height + 10,
+                    left: position.left
+                  };
+                  break;
+                case 'left':
+                  ttPosition = {
+                    top: position.top + position.height / 2 - ttHeight / 2,
+                    left: position.left - ttWidth - 10
+                  };
+                  break;
+                default:
+                  ttPosition = {
+                    top: position.top - ttHeight - 10,
+                    left: position.left
+                  };
+                  break;
+              }
+
+              ttPosition.top += 'px';
+              ttPosition.left += 'px';
+
+              // Now set the calculated positioning.
+              tooltip.css( ttPosition );
+
+            };
+
+            // By default, the tooltip is not open.
+            // TODO add ability to start tooltip opened
+            scope.tt_isOpen = false;
+
+            function toggleTooltipBind () {
+              if ( ! scope.tt_isOpen ) {
+                showTooltipBind();
+              } else {
+                hideTooltipBind();
+              }
+            }
+
+            // Show the tooltip with delay if specified, otherwise show it immediately
+            function showTooltipBind() {
+              if(hasEnableExp && !scope.$eval(attrs[prefix+'Enable'])) {
+                return;
+              }
+              if ( scope.tt_popupDelay ) {
+                popupTimeout = $timeout( show, scope.tt_popupDelay, false );
+                popupTimeout.then(function(reposition){reposition();});
+              } else {
+                show()();
+              }
+            }
+
+            function hideTooltipBind () {
+              scope.$apply(function () {
+                hide();
+              });
+            }
+
+            // Show the tooltip popup element.
+            function show() {
+
+
+              // Don't show empty tooltips.
+              if ( ! scope.tt_content ) {
+                return angular.noop;
+              }
+
+              createTooltip();
+
+              // If there is a pending remove transition, we must cancel it, lest the
+              // tooltip be mysteriously removed.
+              if ( transitionTimeout ) {
+                $timeout.cancel( transitionTimeout );
+              }
+
+              // Set the initial positioning.
+              tooltip.css({ top: 0, left: 0, display: 'block' });
+
+              // Now we add it to the DOM because need some info about it. But it's not 
+              // visible yet anyway.
+              if ( appendToBody ) {
+                  $document.find( 'body' ).append( tooltip );
+              } else {
+                element.after( tooltip );
+              }
+
+              positionTooltip();
+
+              // And show the tooltip.
+              scope.tt_isOpen = true;
+              scope.$digest(); // digest required as $apply is not called
+
+              // Return positioning function as promise callback for correct
+              // positioning after draw.
+              return positionTooltip;
+            }
+
+            // Hide the tooltip popup element.
+            function hide() {
+              // First things first: we don't show it anymore.
+              scope.tt_isOpen = false;
+
+              //if tooltip is going to be shown after delay, we must cancel this
+              $timeout.cancel( popupTimeout );
+
+              // And now we remove it from the DOM. However, if we have animation, we 
+              // need to wait for it to expire beforehand.
+              // FIXME: this is a placeholder for a port of the transitions library.
+              if ( scope.tt_animation ) {
+                transitionTimeout = $timeout(removeTooltip, 500);
+              } else {
+                removeTooltip();
+              }
+            }
+
+            function createTooltip() {
+              // There can only be one tooltip element per directive shown at once.
+              if (tooltip) {
+                removeTooltip();
+              }
+              tooltip = tooltipLinker(scope, function () {});
+
+              // Get contents rendered into the tooltip
+              scope.$digest();
+            }
+
+            function removeTooltip() {
+              if (tooltip) {
+                tooltip.remove();
+                tooltip = null;
+              }
+            }
+
+            /**
+             * Observe the relevant attributes.
+             */
+            attrs.$observe( type, function ( val ) {
+              scope.tt_content = val;
+
+              if (!val && scope.tt_isOpen ) {
+                hide();
+              }
+            });
+
+            attrs.$observe( prefix+'Title', function ( val ) {
+              scope.tt_title = val;
+            });
+
+            attrs.$observe( prefix+'Placement', function ( val ) {
+              scope.tt_placement = angular.isDefined( val ) ? val : options.placement;
+            });
+
+            attrs.$observe( prefix+'PopupDelay', function ( val ) {
+              var delay = parseInt( val, 10 );
+              scope.tt_popupDelay = ! isNaN(delay) ? delay : options.popupDelay;
+            });
+
+            var unregisterTriggers = function() {
+              if (hasRegisteredTriggers) {
+                element.unbind( triggers.show, showTooltipBind );
+                element.unbind( triggers.hide, hideTooltipBind );
+              }
+            };
+
+            var unregisterTriggerFunction = function () {};
+
+            attrs.$observe( prefix+'Trigger', function ( val ) {
+              unregisterTriggers();
+              unregisterTriggerFunction();
+
+              triggers = getTriggers( val );
+
+              if ( angular.isFunction( triggers.show ) ) {
+                unregisterTriggerFunction = scope.$watch( function () {
+                  return triggers.show( scope, element, attrs );
+                }, function ( val ) {
+                  return val ? $timeout( show ) : $timeout( hide );
+                });
+              } else {
+                if ( triggers.show === triggers.hide ) {
+                  element.bind( triggers.show, toggleTooltipBind );
+                } else {
+                  element.bind( triggers.show, showTooltipBind );
+                  element.bind( triggers.hide, hideTooltipBind );
+                }
+              }
+
+              hasRegisteredTriggers = true;
+            });
+
+            var animation = scope.$eval(attrs[prefix + 'Animation']);
+            scope.tt_animation = angular.isDefined(animation) ? !!animation : options.animation;
+
+            attrs.$observe( prefix+'AppendToBody', function ( val ) {
+              appendToBody = angular.isDefined( val ) ? $parse( val )( scope ) : appendToBody;
+            });
+
+            // if a tooltip is attached to <body> we need to remove it on
+            // location change as its parent scope will probably not be destroyed
+            // by the change.
+            if ( appendToBody ) {
+              scope.$on('$locationChangeSuccess', function closeTooltipOnLocationChangeSuccess () {
+              if ( scope.tt_isOpen ) {
+                hide();
+              }
+            });
+            }
+
+            // Make sure tooltip is destroyed and removed.
+            scope.$on('$destroy', function onDestroyTooltip() {
+              $timeout.cancel( transitionTimeout );
+              $timeout.cancel( popupTimeout );
+              unregisterTriggers();
+              unregisterTriggerFunction();
+              removeTooltip();
+            });
+          };
+        }
+      };
+    };
+  }];
+})
+
+.directive( 'tooltipPopup', function () {
+  return {
+    restrict: 'EA',
+    replace: true,
+    scope: { content: '@', placement: '@', animation: '&', isOpen: '&' },
+    templateUrl: 'template/tooltip/tooltip-popup.html'
+  };
+})
+
+.directive( 'tooltip', [ '$tooltip', function ( $tooltip ) {
+  return $tooltip( 'tooltip', 'tooltip', 'mouseenter' );
+}])
+
+.directive( 'tooltipHtmlUnsafePopup', function () {
+  return {
+    restrict: 'EA',
+    replace: true,
+    scope: { content: '@', placement: '@', animation: '&', isOpen: '&' },
+    templateUrl: 'template/tooltip/tooltip-html-unsafe-popup.html'
+  };
+})
+
+.directive( 'tooltipHtmlUnsafe', [ '$tooltip', function ( $tooltip ) {
+  return $tooltip( 'tooltipHtmlUnsafe', 'tooltip', 'mouseenter' );
+}]);
+
+/**
+ * The following features are still outstanding: popup delay, animation as a
+ * function, placement as a function, inside, support for more triggers than
+ * just mouse enter/leave, html popovers, and selector delegatation.
+ */
+angular.module( 'mm.foundation.popover', [ 'mm.foundation.tooltip' ] )
+
+.directive( 'popoverPopup', function () {
+  return {
+    restrict: 'EA',
+    replace: true,
+    scope: { title: '@', content: '@', placement: '@', animation: '&', isOpen: '&' },
+    templateUrl: 'template/popover/popover.html'
+  };
+})
+
+.directive( 'popover', [ '$tooltip', function ( $tooltip ) {
+  return $tooltip( 'popover', 'popover', 'click' );
+}]);
+
+angular.module('mm.foundation.progressbar', ['mm.foundation.transition'])
+
+.constant('progressConfig', {
+  animate: true,
+  max: 100
+})
+
+.controller('ProgressController', ['$scope', '$attrs', 'progressConfig', '$transition', function($scope, $attrs, progressConfig, $transition) {
+    var self = this,
+        bars = [],
+        max = angular.isDefined($attrs.max) ? $scope.$parent.$eval($attrs.max) : progressConfig.max,
+        animate = angular.isDefined($attrs.animate) ? $scope.$parent.$eval($attrs.animate) : progressConfig.animate;
+
+    this.addBar = function(bar, element) {
+        var oldValue = 0, index = bar.$parent.$index;
+        if ( angular.isDefined(index) &&  bars[index] ) {
+            oldValue = bars[index].value;
+        }
+        bars.push(bar);
+
+        this.update(element, bar.value, oldValue);
+
+        bar.$watch('value', function(value, oldValue) {
+            if (value !== oldValue) {
+                self.update(element, value, oldValue);
+            }
+        });
+
+        bar.$on('$destroy', function() {
+            self.removeBar(bar);
+        });
+    };
+
+    // Update bar element width
+    this.update = function(element, newValue, oldValue) {
+        var percent = this.getPercentage(newValue);
+
+        if (animate) {
+            element.css('width', this.getPercentage(oldValue) + '%');
+            $transition(element, {width: percent + '%'});
+        } else {
+            element.css({'transition': 'none', 'width': percent + '%'});
+        }
+    };
+
+    this.removeBar = function(bar) {
+        bars.splice(bars.indexOf(bar), 1);
+    };
+
+    this.getPercentage = function(value) {
+        return Math.round(100 * value / max);
+    };
+}])
+
+.directive('progress', function() {
+    return {
+        restrict: 'EA',
+        replace: true,
+        transclude: true,
+        controller: 'ProgressController',
+        require: 'progress',
+        scope: {},
+        template: '<div class="progress" ng-transclude></div>'
+        //templateUrl: 'template/progressbar/progress.html' // Works in AngularJS 1.2
+    };
+})
+
+.directive('bar', function() {
+    return {
+        restrict: 'EA',
+        replace: true,
+        transclude: true,
+        require: '^progress',
+        scope: {
+            value: '=',
+            type: '@'
+        },
+        templateUrl: 'template/progressbar/bar.html',
+        link: function(scope, element, attrs, progressCtrl) {
+            progressCtrl.addBar(scope, element);
+        }
+    };
+})
+
+.directive('progressbar', function() {
+    return {
+        restrict: 'EA',
+        replace: true,
+        transclude: true,
+        controller: 'ProgressController',
+        scope: {
+            value: '=',
+            type: '@'
+        },
+        templateUrl: 'template/progressbar/progressbar.html',
+        link: function(scope, element, attrs, progressCtrl) {
+            progressCtrl.addBar(scope, angular.element(element.children()[0]));
+        }
+    };
+});
+
+angular.module('mm.foundation.rating', [])
+
+.constant('ratingConfig', {
+  max: 5,
+  stateOn: null,
+  stateOff: null
+})
+
+.controller('RatingController', ['$scope', '$attrs', '$parse', 'ratingConfig', function($scope, $attrs, $parse, ratingConfig) {
+
+  this.maxRange = angular.isDefined($attrs.max) ? $scope.$parent.$eval($attrs.max) : ratingConfig.max;
+  this.stateOn = angular.isDefined($attrs.stateOn) ? $scope.$parent.$eval($attrs.stateOn) : ratingConfig.stateOn;
+  this.stateOff = angular.isDefined($attrs.stateOff) ? $scope.$parent.$eval($attrs.stateOff) : ratingConfig.stateOff;
+
+  this.createRateObjects = function(states) {
+    var defaultOptions = {
+      stateOn: this.stateOn,
+      stateOff: this.stateOff
+    };
+
+    for (var i = 0, n = states.length; i < n; i++) {
+      states[i] = angular.extend({ index: i }, defaultOptions, states[i]);
+    }
+    return states;
+  };
+
+  // Get objects used in template
+  $scope.range = angular.isDefined($attrs.ratingStates) ?  this.createRateObjects(angular.copy($scope.$parent.$eval($attrs.ratingStates))): this.createRateObjects(new Array(this.maxRange));
+
+  $scope.rate = function(value) {
+    if ( $scope.value !== value && !$scope.readonly ) {
+      $scope.value = value;
+    }
+  };
+
+  $scope.enter = function(value) {
+    if ( ! $scope.readonly ) {
+      $scope.val = value;
+    }
+    $scope.onHover({value: value});
+  };
+
+  $scope.reset = function() {
+    $scope.val = angular.copy($scope.value);
+    $scope.onLeave();
+  };
+
+  $scope.$watch('value', function(value) {
+    $scope.val = value;
+  });
+
+  $scope.readonly = false;
+  if ($attrs.readonly) {
+    $scope.$parent.$watch($parse($attrs.readonly), function(value) {
+      $scope.readonly = !!value;
+    });
+  }
+}])
+
+.directive('rating', function() {
+  return {
+    restrict: 'EA',
+    scope: {
+      value: '=',
+      onHover: '&',
+      onLeave: '&'
+    },
+    controller: 'RatingController',
+    templateUrl: 'template/rating/rating.html',
+    replace: true
+  };
+});
+
+
+/**
+ * @ngdoc overview
+ * @name mm.foundation.tabs
+ *
+ * @description
+ * AngularJS version of the tabs directive.
+ */
+
+angular.module('mm.foundation.tabs', [])
+
+.controller('TabsetController', ['$scope', function TabsetCtrl($scope) {
+  var ctrl = this,
+      tabs = ctrl.tabs = $scope.tabs = [];
+
+  ctrl.select = function(tab) {
+    angular.forEach(tabs, function(tab) {
+      tab.active = false;
+    });
+    tab.active = true;
+  };
+
+  ctrl.addTab = function addTab(tab) {
+    tabs.push(tab);
+    if (tabs.length === 1 || tab.active) {
+      ctrl.select(tab);
+    }
+  };
+
+  ctrl.removeTab = function removeTab(tab) {
+    var index = tabs.indexOf(tab);
+    //Select a new tab if the tab to be removed is selected
+    if (tab.active && tabs.length > 1) {
+      //If this is the last tab, select the previous tab. else, the next tab.
+      var newActiveIndex = index == tabs.length - 1 ? index - 1 : index + 1;
+      ctrl.select(tabs[newActiveIndex]);
+    }
+    tabs.splice(index, 1);
+  };
+}])
+
+/**
+ * @ngdoc directive
+ * @name mm.foundation.tabs.directive:tabset
+ * @restrict EA
+ *
+ * @description
+ * Tabset is the outer container for the tabs directive
+ *
+ * @param {boolean=} vertical Whether or not to use vertical styling for the tabs.
+ * @param {boolean=} justified Whether or not to use justified styling for the tabs.
+ *
+ * @example
+<example module="mm.foundation">
+  <file name="index.html">
+    <tabset>
+      <tab heading="Tab 1"><b>First</b> Content!</tab>
+      <tab heading="Tab 2"><i>Second</i> Content!</tab>
+    </tabset>
+    <hr />
+    <tabset vertical="true">
+      <tab heading="Vertical Tab 1"><b>First</b> Vertical Content!</tab>
+      <tab heading="Vertical Tab 2"><i>Second</i> Vertical Content!</tab>
+    </tabset>
+    <tabset justified="true">
+      <tab heading="Justified Tab 1"><b>First</b> Justified Content!</tab>
+      <tab heading="Justified Tab 2"><i>Second</i> Justified Content!</tab>
+    </tabset>
+  </file>
+</example>
+ */
+.directive('tabset', function() {
+  return {
+    restrict: 'EA',
+    transclude: true,
+    replace: true,
+    scope: {},
+    controller: 'TabsetController',
+    templateUrl: 'template/tabs/tabset.html',
+    link: function(scope, element, attrs) {
+      scope.vertical = angular.isDefined(attrs.vertical) ? scope.$parent.$eval(attrs.vertical) : false;
+      scope.justified = angular.isDefined(attrs.justified) ? scope.$parent.$eval(attrs.justified) : false;
+      scope.type = angular.isDefined(attrs.type) ? scope.$parent.$eval(attrs.type) : 'tabs';
+    }
+  };
+})
+
+/**
+ * @ngdoc directive
+ * @name mm.foundation.tabs.directive:tab
+ * @restrict EA
+ *
+ * @param {string=} heading The visible heading, or title, of the tab. Set HTML headings with {@link mm.foundation.tabs.directive:tabHeading tabHeading}.
+ * @param {string=} select An expression to evaluate when the tab is selected.
+ * @param {boolean=} active A binding, telling whether or not this tab is selected.
+ * @param {boolean=} disabled A binding, telling whether or not this tab is disabled.
+ *
+ * @description
+ * Creates a tab with a heading and content. Must be placed within a {@link mm.foundation.tabs.directive:tabset tabset}.
+ *
+ * @example
+<example module="mm.foundation">
+  <file name="index.html">
+    <div ng-controller="TabsDemoCtrl">
+      <button class="button small" ng-click="items[0].active = true">
+        Select item 1, using active binding
+      </button>
+      <button class="button small" ng-click="items[1].disabled = !items[1].disabled">
+        Enable/disable item 2, using disabled binding
+      </button>
+      <br />
+      <tabset>
+        <tab heading="Tab 1">First Tab</tab>
+        <tab select="alertMe()">
+          <tab-heading><i class="fa fa-bell"></i> Alert me!</tab-heading>
+          Second Tab, with alert callback and html heading!
+        </tab>
+        <tab ng-repeat="item in items"
+          heading="{{item.title}}"
+          disabled="item.disabled"
+          active="item.active">
+          {{item.content}}
+        </tab>
+      </tabset>
+    </div>
+  </file>
+  <file name="script.js">
+    function TabsDemoCtrl($scope) {
+      $scope.items = [
+        { title:"Dynamic Title 1", content:"Dynamic Item 0" },
+        { title:"Dynamic Title 2", content:"Dynamic Item 1", disabled: true }
+      ];
+
+      $scope.alertMe = function() {
+        setTimeout(function() {
+          alert("You've selected the alert tab!");
+        });
+      };
+    };
+  </file>
+</example>
+ */
+
+/**
+ * @ngdoc directive
+ * @name mm.foundation.tabs.directive:tabHeading
+ * @restrict EA
+ *
+ * @description
+ * Creates an HTML heading for a {@link mm.foundation.tabs.directive:tab tab}. Must be placed as a child of a tab element.
+ *
+ * @example
+<example module="mm.foundation">
+  <file name="index.html">
+    <tabset>
+      <tab>
+        <tab-heading><b>HTML</b> in my titles?!</tab-heading>
+        And some content, too!
+      </tab>
+      <tab>
+        <tab-heading><i class="fa fa-heart"></i> Icon heading?!?</tab-heading>
+        That's right.
+      </tab>
+    </tabset>
+  </file>
+</example>
+ */
+.directive('tab', ['$parse', function($parse) {
+  return {
+    require: '^tabset',
+    restrict: 'EA',
+    replace: true,
+    templateUrl: 'template/tabs/tab.html',
+    transclude: true,
+    scope: {
+      heading: '@',
+      onSelect: '&select', //This callback is called in contentHeadingTransclude
+                          //once it inserts the tab's content into the dom
+      onDeselect: '&deselect'
+    },
+    controller: function() {
+      //Empty controller so other directives can require being 'under' a tab
+    },
+    compile: function(elm, attrs, transclude) {
+      return function postLink(scope, elm, attrs, tabsetCtrl) {
+        var getActive, setActive;
+        if (attrs.active) {
+          getActive = $parse(attrs.active);
+          setActive = getActive.assign;
+          scope.$parent.$watch(getActive, function updateActive(value, oldVal) {
+            // Avoid re-initializing scope.active as it is already initialized
+            // below. (watcher is called async during init with value ===
+            // oldVal)
+            if (value !== oldVal) {
+              scope.active = !!value;
+            }
+          });
+          scope.active = getActive(scope.$parent);
+        } else {
+          setActive = getActive = angular.noop;
+        }
+
+        scope.$watch('active', function(active) {
+          // Note this watcher also initializes and assigns scope.active to the
+          // attrs.active expression.
+          setActive(scope.$parent, active);
+          if (active) {
+            tabsetCtrl.select(scope);
+            scope.onSelect();
+          } else {
+            scope.onDeselect();
+          }
+        });
+
+        scope.disabled = false;
+        if ( attrs.disabled ) {
+          scope.$parent.$watch($parse(attrs.disabled), function(value) {
+            scope.disabled = !! value;
+          });
+        }
+
+        scope.select = function() {
+          if ( ! scope.disabled ) {
+            scope.active = true;
+          }
+        };
+
+        tabsetCtrl.addTab(scope);
+        scope.$on('$destroy', function() {
+          tabsetCtrl.removeTab(scope);
+        });
+
+
+        //We need to transclude later, once the content container is ready.
+        //when this link happens, we're inside a tab heading.
+        scope.$transcludeFn = transclude;
+      };
+    }
+  };
+}])
+
+.directive('tabHeadingTransclude', [function() {
+  return {
+    restrict: 'A',
+    require: '^tab',
+    link: function(scope, elm, attrs, tabCtrl) {
+      scope.$watch('headingElement', function updateHeadingElement(heading) {
+        if (heading) {
+          elm.html('');
+          elm.append(heading);
+        }
+      });
+    }
+  };
+}])
+
+.directive('tabContentTransclude', function() {
+  return {
+    restrict: 'A',
+    require: '^tabset',
+    link: function(scope, elm, attrs) {
+      var tab = scope.$eval(attrs.tabContentTransclude);
+
+      //Now our tab is ready to be transcluded: both the tab heading area
+      //and the tab content area are loaded.  Transclude 'em both.
+      tab.$transcludeFn(tab.$parent, function(contents) {
+        angular.forEach(contents, function(node) {
+          if (isTabHeading(node)) {
+            //Let tabHeadingTransclude know.
+            tab.headingElement = node;
+          } else {
+            elm.append(node);
+          }
+        });
+      });
+    }
+  };
+  function isTabHeading(node) {
+    return node.tagName &&  (
+      node.hasAttribute('tab-heading') ||
+      node.hasAttribute('data-tab-heading') ||
+      node.tagName.toLowerCase() === 'tab-heading' ||
+      node.tagName.toLowerCase() === 'data-tab-heading'
+    );
+  }
+})
+
+;
+
+
+angular.module("mm.foundation.topbar", [])
+    .factory('closest', [function(){
+        return function(el, selector) {
+            var matchesSelector = function (node, selector) {
+                var nodes = (node.parentNode || node.document).querySelectorAll(selector);
+                var i = -1;
+                while (nodes[++i] && nodes[i] != node){}
+                return !!nodes[i];
+            };
+
+            var element = el[0];
+            while (element) {
+                if (matchesSelector(element, selector)) {
+                    return angular.element(element);
+                } else {
+                    element = element.parentElement;
+                }
+            }
+            return false;
+        };
+    }])
+    .directive('topBar', ['$timeout','$compile', '$window', '$document',
+        function ($timeout, $compile, $window, $document) {
+
+        var win = angular.element($window);
+        var head = angular.element($document[0].querySelector('head'));
+
+        head.append('<meta class="foundation-mq-topbar" />');
+        head.append('<meta class="foundation-mq-small" />');
+        head.append('<meta class="foundation-mq-medium" />');
+        head.append('<meta class="foundation-mq-large" />');
+
+        // MatchMedia for IE < 9
+        var matchMedia = $window.matchMedia || (function( doc, undefined ) {
+            var bool,
+                docElem = doc.documentElement,
+                refNode = docElem.firstElementChild || docElem.firstChild,
+                // fakeBody required for <FF4 when executed in <head>
+                fakeBody = doc.createElement( "body" ),
+                div = doc.createElement( "div" );
+
+            div.id = "mq-test-1";
+            div.style.cssText = "position:absolute;top:-100em";
+            fakeBody.style.background = "none";
+            fakeBody.appendChild(div);
+
+            return function (q) {
+                div.innerHTML = "&shy;<style media=\"" + q + "\"> #mq-test-1 { width: 42px; }</style>";
+
+                docElem.insertBefore( fakeBody, refNode );
+                bool = div.offsetWidth === 42;
+                docElem.removeChild( fakeBody );
+
+                return {
+                    matches: bool,
+                    media: q
+                };
+
+            };
+
+        }( $document[0] ));
+
+        return {
+            scope: {
+                stickyClass : '@',
+                backText: '@',
+                stickyOn : '=',
+                customBackText: '=',
+                isHover: '=',
+                mobileShowParentLink: '=',
+                scrolltop : '=',
+            },
+            restrict: 'EA',
+            replace: true,
+            templateUrl: 'template/topbar/top-bar.html',
+            transclude: true,
+            link: function ($scope, element, attrs) {
+                var topbar = $scope.topbar = element;
+                var topbarContainer = topbar.parent();
+                var regex = /^[\/\\'"]+|(;\s?})+|[\/\\'"]+$/g;
+                var mediaQueries = $scope.mediaQueries = {
+                    topbar: getComputedStyle(head[0].querySelector('meta.foundation-mq-topbar')).fontFamily.replace(regex, ''),
+                    small : getComputedStyle(head[0].querySelector('meta.foundation-mq-small')).fontFamily.replace(regex, ''),
+                    medium : getComputedStyle(head[0].querySelector('meta.foundation-mq-medium')).fontFamily.replace(regex, ''),
+                    large : getComputedStyle(head[0].querySelector('meta.foundation-mq-large')).fontFamily.replace(regex, '')
+                };
+                var body = angular.element($document[0].querySelector('body'));
+
+
+                var isSticky = $scope.isSticky = function () {
+                    var sticky = topbarContainer.hasClass($scope.settings.stickyClass);
+                    if (sticky && $scope.settings.stickyOn === 'all') {
+                        return true;
+                    } else if (sticky && small() && $scope.settings.stickyOn === 'small') {
+                        return true;
+                    } else if (sticky && medium() && $scope.settings.stickyOn === 'medium') {
+                        return true;
+                    } else if (sticky && large() && $scope.settings.stickyOn === 'large') {
+                        return true;
+                    }
+                    return false;
+                };
+
+                var updateStickyPositioning = function(){
+                    if (!$scope.stickyTopbar || !$scope.isSticky()) {
+                        return;
+                    }
+                    
+                    var $class = angular.element($document[0].querySelector('.' + $scope.settings.stickyClass));
+
+                    var distance = stickyoffset;
+                    if (true) {
+                        if (win.scrollTop() > distance && !$class.hasClass('fixed')) {
+                            $class.addClass('fixed');
+                            body.css('padding-top', $scope.originalHeight + 'px');
+                        } else if (win.scrollTop() <= distance && $class.hasClass('fixed')) {
+                            $class.removeClass('fixed');
+                            body.css('padding-top', '');
+                        }
+                    }  
+                };
+
+                $scope.toggle = function(on) {
+                    if(!$scope.breakpoint()){
+                        return false;
+                    }
+                    
+                    var expand = (on === undefined) ? !topbar.hasClass('expanded') : on;
+
+                    if (expand){
+                        topbar.addClass('expanded');
+                    }
+                    else {
+                        topbar.removeClass('expanded');
+                    }
+
+                    if ($scope.settings.scrolltop) {
+                        if (!expand && topbar.hasClass('fixed')) {
+                            topbar.parent().addClass('fixed');
+                            topbar.removeClass('fixed');
+                            body.css('padding-top', $scope.originalHeight + 'px');
+                        } else if (expand && topbar.parent().hasClass('fixed')) {
+                            topbar.parent().removeClass('fixed');
+                            topbar.addClass('fixed');
+                            body.css('padding-top', '');
+                            $window.scrollTo(0,0);
+                        }
+                    } else {
+                        if(isSticky()) {
+                            topbar.parent().addClass('fixed');
+                        }
+
+                        if(topbar.parent().hasClass('fixed')) {
+                            if (!expand) {
+                                topbar.removeClass('fixed');
+                                topbar.parent().removeClass('expanded');
+                                updateStickyPositioning();
+                            } else {
+                                topbar.addClass('fixed');
+                                topbar.parent().addClass('expanded');
+                                body.css('padding-top', $scope.originalHeight + 'px');
+                            }
+                        }
+                    }
+                };
+
+                if(topbarContainer.hasClass('fixed') || isSticky() ) {
+                    $scope.stickyTopbar = true;
+                    $scope.height = topbarContainer[0].offsetHeight;
+                    var stickyoffset = topbarContainer[0].getBoundingClientRect().top;
+                } else {
+                    $scope.height = topbar[0].offsetHeight;
+                }
+
+                $scope.originalHeight = $scope.height;
+
+                $scope.$watch('height', function(h){
+                    if(h){
+                        topbar.css('height', h + 'px');
+                    } else {
+                        topbar.css('height', '');
+                    }
+                });
+
+                win.bind('resize', function(){
+                    var sections = angular.element(topbar[0].querySelectorAll('section'));
+                    angular.forEach(sections, function(section){
+                        angular.element(section.querySelectorAll('li.moved')).removeClass('moved');
+                    });
+                    topbar.removeClass('expanded');
+                    $scope.height = '';
+                    $scope.$apply();
+                });
+
+                // update sticky positioning
+                win.bind("scroll", function() {
+                    updateStickyPositioning();
+                    $scope.$apply();
+                });
+
+                $scope.$on('$destroy', function(){
+                    win.unbind("scroll");
+                    win.unbind("resize");
+                });
+
+                if (topbarContainer.hasClass('fixed')) {
+                    body.css('padding-top', $scope.originalHeight + 'px');
+                }
+
+            },
+            controller: ['$window', '$scope', 'closest', function($window, $scope, closest) {
+            
+                $scope.settings = {};
+                $scope.settings.stickyClass = $scope.stickyClass || 'sticky';
+                $scope.settings.backText = $scope.backText || 'Back';
+                $scope.settings.stickyOn = $scope.stickyOn || 'all';
+
+                $scope.settings.customBackText = $scope.customBackText === undefined ? true : $scope.customBackText;
+                $scope.settings.isHover = $scope.isHover === undefined ? true : $scope.isHover;
+                $scope.settings.mobileShowParentLink = $scope.mobileShowParentLink === undefined ? true : $scope.mobileShowParentLink;
+                $scope.settings.scrolltop = $scope.scrolltop === undefined ? true : $scope.scrolltop; // jump to top when sticky nav menu toggle is clicked
+
+                this.settings = $scope.settings;
+
+                $scope.index = 0;
+
+                var outerHeight = function(el){
+                    var height = el.offsetHeight;
+                    var style = el.currentStyle || getComputedStyle(el);
+
+                    height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
+                    return height;
+                };
+
+                var breakpoint = $scope.breakpoint = this.breakpoint = function () {
+                    return !matchMedia($scope.mediaQueries.topbar).matches;
+                };
+
+                var small = function () {
+                    return $matchMedia($scope.mediaQueries.small).matches;
+                };
+
+                var medium = function () {
+                    return $matchMedia($scope.mediaQueries.medium).matches;
+                };
+
+                var large = function () {
+                    return $matchMedia($scope.mediaQueries.large).matches;
+                };
+
+                var sections = [];
+
+                this.addSection = function(section){
+                    sections.push(section);
+                };
+
+                this.removeSection = function(section){
+                    var index = sections.indexOf(section);
+                    if (index > -1) {
+                        sections.splice(index, 1);
+                    }
+                };
+
+                var dir = /rtl/i.test($document.find('html').attr('dir')) ? 'right' : 'left';
+
+                $scope.$watch('index', function(index){
+                    for(var i = 0; i < sections.length; i++){
+                        sections[i].move(dir, index);
+                    }
+                });
+
+                this.toggle = function(on){
+                    $scope.toggle(on);
+                    for(var i = 0; i < sections.length; i++){
+                        sections[i].reset();
+                    }
+                    $scope.index = 0;
+                    $scope.height = '';
+                    $scope.$apply();
+                };
+
+                this.back = function(event) {
+                    if($scope.index < 1 || !breakpoint()){
+                        return;
+                    }
+                    
+                    var $link = angular.element(event.currentTarget);
+                    var $movedLi = closest($link, 'li.moved');
+                    var $previousLevelUl = $movedLi.parent();
+                    $scope.index = $scope.index -1;
+
+                    if($scope.index === 0){
+                        $scope.height = '';
+                    } else {
+                        $scope.height = $scope.originalHeight + outerHeight($previousLevelUl[0]);
+                    }
+
+                    $timeout(function () {
+                        $movedLi.removeClass('moved');
+                    }, 300);
+                };
+
+                this.forward = function(event) {
+                    if(!breakpoint()){
+                        return false;
+                    }
+
+                    var $link = angular.element(event.currentTarget);
+                    var $selectedLi = closest($link, 'li');
+                    $selectedLi.addClass('moved');
+                    $scope.height = $scope.originalHeight + outerHeight($link.parent()[0].querySelector('ul'));
+                    $scope.index = $scope.index + 1;
+                    $scope.$apply();
+                };
+
+            }]
+        };
+    }])
+    .directive('toggleTopBar', ['closest', function (closest) {
+        return {
+            scope: {},
+            require: '^topBar',
+            restrict: 'A',
+            replace: true,
+            templateUrl: 'template/topbar/toggle-top-bar.html',
+            transclude: true,
+            link: function ($scope, element, attrs, topBar) {
+                element.bind('click', function(event) {
+                    var li = closest(angular.element(event.currentTarget), 'li');
+                    if(!li.hasClass('back') && !li.hasClass('has-dropdown')) {
+                        topBar.toggle();
+                    }
+                });
+
+                $scope.$on('$destroy', function(){
+                    element.unbind('click');
+                });
+            }
+        };
+    }])
+    .directive('topBarSection', ['$compile', 'closest', function ($compile, closest) {
+        return {
+            scope: {},
+            require: '^topBar',
+            restrict: 'EA',
+            replace: true,
+            templateUrl: 'template/topbar/top-bar-section.html',
+            transclude: true,
+            link: function ($scope, element, attrs, topBar) {
+                var section = element;
+                
+                $scope.reset = function(){
+                    angular.element(section[0].querySelectorAll('li.moved')).removeClass('moved');
+                };
+
+                $scope.move = function(dir, index){
+                    if(dir === 'left'){
+                        section.css({"left": index * -100 + '%'});
+                    }
+                    else {
+                        section.css({"right": index * -100 + '%'});
+                    }
+                };
+
+                topBar.addSection($scope);
+
+                $scope.$on("$destroy", function(){
+                    topBar.removeSection($scope);
+                });
+
+                // Top level links close menu on click
+                var links = section[0].querySelectorAll('li>a');
+                angular.forEach(links, function(link){
+                    var $link = angular.element(link);
+                    var li = closest($link, 'li');
+                    if(li.hasClass('has-dropdown') || li.hasClass('back') || li.hasClass('title')){
+                        return;
+                    }
+
+                    $link.bind('click', function(){
+                        topBar.toggle(false);
+                    });
+
+                    $scope.$on('$destroy', function(){
+                        $link.bind('click');
+                    });
+                });
+
+            }
+        };
+    }])
+    .directive('hasDropdown', [function () {
+        return {
+            scope: {},
+            require: ['^topBar'],
+            restrict: 'A',
+            templateUrl: 'template/topbar/has-dropdown.html',
+            replace: true,
+            transclude: true,
+            link: function ($scope, element, attrs, ctrls) {
+                var topBar = ctrls[0];
+                var topBarSection = ctrls[1];
+
+                $scope.triggerLink = element.children('a')[0];
+
+                var $link = angular.element($scope.triggerLink);
+
+                $link.bind('click', function(event){
+                    topBar.forward(event);
+                });
+                $scope.$on('$destroy', function(){
+                    $link.unbind('click');
+                });
+
+                element.bind('mouseenter', function() {
+                    if(topBar.settings.isHover && !topBar.breakpoint()){
+                        element.addClass('not-click');
+                    }
+                });
+                element.bind('click', function(event) {
+                    if(!topBar.settings.isHover && !topBar.breakpoint()){
+                        element.toggleClass('not-click');
+                    }
+                });
+                
+                element.bind('mouseleave', function() {
+                    element.removeClass('not-click');
+                });
+
+                $scope.$on('$destroy', function(){
+                    element.unbind('click');
+                    element.unbind('mouseenter');
+                    element.unbind('mouseleave');
+                    topBarSection.removeDropdown($scope);
+                });
+            },
+            controller: ['$window', '$scope', function($window, $scope) {
+                this.triggerLink = $scope.triggerLink;
+            }]
+        };
+    }])
+    .directive('topBarDropdown', ['$compile', function ($compile) {
+        return {
+            scope: {},
+            require: ['^topBar', '^hasDropdown'],
+            restrict: 'A',
+            replace: true,
+            templateUrl: 'template/topbar/top-bar-dropdown.html',
+            transclude: true,
+            link: function ($scope, element, attrs, ctrls) {
+
+                var topBar = ctrls[0];
+                var hasDropdown = ctrls[1];
+
+                var $link = angular.element(hasDropdown.triggerLink);
+                var url = $link.attr('href');
+
+                $scope.linkText = $link.text();
+
+                $scope.back = function(event){
+                    topBar.back(event);
+                };
+
+                // Add back link
+                if (topBar.settings.customBackText) {
+                    $scope.backText = topBar.settings.backText;
+                } else {
+                    $scope.backText = '&laquo; ' + $link.html();
+                }
+
+                var $titleLi;
+                if (topBar.settings.mobileShowParentLink && url && url.length > 1) {
+                    $titleLi = angular.element('<li class="title back js-generated">' +
+                        '<h5><a href="#" ng-click="back($event);">{{backText}}</a></h5></li>' +
+                        '<li><a class="parent-link js-generated" href="' +
+                        url + '">{{linkText}}</a></li>');
+                } else {
+                    $titleLi = angular.element('<li class="title back js-generated">' +
+                        '<h5><a href="" ng-click="back($event);">{{backText}}</a></h5></li>');
+                }
+
+                $compile($titleLi)($scope);
+                element.prepend($titleLi);
+            }
+        };
+    }]);
+angular.module( 'mm.foundation.tour', [ 'mm.foundation.position', 'mm.foundation.tooltip' ] )
+
+.service( '$tour', [ '$window', function ( $window ) {
+  var currentIndex = getCurrentStep();
+  var ended = false;
+  var steps = {};
+
+  function getCurrentStep() {
+    return parseInt( $window.localStorage.getItem( 'mm.tour.step' ), 10 );
+  }
+
+  function setCurrentStep(step) {
+    currentIndex = step;
+    $window.localStorage.setItem( 'mm.tour.step', step );
+  }
+
+  this.add = function ( index, attrs ) {
+    steps[ index ] = attrs;
+  };
+
+  this.has = function ( index ) {
+    return !!steps[ index ];
+  };
+
+  this.isActive = function () {
+    return currentIndex > 0;
+  };
+
+  this.current = function ( index ) {
+    if ( index ) {
+      setCurrentStep( currentIndex );
+    } else {
+      return currentIndex;
+    }
+  };
+
+  this.start = function () {
+    setCurrentStep( 1 );
+  };
+
+  this.next = function () {
+    setCurrentStep( currentIndex + 1 );
+  };
+
+  this.end = function () {
+    setCurrentStep( 0 );
+  };
+}])
+
+.directive( 'stepTextPopup', ['$tour', function ( $tour ) {
+  return {
+    restrict: 'EA',
+    replace: true,
+    scope: { title: '@', content: '@', placement: '@', animation: '&', isOpen: '&' },
+    templateUrl: 'template/tour/tour.html',
+    link: function (scope, element) {
+      scope.isLastStep = function () {
+        return !$tour.has( $tour.current() + 1 );
+      };
+
+      scope.endTour = function () {
+        element.remove();
+        $tour.end();
+      };
+
+      scope.nextStep = function () {
+        element.remove();
+        $tour.next();
+      };
+    }
+  };
+}])
+
+.directive( 'stepText', [ '$position', '$tooltip', '$tour', '$window', function ( $position, $tooltip, $tour, $window ) {
+  function isElementInViewport( element ) {
+    var rect = element[0].getBoundingClientRect();
+
+    return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= ($window.innerHeight - 80) &&
+      rect.right <= $window.innerWidth
+    );
+  }
+
+  function show( scope, element, attrs ) {
+    var index = parseInt( attrs.stepIndex, 10);
+
+    if ( $tour.isActive() && index ) {
+      $tour.add( index, attrs );
+
+      if ( index === $tour.current() ) {
+        if ( !isElementInViewport( element ) ) {
+          var offset = $position.offset( element );
+          $window.scrollTo( 0, offset.top - $window.innerHeight / 2 );
+        }
+
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  return $tooltip( 'stepText', 'step', show );
+}]);
+
+angular.module('mm.foundation.typeahead', ['mm.foundation.position', 'mm.foundation.bindHtml'])
+
+/**
+ * A helper service that can parse typeahead's syntax (string provided by users)
+ * Extracted to a separate service for ease of unit testing
+ */
+  .factory('typeaheadParser', ['$parse', function ($parse) {
+
+  //                      00000111000000000000022200000000000000003333333333333330000000000044000
+  var TYPEAHEAD_REGEXP = /^\s*(.*?)(?:\s+as\s+(.*?))?\s+for\s+(?:([\$\w][\$\w\d]*))\s+in\s+(.*)$/;
+
+  return {
+    parse:function (input) {
+
+      var match = input.match(TYPEAHEAD_REGEXP), modelMapper, viewMapper, source;
+      if (!match) {
+        throw new Error(
+          "Expected typeahead specification in form of '_modelValue_ (as _label_)? for _item_ in _collection_'" +
+            " but got '" + input + "'.");
+      }
+
+      return {
+        itemName:match[3],
+        source:$parse(match[4]),
+        viewMapper:$parse(match[2] || match[1]),
+        modelMapper:$parse(match[1])
+      };
+    }
+  };
+}])
+
+  .directive('typeahead', ['$compile', '$parse', '$q', '$timeout', '$document', '$position', 'typeaheadParser',
+    function ($compile, $parse, $q, $timeout, $document, $position, typeaheadParser) {
+
+  var HOT_KEYS = [9, 13, 27, 38, 40];
+
+  return {
+    require:'ngModel',
+    link:function (originalScope, element, attrs, modelCtrl) {
+
+      //SUPPORTED ATTRIBUTES (OPTIONS)
+
+      //minimal no of characters that needs to be entered before typeahead kicks-in
+      var minSearch = originalScope.$eval(attrs.typeaheadMinLength) || 1;
+
+      //minimal wait time after last character typed before typehead kicks-in
+      var waitTime = originalScope.$eval(attrs.typeaheadWaitMs) || 0;
+
+      //should it restrict model values to the ones selected from the popup only?
+      var isEditable = originalScope.$eval(attrs.typeaheadEditable) !== false;
+
+      //binding to a variable that indicates if matches are being retrieved asynchronously
+      var isLoadingSetter = $parse(attrs.typeaheadLoading).assign || angular.noop;
+
+      //a callback executed when a match is selected
+      var onSelectCallback = $parse(attrs.typeaheadOnSelect);
+
+      var inputFormatter = attrs.typeaheadInputFormatter ? $parse(attrs.typeaheadInputFormatter) : undefined;
+
+      var appendToBody =  attrs.typeaheadAppendToBody ? $parse(attrs.typeaheadAppendToBody) : false;
+
+      //INTERNAL VARIABLES
+
+      //model setter executed upon match selection
+      var $setModelValue = $parse(attrs.ngModel).assign;
+
+      //expressions used by typeahead
+      var parserResult = typeaheadParser.parse(attrs.typeahead);
+
+      var hasFocus;
+
+      //pop-up element used to display matches
+      var popUpEl = angular.element('<div typeahead-popup></div>');
+      popUpEl.attr({
+        matches: 'matches',
+        active: 'activeIdx',
+        select: 'select(activeIdx)',
+        query: 'query',
+        position: 'position'
+      });
+      //custom item template
+      if (angular.isDefined(attrs.typeaheadTemplateUrl)) {
+        popUpEl.attr('template-url', attrs.typeaheadTemplateUrl);
+      }
+
+      //create a child scope for the typeahead directive so we are not polluting original scope
+      //with typeahead-specific data (matches, query etc.)
+      var scope = originalScope.$new();
+      originalScope.$on('$destroy', function(){
+        scope.$destroy();
+      });
+
+      var resetMatches = function() {
+        scope.matches = [];
+        scope.activeIdx = -1;
+      };
+
+      var getMatchesAsync = function(inputValue) {
+
+        var locals = {$viewValue: inputValue};
+        isLoadingSetter(originalScope, true);
+        $q.when(parserResult.source(originalScope, locals)).then(function(matches) {
+
+          //it might happen that several async queries were in progress if a user were typing fast
+          //but we are interested only in responses that correspond to the current view value
+          if (inputValue === modelCtrl.$viewValue && hasFocus) {
+            if (matches.length > 0) {
+
+              scope.activeIdx = 0;
+              scope.matches.length = 0;
+
+              //transform labels
+              for(var i=0; i<matches.length; i++) {
+                locals[parserResult.itemName] = matches[i];
+                scope.matches.push({
+                  label: parserResult.viewMapper(scope, locals),
+                  model: matches[i]
+                });
+              }
+
+              scope.query = inputValue;
+              //position pop-up with matches - we need to re-calculate its position each time we are opening a window
+              //with matches as a pop-up might be absolute-positioned and position of an input might have changed on a page
+              //due to other elements being rendered
+              scope.position = appendToBody ? $position.offset(element) : $position.position(element);
+              scope.position.top = scope.position.top + element.prop('offsetHeight');
+
+            } else {
+              resetMatches();
+            }
+            isLoadingSetter(originalScope, false);
+          }
+        }, function(){
+          resetMatches();
+          isLoadingSetter(originalScope, false);
+        });
+      };
+
+      resetMatches();
+
+      //we need to propagate user's query so we can higlight matches
+      scope.query = undefined;
+
+      //Declare the timeout promise var outside the function scope so that stacked calls can be cancelled later 
+      var timeoutPromise;
+
+      //plug into $parsers pipeline to open a typeahead on view changes initiated from DOM
+      //$parsers kick-in on all the changes coming from the view as well as manually triggered by $setViewValue
+      modelCtrl.$parsers.unshift(function (inputValue) {
+
+        hasFocus = true;
+
+        if (inputValue && inputValue.length >= minSearch) {
+          if (waitTime > 0) {
+            if (timeoutPromise) {
+              $timeout.cancel(timeoutPromise);//cancel previous timeout
+            }
+            timeoutPromise = $timeout(function () {
+              getMatchesAsync(inputValue);
+            }, waitTime);
+          } else {
+            getMatchesAsync(inputValue);
+          }
+        } else {
+          isLoadingSetter(originalScope, false);
+          resetMatches();
+        }
+
+        if (isEditable) {
+          return inputValue;
+        } else {
+          if (!inputValue) {
+            // Reset in case user had typed something previously.
+            modelCtrl.$setValidity('editable', true);
+            return inputValue;
+          } else {
+            modelCtrl.$setValidity('editable', false);
+            return undefined;
+          }
+        }
+      });
+
+      modelCtrl.$formatters.push(function (modelValue) {
+
+        var candidateViewValue, emptyViewValue;
+        var locals = {};
+
+        if (inputFormatter) {
+
+          locals['$model'] = modelValue;
+          return inputFormatter(originalScope, locals);
+
+        } else {
+
+          //it might happen that we don't have enough info to properly render input value
+          //we need to check for this situation and simply return model value if we can't apply custom formatting
+          locals[parserResult.itemName] = modelValue;
+          candidateViewValue = parserResult.viewMapper(originalScope, locals);
+          locals[parserResult.itemName] = undefined;
+          emptyViewValue = parserResult.viewMapper(originalScope, locals);
+
+          return candidateViewValue!== emptyViewValue ? candidateViewValue : modelValue;
+        }
+      });
+
+      scope.select = function (activeIdx) {
+        //called from within the $digest() cycle
+        var locals = {};
+        var model, item;
+
+        locals[parserResult.itemName] = item = scope.matches[activeIdx].model;
+        model = parserResult.modelMapper(originalScope, locals);
+        $setModelValue(originalScope, model);
+        modelCtrl.$setValidity('editable', true);
+
+        onSelectCallback(originalScope, {
+          $item: item,
+          $model: model,
+          $label: parserResult.viewMapper(originalScope, locals)
+        });
+
+        resetMatches();
+
+        //return focus to the input element if a mach was selected via a mouse click event
+        element[0].focus();
+      };
+
+      //bind keyboard events: arrows up(38) / down(40), enter(13) and tab(9), esc(27)
+      element.bind('keydown', function (evt) {
+
+        //typeahead is open and an "interesting" key was pressed
+        if (scope.matches.length === 0 || HOT_KEYS.indexOf(evt.which) === -1) {
+          return;
+        }
+
+        evt.preventDefault();
+
+        if (evt.which === 40) {
+          scope.activeIdx = (scope.activeIdx + 1) % scope.matches.length;
+          scope.$digest();
+
+        } else if (evt.which === 38) {
+          scope.activeIdx = (scope.activeIdx ? scope.activeIdx : scope.matches.length) - 1;
+          scope.$digest();
+
+        } else if (evt.which === 13 || evt.which === 9) {
+          scope.$apply(function () {
+            scope.select(scope.activeIdx);
+          });
+
+        } else if (evt.which === 27) {
+          evt.stopPropagation();
+
+          resetMatches();
+          scope.$digest();
+        }
+      });
+
+      element.bind('blur', function (evt) {
+        hasFocus = false;
+      });
+
+      // Keep reference to click handler to unbind it.
+      var dismissClickHandler = function (evt) {
+        if (element[0] !== evt.target) {
+          resetMatches();
+          scope.$digest();
+        }
+      };
+
+      $document.bind('click', dismissClickHandler);
+
+      originalScope.$on('$destroy', function(){
+        $document.unbind('click', dismissClickHandler);
+      });
+
+      var $popup = $compile(popUpEl)(scope);
+      if ( appendToBody ) {
+        $document.find('body').append($popup);
+      } else {
+        element.after($popup);
+      }
+    }
+  };
+
+}])
+
+  .directive('typeaheadPopup', function () {
+    return {
+      restrict:'EA',
+      scope:{
+        matches:'=',
+        query:'=',
+        active:'=',
+        position:'=',
+        select:'&'
+      },
+      replace:true,
+      templateUrl:'template/typeahead/typeahead-popup.html',
+      link:function (scope, element, attrs) {
+
+        scope.templateUrl = attrs.templateUrl;
+
+        scope.isOpen = function () {
+          return scope.matches.length > 0;
+        };
+
+        scope.isActive = function (matchIdx) {
+          return scope.active == matchIdx;
+        };
+
+        scope.selectActive = function (matchIdx) {
+          scope.active = matchIdx;
+        };
+
+        scope.selectMatch = function (activeIdx) {
+          scope.select({activeIdx:activeIdx});
+        };
+      }
+    };
+  })
+
+  .directive('typeaheadMatch', ['$http', '$templateCache', '$compile', '$parse', function ($http, $templateCache, $compile, $parse) {
+    return {
+      restrict:'EA',
+      scope:{
+        index:'=',
+        match:'=',
+        query:'='
+      },
+      link:function (scope, element, attrs) {
+        var tplUrl = $parse(attrs.templateUrl)(scope.$parent) || 'template/typeahead/typeahead-match.html';
+        $http.get(tplUrl, {cache: $templateCache}).success(function(tplContent){
+           element.replaceWith($compile(tplContent.trim())(scope));
+        });
+      }
+    };
+  }])
+
+  .filter('typeaheadHighlight', function() {
+
+    function escapeRegexp(queryToEscape) {
+      return queryToEscape.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+    }
+
+    return function(matchItem, query) {
+      return query ? matchItem.replace(new RegExp(escapeRegexp(query), 'gi'), '<strong>$&</strong>') : matchItem;
+    };
+  });

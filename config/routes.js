@@ -49,13 +49,14 @@ module.exports.routes = {
     action:     'authenticate'
    },
     'get /register': {
-        controller: 'user',
+        controller: 'home',
         action:     'getregister'
     },
     'post /register': {
-        controller: 'user',
+        controller: 'home',
         action:     'postregister'
-    }
+    },
+    '/panel': 'panel/panel.index'
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

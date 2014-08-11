@@ -31,7 +31,13 @@ module.exports = {
             response.redirect("/");
         }
 
-        response.view();
+        response.view({
+            layout: 'layout-extra',
+            site: 'login',
+            bodyclass: 'error-body no-top lazy',
+            dataoriginal: '/images/work.jpg',
+            bodystyle: '/images/work.jpg'
+        });
     },
 
     /**

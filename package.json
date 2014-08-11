@@ -45,5 +45,8 @@
     "url": "git://github.com/domz/Seedmybox.git"
   },
   "author": "domz",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "grunt-contrib-less": "^0.11.1"
+  }
 }

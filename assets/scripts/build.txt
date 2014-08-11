@@ -235,8 +235,8 @@ vendor/queryloader2/demo/css/style.css
 
 main.js
 ----------------
-vendor/jquery/dist/jquery.min.js
 vendor/angular/angular.min.js
+socket.io.js
 sails.io.js
 app.js
 main.js

@@ -17,7 +17,7 @@ module.exports.bootstrap = function(cb) {
     var initialize = passport.initialize();
     var session = passport.session();
     var http = require("http");
-    var methods = ["login", "logIn", "logout", "logOut", "isAuthenticated", "isUnauthenticated"];
+    var methods = ["register", "login", "logIn", "logout", "logOut", "isAuthenticated", "isUnauthenticated"];
     var async = require("async");
 
     /**

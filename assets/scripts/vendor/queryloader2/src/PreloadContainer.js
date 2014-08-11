@@ -1,1 +1,38 @@
-function PreloadContainer(o){this.toPreload=[],this.parent=o,this.container}PreloadContainer.prototype.create=function(){this.container=$("<div></div>").appendTo("body").css({display:"none",width:0,height:0,overflow:"hidden"}),this.processQueue()},PreloadContainer.prototype.processQueue=function(){for(var o=0;this.toPreload.length>o;o++)this.parent.destroyed||this.preloadImage(this.toPreload[o])},PreloadContainer.prototype.addImage=function(o){console.log("Add to queue: "+o),this.toPreload.push(o)},PreloadContainer.prototype.preloadImage=function(o){console.log("Add image to preload container");var e=new PreloadImage;e.addToPreloader(this,o),e.bindLoadEvent()};
+function PreloadContainer(parent) {
+    this.toPreload = [];
+    this.parent = parent;
+    this.container;
+};
+
+PreloadContainer.prototype.create = function () {
+    this.container = $("<div></div>").appendTo("body").css({
+        display: "none",
+        width: 0,
+        height: 0,
+        overflow: "hidden"
+    });
+
+    //process the image queue
+    this.processQueue();
+};
+
+PreloadContainer.prototype.processQueue = function () {
+    //add background images for loading
+    for (var i = 0; this.toPreload.length > i; i++) {
+		if (!this.parent.destroyed) {
+			this.preloadImage(this.toPreload[i]);
+		}
+    }
+};
+
+PreloadContainer.prototype.addImage = function (src) {
+    console.log("Add to queue: " + src);
+    this.toPreload.push(src);
+};
+
+PreloadContainer.prototype.preloadImage = function (url) {
+    console.log("Add image to preload container");
+    var image = new PreloadImage();
+    image.addToPreloader(this, url);
+    image.bindLoadEvent();
+};

@@ -5,12 +5,9 @@ module.exports = function(grunt) {
                 appDir: "scripts/",
                 baseUrl: "./",
                 name: 'main',
-                optimize: "uglify2",//'none',//"uglify2",
+                optimize: "none",//'none',//"uglify2",
                 mainConfigFile: "scripts/main.js",
                 //wrap: true,
-                paths: {
-
-                },
                 removeCombined: true,
                 inlineText: true,
                 useStrict: true,

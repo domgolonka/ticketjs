@@ -1,1 +1,66 @@
-!function(){function e(){Modernizr.addTest("blobworkers",!1),o()}function o(){r&&a.revokeObjectURL(r),i&&i.terminate(),w&&clearTimeout(w)}try{var n,t,i,r,w,d=window.MozBlobBuilder||window.WebKitBlobBuilder||window.MSBlobBuilder||window.OBlobBuilder||window.BlobBuilder,a=window.MozURL||window.webkitURL||window.MSURL||window.OURL||window.URL,s="Modernizr",b="this.onmessage=function(e){postMessage(e.data)}";try{n=new Blob([b],{type:"text/javascript"})}catch(l){}n||(t=new d,t.append(b),n=t.getBlob()),r=a.createObjectURL(n),i=new Worker(r),i.onmessage=function(e){Modernizr.addTest("blobworkers",s===e.data),o()},i.onerror=e,w=setTimeout(e,200),i.postMessage(s)}catch(l){e()}}();
+// by jussi-kalliokoski
+
+
+// This test is asynchronous. Watch out.
+
+// The test will potentially add garbage to console.
+
+(function(){
+  try {
+    // we're avoiding using Modernizr._domPrefixes as the prefix capitalization on
+    // these guys are notoriously peculiar.
+    var BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.MSBlobBuilder || window.OBlobBuilder || window.BlobBuilder;
+    var URL         = window.MozURL || window.webkitURL || window.MSURL || window.OURL || window.URL;
+    var data    = 'Modernizr',
+        blob,
+        bb,
+        worker,
+        url,
+        timeout,
+        scriptText = 'this.onmessage=function(e){postMessage(e.data)}';
+
+    try {
+      blob = new Blob([scriptText], {type:'text/javascript'});
+    } catch(e) {
+      // we'll fall back to the deprecated BlobBuilder
+    }
+    if (!blob) {
+      bb = new BlobBuilder();
+      bb.append(scriptText);
+      blob = bb.getBlob();
+    }
+
+    url = URL.createObjectURL(blob);
+    worker = new Worker(url);
+
+    worker.onmessage = function(e) {
+      Modernizr.addTest('blobworkers', data === e.data);
+      cleanup();
+    };
+
+    // Just in case...
+    worker.onerror = fail;
+    timeout = setTimeout(fail, 200);
+
+    worker.postMessage(data);
+  } catch (e) {
+    fail();
+  }
+
+  function fail() {
+    Modernizr.addTest('blobworkers', false);
+    cleanup();
+  }
+
+  function cleanup() {
+    if (url) {
+      URL.revokeObjectURL(url);
+    }
+    if (worker) {
+      worker.terminate();
+    }
+    if (timeout) {
+      clearTimeout(timeout);
+    }
+  }
+}());
