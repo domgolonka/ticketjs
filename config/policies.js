@@ -21,20 +21,9 @@ module.exports.policies = {
 
     "*": ["flashMessage"],
 
-    "Home": {
-        "*": true,
-        // Register
-        getregister: ["flashMessage"],
-        postregister: ["flashMessage"]
-    },
-    "Panel": {
-        "*": false,
 
-        // Custom actions
-        index:          ["flashMessage","authenticated"]
-    },
     // whitelist the auth controller, this is used for login
-    "Auth": {
+    "auth": {
         "*": true,
 
         // Custom actions
@@ -54,9 +43,7 @@ module.exports.policies = {
     "User": {
         // By default do not allow nothing
         "*":        false,
-        // Register
-        getregister: ["flashMessage"],
-        postregister: ["flashMessage"],
+
         // Default handling for blueprints
         find:       ["flashMessage", "authenticated", "isAjaxOrSocket"],
         create:     ["flashMessage", "authenticated", "isAjaxOrSocket", "hasUserAdmin", "addUserDataCreate"],
@@ -70,5 +57,23 @@ module.exports.policies = {
         history:        ["flashMessage", "authenticated", "isAjax", "hasUserAdminOrItself"],
         projects:       ["flashMessage", "authenticated", "isAjax", "hasUserAdminOrItself"],
         changePassword: ["flashMessage", "authenticated", "isAjax", "hasUserAdminOrItself"]
-    }
+    },
+    "home": {
+        "*": true,
+        // Register
+        getregister: ["flashMessage"],
+        postregister: ["flashMessage"]
+    },
+    "ticket/ticket": {
+        "*": false,
+
+        // Custom actions
+        index:          ["flashMessage", "authenticated"]
+    },
+    "panel/panel": {
+        "*": false,
+
+        // Custom actions
+        index:          ["flashMessage", "authenticated"]
+    },
 };

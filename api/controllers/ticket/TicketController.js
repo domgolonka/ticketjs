@@ -21,6 +21,12 @@ var moment = require("moment-timezone");
 var languages = require("../../../config/i18n.js");
 
 module.exports = {
+    index: function(request, response) {
 
+        response.view("panel/index", {
+            keywords: "seedbox, seedbox hosting",
+            description: "Seedmybox"
+        });
+    }
 
 }
