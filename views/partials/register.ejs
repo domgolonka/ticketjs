@@ -1,0 +1,36 @@
+<form id="frm_register" <% if (layout == 'layout-extra') {%>class="animated fadeIn" style="display:none" <%}%>method="post" action="/register">
+    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+        <div class="col-md-12 col-sm-12">
+            <input name="email" id="reg_email" type="text"  class="form-control" placeholder="Email">
+        </div>
+    </div>
+    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+        <div class="col-md-6 col-sm-6">
+            <input name="password" id="reg_pass" type="password"  class="form-control" placeholder="Password">
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <input name="password2" id="reg_pass2" type="password"  class="form-control" placeholder="Confirm Password">
+        </div>
+    </div>
+    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+        <div class="col-md-6 col-sm-6">
+            <input name="firstname" id="reg_first_Name" type="text"  class="form-control" placeholder="First Name">
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <input name="lastname" id="reg_last_Name" type="password"  class="form-control" placeholder="Last Name">
+        </div>
+    </div>
+    <div class="row form-row m-l-20 m-r-20 xs-m-l-10 xs-m-r-10">
+        <div class="col-md-12 ">
+            <select name="country" id="req_country"  class="form-control">
+                <% _.each(countries, function (country) { %>
+                <option value="<%= country.name %>"><%= country.name %></option>
+                <% }) %>
+            </select>
+        </div>
+    </div>
+    <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10">
+        <button type="submit" class="btn btn-cons btn-info">  <span class="bold">Register</span></button>
+    </div>
+</form>

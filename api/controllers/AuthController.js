@@ -30,13 +30,14 @@ module.exports = {
         if (request.user) {
             response.redirect("/");
         }
-
+        var countries  = require('country-data').countries;
         response.view({
             layout: 'layout-extra',
             site: 'login',
             bodyclass: 'error-body no-top lazy',
             dataoriginal: '/images/work.jpg',
-            bodystyle: '/images/work.jpg'
+            bodystyle: '/images/work.jpg',
+            countries: countries.all
         });
     },
 
@@ -111,7 +112,7 @@ module.exports = {
                             request.flash.message("Successfully sign in", "success");
 
                             response.cookie("message", {message: "Successfully sign in", type: "success", options: {}});
-                            response.redirect("/");
+                            response.redirect("/panel");
                         }
                     });
                 }

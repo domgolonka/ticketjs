@@ -139,7 +139,7 @@ module.exports = {
                                             request.flash.message("Successfully sign in", "success");
 
                                             response.cookie("message", {message: "Successfully sign in", type: "success", options: {}});
-                                            response.redirect("/");
+                                            response.redirect("/panel");
                                         }
                                     });
                                 }
@@ -163,6 +163,7 @@ module.exports = {
         response.view({
             keywords: "seedbox, seedbox hosting",
             description: "Seedmybox",
+            slider: 'homeslider',
             layout: 'layout-front'
         });
     }

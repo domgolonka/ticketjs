@@ -22,13 +22,13 @@
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="<% if (bodyclass){ %> <%=bodyclass%><%}%>" <% if (site) {%>data-original="<%=dataoriginal%>"  style="background-image: url('<%=bodystyle%>')"<%}%>>
+<body class="<% if (typeof bodyclass != 'undefined'){ %> <%=bodyclass%><%}%>" <% if (typeof site !='undefined') {%>data-original="<%=dataoriginal%>"  style="background-image: url('<%=bodystyle%>')"<%}%>>
 <%- body %>
 <!-- BEGIN CORE JS FRAMEWORK-->
 <script src="/plugins/jquery-1.8.3.min.js" type="text/javascript"></script>
 <script src="/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="/plugins/pace/pace.min.js" type="text/javascript"></script>
-<% if (site == 'login') { %>
+<% if (typeof site != 'undefined' && site == 'login') { %>
 <script src="/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 <script src="/plugins/jquery-lazyload/jquery.lazyload.min.js" type="text/javascript"></script>
 <script src="/js/login_v2.js" type="text/javascript"></script>
