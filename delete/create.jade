@@ -1,0 +1,32 @@
+extends layout
+
+include mixins/form
+
+block styles
+  mixin featuresStylesheets()
+
+block content
+  #content
+    mixin errors()
+    h1 Create a new page
+
+    form(action='/pages', method='post', class='edit')
+
+      input(type="hidden", name="pageName", value="#{coalesce(pageName, '')}")
+
+      .form-group
+        input.form-control(required, type='text', placeholder='Enter the page title', name='pageTitle', value="#{coalesce(formData.pageTitle, pageTitle)}")#pageTitle
+
+      .form-group
+        textarea.form-control(name="content", data-widearea="enable", rows=25)#editor #{coalesce(formData.content, '')}
+
+      mixin saveAndCancel()
+
+  #preview.modal
+    mixin dialogBox("Page preview")
+
+  #syntax-reference.modal.fade
+    mixin dialogBox("Markdown cheatsheet")
+
+block scripts
+  mixin featuresJavaScripts()

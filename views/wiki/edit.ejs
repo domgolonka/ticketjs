@@ -1,0 +1,93 @@
+<%- partial("index") %>
+<form name="edit" action="/wiki/pages/<%= page.name %>" method="post">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="content" class="edit">
+                <div class="grid simple">
+                    <div class="grid-title no-border">
+                        <h4>Edit Page <span class="semi-bold"><%=page.title%></span></h4>
+                     </div>
+                    <div class="grid-body no-border"> <br>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label class="form-label"><%= i18n('wiki-title') %></label>
+                                    <span class="help"><%= i18n("wiki-title-hint") %></span>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="pageTitle" value="<%= formData.pageTitle %>">
+                                        <input type="hidden" name="_method" value="put">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><%= i18n("wiki-name") %></label>
+                                    <span class="help"><%= i18n("wiki-name-hint") %></span>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="pageName" value="<%=formData.pageName%>">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <ul class="toolbar">
+                                <li title="Toggle fullscreen (Ctrl/Cmd+Enter)" class="fullscreen"><span></span></li>
+                                <li title="Syntax help" class="info"><span></span></li>
+                                <li title="Preview" class="preview"><span></span></li>
+                            </ul>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+
+                                <div class="form-group">
+                                    <label class="form-label"><%= i18n("wiki-content") %></label>
+                                    <span class="help"><%= i18n("wiki-content-hint") %></span>
+                                    <textarea name="content" data-widearea="enable" rows="25" id="editor" class="form-control" style="display: none;"><%=formData.content%></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label class="form-label"><%= i18n("wiki-message") %></label>
+                                    <span class="help"><%= i18n("wiki-message-hint") %></span>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="message" >
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-actions">
+                                    <div class="pull-right">
+                                        <button type="submit" class="btn btn-success btn-cons"><i class="icon-ok"></i> Save</button>
+                                        <button type="button" class="btn btn-white btn-cons" onclick="window.history.back()">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="preview" tabindex="-1" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                <h3>Page preview</h3>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+<div id="syntax-reference" tabindex="-1" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                <h3>Markdown cheatsheet</h3>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+</div>
+</div>

@@ -23,7 +23,8 @@ module.exports = function(grunt) {
 			files: [{
 				expand: true,
 				cwd: 'assets/styles/',
-				src: ['style.less'
+				src: ['style.less',
+                        'responsive.less'
                     /*'modules.less',
                     'mixins.less',
                     'responsive.less',

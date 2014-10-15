@@ -1,0 +1,27 @@
+extends layout
+
+include mixins/form
+
+block tools
+  mixin tools('history')
+
+block content
+  #content.show
+    h2 Revisions of:&nbsp;
+      b.page-param #{page.title}
+    p
+      button(id="rev-compare", data-pageName="#{page.name}").btn.btn-primary Compare revisions
+
+    table.history.table.table-striped.table-bordered.table-hover.table-condensed
+      each item in items
+        tr
+          td
+            input(type="checkbox", value="#{item.hashRef}")
+          td
+            if item.email
+              img(src=gravatar().url("#{item.email}", {s:16}))
+            |#{item.author}
+          td #{item.relDate}
+          td #{item.subject}
+          td
+            a(href="#{page.urlForShow()}/#{item.hashRef}") #{item.hashRef || 'CURRENT'}

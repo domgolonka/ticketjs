@@ -58,7 +58,7 @@ module.exports = function notFound (data, options) {
 
   // If no second argument provided, try to serve the default view,
   // but fall back to sending JSON(P) if any errors occur.
-  else return res.view('404', { data: data }, function (err, html) {
+  else return res.view('404', { data: data, layout: 'layout-error', title: 'Seedmybox.com: 404 Not Found', keywords: 'Seedmybox, seedbox, vps, vpn, 404 error, 404', description:'404 Not found' }, function (err, html) {
 
     // If a view error occured, fall back to JSON(P).
     if (err) {

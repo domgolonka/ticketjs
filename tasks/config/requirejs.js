@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                 useStrict: true,
                 dir: "./assets/scripts",
                 //out: "scripts/output.js"
-            },
+            }
         }
     });
 

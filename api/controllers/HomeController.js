@@ -27,11 +27,10 @@ module.exports = {
         if (req.user) {
             res.redirect("/");
         }
-        var countries  = require('country-data').countries;
 
 
         res.view('auth/register',{
-            countries: countries.all,
+            site: 'login',
             layout: 'layout-front'
         });
     },
@@ -161,9 +160,35 @@ module.exports = {
     index: function(request, response) {
 
         response.view({
-            keywords: "seedbox, seedbox hosting",
+            keywords: "seedbox, seedbox hosting, vps",
             description: "Seedmybox",
             slider: 'homeslider',
+            title: "VPS, VPN, Dedicated Servers and Seedboxes",
+            layout: 'layout-front'
+        });
+    },
+    /**
+     * Index page
+     *
+     * @param   {Request}   request     Request object
+     * @param   {Response}  response    Response object
+     */
+    tour: function(request, response) {
+
+        response.view({
+            keywords: "seedbox, seedbox hosting, vps tour, vps",
+            description: "Seedmybox Tour",
+            title: "Tour",
+            site: 'tour',
+            slider: 'tourslider',
+            layout: 'layout-front'
+        });
+    },
+    plans: function(request, response) {
+
+        response.view({
+            keywords: "seedbox, seedbox hosting, seedbox prices, plans, vps plans, vps pricing",
+            description: "Seedmybox Plans & Prices",
             layout: 'layout-front'
         });
     }

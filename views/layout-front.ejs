@@ -6,7 +6,7 @@
     <meta name="description" content="<%= description %>">
     <meta name="author" content="Seedmybox.com">
 
-    <title> <%= title %></title>
+    <title> <%= sails.config.appName + " | " + title %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
     <link rel="stylesheet" type="text/css" href="/plugins/owl-carousel/owl.carousel.css" />
@@ -14,7 +14,10 @@
     <link rel="stylesheet" type="text/css" href="/plugins/headereffects/css/component.css">
     <link rel="stylesheet" type="text/css" href="/plugins/headereffects/css/normalize.css" />
     <link href="/plugins/pace/pace-theme-flash.css" rel="stylesheet" type="text/css" media="screen"/>
-
+    <% if (typeof site != 'undefined' && site == 'tour') { %>
+    <link rel="stylesheet" type="text/css" href="/plugins/onescroll/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="/plugins/onescroll/css/component.css" />
+    <% } %>
     <!-- BEGIN CORE CSS FRAMEWORK -->
     <link href="/plugins/boostrapv3/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
@@ -28,7 +31,18 @@
     <link href="/styles/front/animate.min.css" rel="stylesheet" type="text/css"/>
     <!-- END CSS TEMPLATE -->
 
-    <script type="text/javascript" src="/plugins/jquery-1.8.3.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+    <% if (typeof site != 'undefined' && site == 'login') { %>
+    <link href="/styles/front/typeaheadjs.css" rel="stylesheet" type="text/css"/>
+    <script src="/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
+    <% } %>
+    <% if (typeof site != 'undefined' && site == 'wikiedit') { %>
+    <link href="/styles/front/typeaheadjs.css" rel="stylesheet" type="text/css"/>
+    <script src="/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
+    <link href="/scripts/vendor/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" href="/scripts/vendor/codemirror/addon/display/fullscreen.css"/>
+    <% } %>
     <!-- SLIDER REVOLUTION 4.x SCRIPTS  -->
     <script type="text/javascript" src="/plugins/rs-plugin/js/jquery.themepunch.plugins.min.js"></script>
     <script type="text/javascript" src="/plugins/rs-plugin/js/jquery.themepunch.revolution.min.js"></script>
@@ -283,6 +297,27 @@
 <script type="text/javascript" src="/plugins/jquery-nicescroll/jquery.nicescroll.min.js"></script>
 <script type="text/javascript" src="/plugins/jquery-appear/jquery.appear.js"></script>
 <script src="/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
-<script type="text/javascript" src="/js/core-front.js"></script>
 
+<% if (typeof site != 'undefined' && site == 'login') { %>
+<script src="/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
+<script src="/plugins/jquery-lazyload/jquery.lazyload.min.js" type="text/javascript"></script>
+<script src="/js/login_v2.js" type="text/javascript"></script>
+<% } %>
+<% if (typeof site != 'undefined' && site == 'wiki') { %>
+<script src="/js/wiki.js" type="text/javascript"></script>
+<% } %>
+<% if (typeof site != 'undefined' && site == 'wikiedit') { %>
+<script src="/scripts/vendor/codemirror/lib/codemirror.js" type="text/javascript"></script>
+<script src="/js/wikiedit.js" type="text/javascript"></script>
+<% } %>
+<% if (typeof site != 'undefined' && site == 'tour') { %>
+<script src="/plugins/modernizr.custom.js"></script>
+<script src="/plugins/onescroll/js/classie.js"></script>
+<script src="/plugins/onescroll/js/cbpScroller.js"></script>
+<!-- END JS PLUGIN -->
+<script>
+    new cbpScroller( document.getElementById( 'cbp-so-scroller' ) );
+</script>
+<% } %>
+<script type="text/javascript" src="/js/core-front.js"></script>
 </body>

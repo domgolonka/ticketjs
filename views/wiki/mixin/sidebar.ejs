@@ -1,0 +1,56 @@
+<% if(typeof items != 'undefined') { %>
+    <% _.each(items, function(item) { %>
+        <div class="col-md-4" id="leftCol">
+            <div class="grid simple vertical" id="sidebar">
+                <div class="grid-title no-border">
+                    <h4>Index</h4>
+                </div>
+                <div class="grid-body no-border">
+                    <ul class="nav nav-stacked" id="sidebar">
+                        <li><a href="#<%=item.id%>"><span class="semi-bold"><%= item.name %></span></a></li>
+                    </ul>
+                </div>
+            </div>
+
+    <% }) %>
+<% if (typeof user != 'undefined' && (user.isAdmin || user.wikiAdd)) {%>
+    <div class="grid simple vertical" id="sidebar">
+        <div class="grid-title no-border">
+            <h4>Menu</h4>
+        </div>
+        <div class="grid-body no-border">
+            <ul class="nav nav-stacked">
+                <li><a href="/wiki/pages/new"><span class="semi-bold">New Page</span></a></li>
+            </ul>
+        </div>
+    </div>
+<% } %>
+</div>
+<%} %>
+<% if(typeof contentitems != 'undefined' && contentitems != null) { %>
+                <div class="col-md-4" id="leftCol">
+                    <div class="grid simple vertical" id="sidebar">
+                        <div class="grid-title no-border">
+                            <h4>Index</h4>
+                        </div>
+                        <div class="grid-body no-border">
+                            <ul class="nav nav-stacked" id="sidebar">
+                                <%- contentitems %>
+                            </ul>
+                        </div>
+                    </div>
+<% if (typeof user != 'undefined' && (user.isAdmin || user.id == page.author)) {%>
+<div class="grid simple vertical" id="sidebar">
+    <div class="grid-title no-border">
+        <h4>User Menu</h4>
+    </div>
+    <div class="grid-body no-border">
+        <ul class="nav nav-stacked">
+            <li><a href="/wiki/pages/<%= page.name %>/edit"><span class="semi-bold">Edit Page</span></a></li>
+            <li><a href="/wiki/pages/new"><span class="semi-bold">New Page</span></a></li>
+        </ul>
+    </div>
+</div>
+<% } %>
+</div>
+<%  } %>

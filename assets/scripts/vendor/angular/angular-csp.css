@@ -8,10 +8,3 @@
 ng\:form {
   display: block;
 }
-.ng-animate-block-transitions {
-  transition:0s all!important;
-  -webkit-transition:0s all!important;
-}
-.ng-hide-add-active, .ng-hide-remove {
-  display: block!important;
-}

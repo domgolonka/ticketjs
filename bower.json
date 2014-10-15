@@ -40,6 +40,14 @@
     "fancybox": "latest",
     "queryloader2": "latest",
     "jquery.parallax": "latest",
-    "angular-foundation": "~0.3.0"
+    "angular-foundation": "~0.3.0",
+    "angular-sails-bind": "~1.0.3",
+    "angular-sails": "~1.0.4",
+    "angular-bootstrap": "~0.11.0",
+    "sails.io.js": "~0.10.3",
+    "socket.io-client": "~1.0.6",
+    "domReady": "~2.0.1",
+    "markitup": "latest",
+    "codemirror": "latest"
   }
 }

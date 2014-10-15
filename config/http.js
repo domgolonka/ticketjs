@@ -108,7 +108,7 @@ module.exports.http = {
         app.use(function(req, res, next) {
             if (req.user && req.user.language) {
                 // Change moment language
-                moment.lang(req.user.language);
+                moment.locale(req.user.language);
 
                 try {
                     // Change numeral language
@@ -125,8 +125,14 @@ module.exports.http = {
             res.locals.numeral = numeral;
             res.locals.packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
             res.locals.inspect = require("util").inspect;
-
+            /* https://github.com/kasperisager/sails-generate-auth/issues/11 */
+            if (req.isSocket) {
+                for (var i = 0; i < methods.length; i++) {
+                    req[methods[i]] = http.IncomingMessage.prototype[methods[i]].bind(req);
+                }
+            }
             next();
         });
     }
 };
+

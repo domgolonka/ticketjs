@@ -1001,7 +1001,72 @@ exports.getUsers = function(where, next) {
             next(error, users);
         });
 };
+/**
+ * Service to fetch one Wiki page.
+ *
+ * @param   {{}}        where   Used query conditions
+ * @param   {Function}  next    Callback function to call after query
+ */
+exports.getWikiPage = function(where, next) {
+    Wiki
+        .findOne({name:where})
+        .exec(function(error, page) {
+            if (error) {
+                sails.log.error(__filename + ":" + __line + " [Failed to fetch Wiki Page");
+                sails.log.error(error);
+            } else if (!page) {
+                error = new Error();
 
+                error.message = "Page not found";
+                error.status = 404;
+            }
+
+            next(error, page);
+        });
+};
+/**
+ * Service to fetch Wiki List from database.
+ *
+ * @param   {{}}        where   Used query conditions
+ * @param   {Function}  next    Callback function to call after query
+ */
+exports.getWikiList = function(hidden, next) {
+    WikiCategories
+        .find()
+        .where({where: {hidden:hidden}})
+        .populate('list')
+        //.sort("title ASC")
+        .exec(function(error, list) {
+            if (error) {
+                sails.log.error(__filename + ":" + __line + " [Failed to fetch Wiki List]");
+                sails.log.error(error);
+            }
+            next(error, list);
+        });
+};
+/**
+ * Service to fetch Config from database.
+ *
+ * @param   {{}}        where   Used query conditions
+ * @param   {Function}  next    Callback function to call after query
+ */
+exports.getConfig = function(where, next) {
+    Config
+        .findOne({setting:where})
+        .exec(function(error, conf) {
+            if (error) {
+                sails.log.error(__filename + ":" + __line + " [Failed to fetch Config data] Sending: " + where);
+                sails.log.error(error);
+            } else if (!conf) {
+                error = new Error();
+
+                error.message = "Config Not Found.";
+                error.status = 404;
+            }
+
+            next(error, conf.value);
+        });
+};
 /**
  * Service to fetch project users. These users are attached in some role to specified project.
  *

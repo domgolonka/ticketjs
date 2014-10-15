@@ -1,0 +1,13 @@
+<%- partial("index") %>
+<%- partial("mixin/sidebar") %>
+        <div class="<% if(typeof contentitems != 'undefined' && contentitems != null) { %>col-md-8<% } else {%>col-md-12<%}%>">
+            <div class="grid simple vertical green">
+                <div class="grid-body no-border">
+                   <%- content %>
+                    <hr>
+                        <p>Updated at&nbsp;<%-page.updatedAt%></p>
+                    </div><!-- marked up -->
+            </div>
+        </div>
+    </div>
+</div>

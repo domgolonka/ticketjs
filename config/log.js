@@ -25,7 +25,5 @@ module.exports.log = {
   ***************************************************************************/
 
   level: 'silly',
-
   filePath: "logs/application.log"
-
 };

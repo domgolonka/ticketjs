@@ -136,7 +136,7 @@ module.exports = {
                                 user.lastLogin = (!loginData) ? null : loginData.stamp;
 
                                 if (user.lastLogin !== null) {
-                                    moment.lang(request.user.language);
+                                    moment.locale(request.user.language);
 
                                     user.lastLogin = DateService.convertDateObjectToUtc(user.lastLogin);
                                     user.lastLogin.tz(request.user.momentTimezone);
@@ -195,7 +195,7 @@ module.exports = {
                 if (error) {
                     ResponseService.makeError(error, request, response);
                 } else {
-                    moment.lang(request.user.language);
+                    moment.locale(request.user.language);
 
                     // Iterate sign in rows and make formatted stamp
                     _.each(data.history, function(row) {
@@ -267,7 +267,7 @@ module.exports = {
          * @param   {{}}    data
          */
         function filterOutInvalidProjects(data) {
-            moment.lang(request.user.language);
+            moment.locale(request.user.language);
 
             async.filter(
                 data.projects,

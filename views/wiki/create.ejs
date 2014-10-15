@@ -1,0 +1,151 @@
+<%- partial("index") %>
+<form name="create" action="/wiki/pages" method="post">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="content" class="edit">
+                <div class="grid simple">
+                    <div class="grid-title no-border">
+                        <h4>Create a new Page</h4>
+                    </div>
+                    <div class="grid-body no-border"> <br>
+                        <div class="row">
+                            <ul class="toolbar">
+                                <li title="Toggle fullscreen (Ctrl/Cmd+Enter)" class="fullscreen"><span></span></li>
+                                <li title="Syntax help" class="info"><span></span></li>
+                                <li title="Preview" class="preview"><span></span></li>
+                            </ul>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="row form-row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label"><%= i18n('wiki-title') %></label>
+                                            <span class="help"><%= i18n("wiki-title-hint") %></span>
+                                            <div class="controls">
+                                                <input type="text" class="form-control" name="pageTitle" >
+                                                <input type="hidden" name="_method" value="put">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label"><%= i18n("wiki-name") %></label>
+                                            <span class="help"><%= i18n("wiki-name-hint") %></span>
+                                            <div class="controls">
+                                                <input type="text" class="form-control" name="pageName" value="<% if (typeof pageName != 'undefined') { %><%= pageName %><% }%>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                        <div class="form-group">
+                                            <label class="form-label"><%= i18n('wiki-categories') %></label>
+                                            <span class="help"><%= i18n("wiki-categories-hint") %></span>
+                                            <div class="controls">
+                                                <input name="categories" type="text" class="typeahead form-control"  autocomplete="off" spellcheck="false" >
+                                            </div>
+                                        </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+
+                                <div class="form-group">
+                                    <label class="form-label"><%= i18n("wiki-content") %></label>
+                                    <span class="help"><%= i18n("wiki-content-hint") %></span>
+                                    <textarea name="content" data-widearea="enable" rows="25" id="editor" class="form-control" style="display: none;"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label class="form-label"><%= i18n("wiki-message") %></label>
+                                    <span class="help"><%= i18n("wiki-message-hint") %></span>
+                                    <div class="controls">
+                                        <input type="text" class="form-control" name="message" >
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-actions">
+                                    <div class="pull-right">
+                                        <button type="submit" class="btn btn-success btn-cons"><i class="icon-ok"></i> Save</button>
+                                        <button type="button" class="btn btn-white btn-cons" onclick="window.history.back()">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="preview" tabindex="-1" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                <h3>Page preview</h3>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+<div id="syntax-reference" tabindex="-1" class="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+                <h3>Markdown cheatsheet</h3>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+/* TWITTER TYPEAHEAD */
+var substringMatcher = function (strs) {
+return function findMatches(q, cb) {
+var matches, substringRegex;
+
+// an array that will be populated with substring matches
+matches = [];
+
+// regex used to determine if a string contains the substring `q`
+substrRegex = new RegExp(q, 'i');
+
+// iterate through the pool of strings and for any string that
+// contains the substring `q`, add it to the `matches` array
+$.each(strs, function (i, str) {
+if (substrRegex.test(str)) {
+// the typeahead jQuery plugin expects suggestions to a
+// JavaScript object, refer to typeahead docs for more info
+matches.push({
+value: str
+});
+}
+});
+
+cb(matches);
+};
+};
+
+var categories = [ <% _.each(categories, function(categories) { %>"<%= categories.name %>", <% }) %>];
+
+$('input.typeahead').typeahead({
+limit: 5,
+hint: true,
+highlight: true,
+minLength: 1
+}, {
+name: 'categories',
+displayKey: 'value',
+source: substringMatcher(categories)
+
+});
+$('.typeahead.input-sm').siblings('input.tt-hint').addClass('hint-small');
+$('.typeahead.input-lg').siblings('input.tt-hint').addClass('hint-large');
+</script>

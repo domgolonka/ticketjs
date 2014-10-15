@@ -62,7 +62,6 @@ module.exports.globals = {
 	// models: true
 };
 module.exports = {
-    appName: "Seedmybox",
     history: {
         ignoreValues: [
             "sessionId",

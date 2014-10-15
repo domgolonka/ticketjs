@@ -2800,4 +2800,106 @@ margin-bottom:0px;
 .item-info-overlay .button + .button {
     margin-left: 5px;
 }
-   
+/* Wiki pages */
+#sidebar.affix-top {
+    position: static;
+}
+
+#sidebar.affix {
+    position: fixed;
+    top:70px;
+}
+.toolbar {
+    padding: 0;
+    margin: 0;
+    text-align: right
+}
+
+.toolbar li {
+    list-style-type: none;
+    display: inline-block;
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.toolbar li span {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    background-repeat: no-repeat;
+}
+
+.toolbar li.fullscreen span {
+    background-image:url(../../images/wiki/fullscreen_16.png);
+}
+.toolbar li.info span {
+    background-image:url(../../images/wiki/info_16.png);
+}
+.toolbar li.preview span {
+    background-image:url(../../images/wiki/preview_16.png);
+}
+
+.toolbar.fullscreen {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    z-index: 10;
+}
+#content {
+    padding: 40px 25px;
+}
+#content .CodeMirror.CodeMirror-fullscreen {
+    height: auto;
+}
+#content {
+    padding: 20px 15px;
+    overflow: hidden;
+}
+
+#content.show li {
+    line-height: 1.92;
+}
+
+#content.show ul >li:first-child {
+    margin-top: 4px;
+}
+
+.modal-body #content {
+    box-shadow: none;
+    padding: 10px;
+    overflow: hidden;
+}
+#content .CodeMirror-focused {
+    border-color: rgba(82,168,236,0.8);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
+}
+
+#content .CodeMirror-fullscreen {
+    margin-top: 40px;
+}
+
+.cheatsheet-content .col {
+    float: left;
+    width: 30%;
+    margin-left: 10px;
+}
+
+.cheatsheet-content pre {
+    border: 1px solid #ddd;
+    background-color: #eee;
+    border-radius: 3px;
+    width: 100%;
+    padding: 5px;
+    font-size: 12px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.cheatsheet-content hr {
+    clear: both;
+}

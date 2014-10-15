@@ -5,17 +5,14 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-
+/*
 var Q = require('q');
 var _ = require('lodash');
 var uuid = require('uuid-v4');
 
 module.exports = {
-
     search: function ( req, res ) {
-
         var criterion = req.param('criterion');
-
         Howdois.find({
             title: {
                 'contains': criterion
@@ -29,11 +26,9 @@ module.exports = {
     },
 
     addCategory: function ( req, res ) {
-
-        var postId = req.param('id');
         var categoryCode = req.param('category_code');
 
-        Q(Howdois.findOne(postId))
+        Q(Category.findOne(postId))
             .then(function ( post ) {
 
                 //find the id of the
@@ -212,10 +207,10 @@ module.exports = {
             });
 
     }
-
+*/
     /*,
 
      find: function(req, res){
      return res.json({t: 'working ok'});
-     }*/
-};
+     } -- comment here
+}; */

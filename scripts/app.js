@@ -1,16 +1,20 @@
 define([
     'angular',
-    'sails.io'
-], function (angular, io) {
+    'angular.route',
+    'angular-sails',
+    './controllers/index',
+    /*'./services/index',*/
+    /*'./directives/index',*/
+    /*'./filters/index'*/
+], function (ng) {
+    'use strict';
 
-    var socket = io.connect(), app;
-
-    socket.on('connect', function socketConnected() {
-        console.log('Socket is now connected');
-    });
-
-    app = angular.module('ngApp', []);
-
-    return app;
-
+    return ng.module('app', [
+        'ngSails',
+        'ngRoute',
+        'app.controllers',
+        // call your 'app.services',
+        // call your 'app.directives',
+        // call your 'app.filters',
+    ]);
 });

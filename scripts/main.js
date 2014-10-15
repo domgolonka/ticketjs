@@ -8,7 +8,12 @@ require.config({
     paths: {
         'angular': 'vendor/angular/angular.min',
         'angular.route': 'vendor/angular-route/angular-route.min',
-        'angular.resource': 'vendor/angular-resource/angular-resource.min',
+        'domReady': 'vendor/domReady/domReady',
+        'angular-ui-bootstrap': 'vendor/angular-bootstrap/ui-bootstrap-tpls',
+        'angular-sails': 'vendor/angular-sails/dist/angular-sails',
+        'angular-sails-bind': 'vendor/angular-sails-bind/dist/angular-sails-bind',
+        'socket-io': 'vendor/socket.io-client/socket.io',
+        'sails-io':  'vendor/sails.io.js/dist/sails.io'
        // jquery: 'vendor/jquery/dist/jquery.min',
         //"fancybox": "vendor/fancybox",
         //"iCheck": "vendor/iCheck/icheck.min",
@@ -26,26 +31,11 @@ require.config({
         'angular': {
             'exports': 'angular'
         },
-        'socket.io': {
-            'exports': 'io'
-        },
-        'sails.io': {
-            'deps': ['socket.io'],
-            'exports': 'io'
-        }
+        'angular.route': ['angular'],
+        'angular-ui-bootstrap': ['angular'],
+        'sails-io': ['socket-io'],
+        'angular-sails': ['sails-io','angular','socket-io','angular-sails-bind']
 
-    }
-});
-
-require([
-    'angular',
-    'app',
-], function (angular, app) {
-
-    angular.element(document.getElementsByTagName('html')[0]);
-
-    angular.element().ready(function() {
-        angular.resumeBootstrap([app.name]);
-    });
-
+    },
+    deps: ['./bootstrap']
 });

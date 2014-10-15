@@ -714,5 +714,5 @@ exports.hasExternalLinkAdmin = function(user, linkId, next) {
  * @param   {Function}          next    Main callback function, which is called after checks
  */
 exports.isAdministrator = function(user, next) {
-    next(null, user.admin);
+    next(null, user.isAdmin);
 };

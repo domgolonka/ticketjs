@@ -30,14 +30,12 @@ module.exports = {
         if (request.user) {
             response.redirect("/");
         }
-        var countries  = require('country-data').countries;
         response.view({
             layout: 'layout-extra',
             site: 'login',
             bodyclass: 'error-body no-top lazy',
             dataoriginal: '/images/work.jpg',
-            bodystyle: '/images/work.jpg',
-            countries: countries.all
+            bodystyle: '/images/work.jpg'
         });
     },
 

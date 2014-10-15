@@ -53,7 +53,7 @@ module.exports = function serverError (data, options) {
 
   // If no second argument provided, try to serve the default view,
   // but fall back to sending JSON(P) if any errors occur.
-  else return res.view('500', { data: data }, function (err, html) {
+  else return res.view('500', { data: data, layout: 'layout-error', title: 'Seedmybox.com: 500 Error', keywords: 'Seedmybox, seedbox, vps, vpn, 500 error, 500', description:'500 Server Error' }, function (err, html) {
 
     // If a view error occured, fall back to JSON(P).
     if (err) {

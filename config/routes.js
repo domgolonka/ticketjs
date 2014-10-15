@@ -36,7 +36,15 @@ module.exports.routes = {
       controller: 'home',
       action:     'index'
   },
-   '/logout': {
+    '/tour': {
+        controller: 'home',
+        action:     'tour'
+    },
+  '/plans': {
+        controller: 'home',
+        action:     'plans'
+    },
+  '/logout': {
     controller: 'auth',
     action:     'logout'
   },
@@ -56,7 +64,33 @@ module.exports.routes = {
         controller: 'home',
         action:     'postregister'
     },
-    '/panel': 'panel/panel.index'
+    '/panel': 'panel/panel.index',
+
+    /* WIKI */
+    'get /wiki/misc/syntax-reference': { controller:'wiki/misc', action: 'getSyntaxReference' },
+    'post /wiki/misc/preview': { controller:'wiki/misc', action: 'postPreview' },
+    'get /wiki/misc/existence': { controller:'wiki/misc', action: 'getExistence' },
+
+    'put /wiki/pages': { controller:'wiki/pages', action: 'postPages' }, // Change this to POST
+    'get /wiki/pages/new/:page': { controller:'wiki/pages', action: 'getPagesNew' },
+    'get /wiki/pages/new': { controller:'wiki/pages', action: 'getPagesNew' },
+    'get /wiki/pages/:page/edit': { controller:'wiki/pages', action: 'getPagesEdit' },
+    'put /wiki/pages/:page': { controller:'wiki/pages', action: 'putPages' },
+    'delete /wiki/pages/:page': { controller:'wiki/pages', action: 'deletePages' },
+
+    'get /wiki/search': { controller:'wiki/search', action: 'getSearch' },
+    'get /wiki': { controller:'wiki/wiki', action: 'getWiki' },
+    'get /wiki/:page': { controller:'wiki/wiki', action: 'getWikiPage' },
+    'get /wiki/:page/history': { controller:'wiki/wiki', action: 'getHistory' },
+    'get /wiki/:page/:version': { controller:'wiki/wiki', action: 'getWikiPage' },
+    'get /wiki/:page/compare/:revisions': { controller:'wiki/wiki', action: 'getCompare' },
+
+
+
+
+
+
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

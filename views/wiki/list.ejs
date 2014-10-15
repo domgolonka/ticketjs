@@ -1,0 +1,26 @@
+<%- partial("index") %>
+<%- partial("mixin/sidebar") %>
+    <% _.each(items, function(item) { %>
+        <div class="col-md-8">
+            <div class="grid simple vertical green">
+                <div class="grid-title no-border">
+                    <h4 id="<%=item.id%>"> <span class="semi-bold"><%= item.name %></span> <small class="p-r-10"><%=item.description%></small></h4>
+                    <div class="tools"> <a href="javascript:;" class="collapse"></a> <a href="#grid-config" data-toggle="modal" class="config"></a> <a href="javascript:;" class="reload"></a> <a href="javascript:;" class="remove"></a> </div>
+                </div>
+                <div class="grid-body no-border" style="overflow: hidden; display: block;">
+                    <div class="row-fluid">
+                        <div>
+                            <ol class="bold">
+                             <% _.each(item.list, function(wiki) { %>
+                            <li><a href="/wiki/<%= wiki.name %>"><span class="normal"><%= wiki.title %></span></a></li>
+                            <% }) %>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <%}) %>
+</div>

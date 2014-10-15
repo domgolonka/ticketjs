@@ -1,4 +1,17 @@
 {
 	"Welcome": "Welcome",
-	"A brand new app.": "A brand new app."
+	"A brand new app.": "A brand new app.",
+    "wiki-title": "Title",
+    "wiki-title-hint": "Enter a proper title",
+    "wiki-name": "SEO friendly link",
+    "wiki-name-hint": "Cannot contain spaces (Optional).",
+    "wiki-content": "Content",
+    "wiki-content-hint": "Please use the correct syntax.",
+    "wiki-message": "Message",
+    "wiki-message-hint": "Write a small message here explaining this change (optional).",
+    "wiki-page-found": "A document with this title already exists",
+    "wiki-categories": "Categories",
+    "wiki-categories-hint": "Pick or create a new Category"
+
+
 }

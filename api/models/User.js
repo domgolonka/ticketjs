@@ -46,10 +46,6 @@ module.exports = _.merge(_.cloneDeep(require("../services/baseModel")), {
             required:   true,
             unique:     true
         },
-        admin: {
-            type:       "boolean",
-            defaultsTo: false
-        },
         password: {
             type:       "string",
             required:   false,
@@ -87,14 +83,29 @@ module.exports = _.merge(_.cloneDeep(require("../services/baseModel")), {
             type: 'boolean',
             defaultsTo: 'false'
         },
-
+        passwordResetToken: {
+            type: 'json'
+        },
+        wikiAdd: {
+            type: 'boolean',
+            defaults: 'true'
+        },
+        isAdmin: {
+            type: 'boolean',
+            defaults: 'false'
+        },
+        admin: {
+            model: 'admins'
+        },
         // Dynamic data attributes
 
         // Computed user fullName string
         fullname: function() {
             return this.lastName + " " + this.firstName;
         },
-
+        admindetails: function() {
+            return !!this.admin;
+        },
 
         // Override toJSON instance method to remove password value
         toJSON: function() {
@@ -114,8 +125,46 @@ module.exports = _.merge(_.cloneDeep(require("../services/baseModel")), {
             } else {
                 return bcrypt.compareSync(password, obj.password);
             }
+        },
+
+
+        /**
+         * Send password reset email
+         *
+         * Generate a password reset token and send an email to the user with
+         * instructions to reset their password
+         */
+
+        sendPasswordResetEmail: function(cb) {
+            var self = this;
+
+            this.generatePasswordResetToken(function (err) {
+                if(err) return cb(err);
+
+                // Send email
+                var email = new Email._model({
+                    to: {
+                        name: self.fullName(),
+                        email: self.email
+                    },
+                    subject: "Reset your Seedmybox password",
+                    data: {
+                        resetURL: sails.config.localAppURL + '/reset-password/#/' + self.id + '/' +self.passwordResetToken.value
+                    },
+                    tags: ['password-reset','transactional'],
+                    template: 'password-reset'
+                });
+
+                email.setDefaults();
+
+                email.send(function (err, res, msg) {
+                    cb(err, res, msg, self.passwordResetToken);
+                });
+            });
         }
+
     },
+
 
     // Life cycle callbacks
 
