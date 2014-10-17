@@ -26,7 +26,7 @@ module.exports =  {
         supportemails: {
             type: "boolean"
         },
-        editwiki: {
+        edithelp: {
             type: "boolean"
         },
         list: {

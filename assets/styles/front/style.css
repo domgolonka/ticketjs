@@ -1387,6 +1387,14 @@ line-height: 21px;
 	color:#fff;
 	border:none;
 }
+/*** header search ***/
+.sub-menu .nav-tabs>li {
+    padding:0 10px;
+}
+
+.sub-menu {
+    margin-bottom:0px;
+}
 
 /*** Page sidebar ***/
 .side-menu > ul {
@@ -2832,13 +2840,13 @@ margin-bottom:0px;
 }
 
 .toolbar li.fullscreen span {
-    background-image:url(../../images/wiki/fullscreen_16.png);
+    background-image:url(../../images/help/fullscreen_16.png);
 }
 .toolbar li.info span {
-    background-image:url(../../images/wiki/info_16.png);
+    background-image:url(../../images/help/info_16.png);
 }
 .toolbar li.preview span {
-    background-image:url(../../images/wiki/preview_16.png);
+    background-image:url(../../images/help/preview_16.png);
 }
 
 .toolbar.fullscreen {
@@ -2902,4 +2910,132 @@ margin-bottom:0px;
 
 .cheatsheet-content hr {
     clear: both;
+}
+
+/* SEARCH */
+.home-search .generic-container {
+    overflow:inherit;
+    width:70%;
+    min-width:400px;
+}
+
+.home-search {
+    background:url("../../images/bg/tour_bg.png") no-repeat;
+    background-size:cover;
+    background-position:center center;
+    margin-bottom:15px;
+}
+
+.home-search .container>div {
+    padding:50px 0;
+}
+
+.lt-ie9 .home-search {
+    background-position:center center;
+}
+
+.search-banner-bar {
+    position:relative;
+    height:40px;
+}
+
+.search-banner-lens-wrapper {
+    position:absolute;
+    background-color:#84bd00;
+    background-repeat:no-repeat;
+    width:40px;
+    height:36px;
+    border-top-left-radius:3px;
+    border-bottom-left-radius:3px;
+    border:1px solid #81aa30;
+    border-right-width:0;
+}
+
+.secondary-search .search-banner-lens-wrapper {
+    width:29px;
+    height:28px;
+}
+
+.search-banner-lens {
+    position:absolute;
+    width:20px;
+    height:20px;
+    top:50%;
+    left:50%;
+    margin:-10px 0 0 -10px;
+}
+
+.search-bar-input-wrapper {
+    position:absolute;
+    right:0;
+    left:40px;
+}
+
+.secondary-search .search-bar-input-wrapper {
+    position:inherit;
+}
+
+.search-bar-input {
+    width:100%;
+    font-size:14px;
+    line-height:40px;
+    text-indent:10px;
+    outline:0;
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    border-radius:0;
+    -moz-background-clip:padding;
+    -webkit-background-clip:padding-box;
+    background-clip:padding-box;
+    -webkit-border-top-right-radius:3px;
+    -webkit-border-bottom-right-radius:3px;
+    -moz-border-radius-topright:3px;
+    -moz-border-radius-bottomright:3px;
+    border-top-right-radius:3px;
+    border-bottom-right-radius:3px;
+    border:1px solid #ccc;
+    left:0;
+    padding:0;
+}
+
+.secondary-search .search-bar-input {
+    height:28px;
+    line-height:normal;
+    font-size:12px;
+    padding-left:36px;
+    text-indent:0;
+}
+
+.search-banner-text h2 {
+    font-size:25px;
+    font-weight:700;
+    color:#FFF;
+    margin-bottom:10px;
+}
+
+.search-banner-text p {
+    font-size:15px;
+    color:#FFF;
+}
+
+.search-arrow-inner,.search-arrow-outer {
+    position:absolute;
+    z-index:2;
+    border:solid 16px transparent;
+    border-bottom:solid 16px #FFF;
+    width:0;
+    top:-26px;
+    margin:-4px 0 0 50px;
+}
+
+.search-arrow-outer {
+    border-bottom:solid 16px #cdcdcd;
+    top:-27px;
+}
+
+.secondary-search .search-arrow-inner,.secondary-search .search-arrow-outer {
+    right:30px;
+}
+.tp-search-container {
+    padding-top: 76px;
 }

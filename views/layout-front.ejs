@@ -37,7 +37,11 @@
     <link href="/styles/front/typeaheadjs.css" rel="stylesheet" type="text/css"/>
     <script src="/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
     <% } %>
-    <% if (typeof site != 'undefined' && site == 'wikiedit') { %>
+    <% if (typeof site != 'undefined' && site == 'help') { %>
+    <link href="/styles/front/typeaheadjs.css" rel="stylesheet" type="text/css"/>
+    <script src="/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
+    <% } %>
+    <% if (typeof site != 'undefined' && site == 'helpedit') { %>
     <link href="/styles/front/typeaheadjs.css" rel="stylesheet" type="text/css"/>
     <script src="/plugins/typeahead/typeahead.bundle.min.js" type="text/javascript"></script>
     <link href="/scripts/vendor/codemirror/lib/codemirror.css" rel="stylesheet" type="text/css"/>
@@ -286,8 +290,6 @@
     </div>
 </div>
 </div>
-
-
 <script src="/plugins/boostrapv3/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="/plugins/pace/pace.min.js" type="text/javascript"></script>
 <script src="/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script>
@@ -297,18 +299,93 @@
 <script type="text/javascript" src="/plugins/jquery-nicescroll/jquery.nicescroll.min.js"></script>
 <script type="text/javascript" src="/plugins/jquery-appear/jquery.appear.js"></script>
 <script src="/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
-
 <% if (typeof site != 'undefined' && site == 'login') { %>
 <script src="/plugins/jquery-validation/js/jquery.validate.min.js" type="text/javascript"></script>
 <script src="/plugins/jquery-lazyload/jquery.lazyload.min.js" type="text/javascript"></script>
 <script src="/js/login_v2.js" type="text/javascript"></script>
 <% } %>
-<% if (typeof site != 'undefined' && site == 'wiki') { %>
-<script src="/js/wiki.js" type="text/javascript"></script>
+<% if (typeof site != 'undefined' && site == 'help') { %><script src="/js/help.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var helplist = new Bloodhound({
+        datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.value); },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        limit: 5,
+        remote: {
+            url: '/help/s?key=%QUERY',
+            filter: function (data) {
+                return $.map(data, function (data) {
+                    return {
+                        value: data
+                    };
+                });
+            }
+        }
+
+    });
+
+    helplist.initialize();
+
+    $('input.typeahead').typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 2
+    }, {
+        name: 'search',
+        displayKey: 'value',
+        source: helplist.ttAdapter()
+
+    });
+</script>
+
 <% } %>
-<% if (typeof site != 'undefined' && site == 'wikiedit') { %>
+<% if (typeof site != 'undefined' && site == 'helpedit') { %>
 <script src="/scripts/vendor/codemirror/lib/codemirror.js" type="text/javascript"></script>
-<script src="/js/wikiedit.js" type="text/javascript"></script>
+<script src="/js/helpedit.js" type="text/javascript"></script>
+<script type="text/javascript">
+    /* TWITTER TYPEAHEAD */
+    var substringMatcher = function (strs) {
+        return function findMatches(q, cb) {
+            var matches, substringRegex;
+
+// an array that will be populated with substring matches
+            matches = [];
+
+// regex used to determine if a string contains the substring `q`
+            substrRegex = new RegExp(q, 'i');
+
+// iterate through the pool of strings and for any string that
+// contains the substring `q`, add it to the `matches` array
+            $.each(strs, function (i, str) {
+                if (substrRegex.test(str)) {
+// the typeahead jQuery plugin expects suggestions to a
+// JavaScript object, refer to typeahead docs for more info
+                    matches.push({
+                        value: str
+                    });
+                }
+            });
+
+            cb(matches);
+        };
+    };
+
+    var categories = [ <% _.each(categories, function(categories) { %>"<%= categories.name %>", <% }) %>];
+
+    $('input.typeahead').typeahead({
+        limit: 5,
+        hint: true,
+        highlight: true,
+        minLength: 1
+    }, {
+        name: 'categories',
+        displayKey: 'value',
+        source: substringMatcher(categories)
+
+    });
+    $('.typeahead.input-sm').siblings('input.tt-hint').addClass('hint-small');
+    $('.typeahead.input-lg').siblings('input.tt-hint').addClass('hint-large');
+</script>
+
 <% } %>
 <% if (typeof site != 'undefined' && site == 'tour') { %>
 <script src="/plugins/modernizr.custom.js"></script>

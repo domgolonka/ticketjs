@@ -1,0 +1,73 @@
+<div class="tp-search-container">
+    <div class="section white">
+        <div class="container sub-menu">
+            <div class="row">
+                <div class="col-md-12">
+                    <form role="form" class="visible-xs" style="margin: 10px 0 0 0;">
+                        <div class="form-group">
+                            <select class="form-control" id="nav-select">
+                                <option selected="" value="/us/">Overview</option>
+                                <option value="/us/get-started/">Get Started</option>
+                                <option value="/us/learn-more/guides/">Learn more</option>
+                                <option value="/us/problems/">Solutions</option>
+                                <option value="http://community.spotify.com/">Community</option>
+                            </select>
+                        </div>
+                    </form>
+                    <ul class="nav nav-tabs hidden-xs">
+                        <li class="nav-item active">
+                            <a class="js-ga-event nav-link features" id="navbar-overview" href="/us/">Overview</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="js-ga-event nav-link features" id="navbar-get-started" href="/us/get-started/">Get
+                                Started</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="js-ga-event nav-link features" id="navbar-guides" href="/us/learn-more/guides/">Learn
+                                more</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="js-ga-event nav-link features" id="navbar-problems"
+                               href="/us/problems/">Solutions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="js-ga-event nav-link features" href="http://community.spotify.com/">Community</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+</div>
+        <div class="search-bar home-search">
+            <div class="container">
+                <div class="col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+                    <div class="search-banner-text">
+                        <h2>Search</h2>
+
+                        <p>What can we help you with?</p>
+                    </div>
+
+                    <div class="search-banner-bar">
+                        <div class="search-banner-lens-wrapper">
+                            <img class="search-banner-lens" src="/images/icon/magnifyglass.png">
+                        </div>
+                        <div class="search-bar-input-wrapper">
+                            <form name="search" action="/help/search">
+                                <input name="search" type="text" class="typeahead search-bar-input"  autocomplete="off" spellcheck="false" placeholder="<%= __("help-searchbar") %>">
+                                <input type="submit" hidden="true" />
+                            </form>
+                        </div>
+                    </div>
+
+                    <div id="search-results-wrapper" class="hide">
+                        <div class="search-arrow-outer"></div>
+                        <div class="search-arrow-inner"></div>
+                        <div id="search-results" class="search-banner-results primary-search"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>

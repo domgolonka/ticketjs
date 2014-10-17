@@ -86,7 +86,7 @@ module.exports = _.merge(_.cloneDeep(require("../services/baseModel")), {
         passwordResetToken: {
             type: 'json'
         },
-        wikiAdd: {
+        helpAdd: {
             type: 'boolean',
             defaults: 'true'
         },

@@ -4,13 +4,13 @@ var fs = require("fs");
 module.exports = {
     getSyntaxReference: function (req, res)
     {
-        res.view('wiki/mixin/syntax', {
+        res.view('help/mixin/syntax', {
             layout: ''
         });
     },
 
     postPreview: function (req, res) {
-        res.view('wiki/preview', {
+        res.view('help/preview', {
             content: req.body.data,
            layout: ''
         });
@@ -29,11 +29,11 @@ module.exports = {
 
         req.query.data.forEach(function (pageName, idx) {
             (function (name, index) {
-                Wiki
+                Help
                     .findOne(name)
                     .exec(function(error, page) {
                         if (error) {
-                            sails.log.error(__filename + ":" + __line + " [Failed to fetch Get Wiki Page]");
+                            sails.log.error(__filename + ":" + __line + " [Failed to fetch Get Help Page]");
                             sails.log.error(error);
                         } else if (!page) {
                             error = new Error();

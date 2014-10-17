@@ -10,7 +10,7 @@ function getWhitespaceReplacement() {
 }
 
 
-exports.wikify = function (str) {
+exports.helpfy = function (str) {
 
     var ret = str;
 
@@ -23,10 +23,10 @@ exports.wikify = function (str) {
     async.parallel(
         {
             asciiOnly: function(callback) {
-                DataService.getConfig('wikiasciiOnly', callback);
+                DataService.getConfig('helpasciiOnly', callback);
             },
             lowercase: function(callback) {
-                DataService.getConfig('wikilowercase', callback);
+                DataService.getConfig('helplowercase', callback);
             }
         },
 
@@ -62,7 +62,7 @@ exports.wikify = function (str) {
 };
 
 // Not symmetric by any chance, but still better than nothing
-exports.unwikify = function (str) {
+exports.unhelpfy = function (str) {
 
     var ret = str;
 
@@ -73,7 +73,7 @@ exports.unwikify = function (str) {
     async.parallel(
         {
             lowercase: function(callback) {
-                DataService.getConfig('wikilowercase', callback);
+                DataService.getConfig('helplowercase', callback);
             }
         },
 

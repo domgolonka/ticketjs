@@ -1002,17 +1002,17 @@ exports.getUsers = function(where, next) {
         });
 };
 /**
- * Service to fetch one Wiki page.
+ * Service to fetch one Help page.
  *
  * @param   {{}}        where   Used query conditions
  * @param   {Function}  next    Callback function to call after query
  */
-exports.getWikiPage = function(where, next) {
-    Wiki
+exports.getHelpPage = function(where, next) {
+    Help
         .findOne({name:where})
         .exec(function(error, page) {
             if (error) {
-                sails.log.error(__filename + ":" + __line + " [Failed to fetch Wiki Page");
+                sails.log.error(__filename + ":" + __line + " [Failed to fetch Help Page");
                 sails.log.error(error);
             } else if (!page) {
                 error = new Error();
@@ -1025,20 +1025,20 @@ exports.getWikiPage = function(where, next) {
         });
 };
 /**
- * Service to fetch Wiki List from database.
+ * Service to fetch Help List from database.
  *
  * @param   {{}}        where   Used query conditions
  * @param   {Function}  next    Callback function to call after query
  */
-exports.getWikiList = function(hidden, next) {
-    WikiCategories
+exports.getHelpList = function(hidden, next) {
+    HelpCategories
         .find()
         .where({where: {hidden:hidden}})
         .populate('list')
         //.sort("title ASC")
         .exec(function(error, list) {
             if (error) {
-                sails.log.error(__filename + ":" + __line + " [Failed to fetch Wiki List]");
+                sails.log.error(__filename + ":" + __line + " [Failed to fetch Help List]");
                 sails.log.error(error);
             }
             next(error, list);

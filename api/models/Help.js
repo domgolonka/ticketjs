@@ -46,7 +46,7 @@ module.exports = _.merge(_.cloneDeep(require("../services/baseModel")), {
             type: "text"
         },
         categories: {
-            model: 'wikicategories'
+            model: 'helpcategories'
         }
 
     }

@@ -86,7 +86,7 @@
                 if ($hCol1.find(":checked").length < 2) {
                     return false;
                 }
-                window.location.href = "/wiki/" + $(this).data("pagename") + "/compare/" + $hCol1.find(":checked").map(function() { return $(this).val(); }).toArray().reverse().join("..");
+                window.location.href = "/help/" + $(this).data("pagename") + "/compare/" + $hCol1.find(":checked").map(function() { return $(this).val(); }).toArray().reverse().join("..");
                 return false;
             });
 
@@ -110,21 +110,21 @@
                 }
             }
 
-            if (/^\/wiki\//.test(window.location.pathname)) {
+            if (/^\/help\//.test(window.location.pathname)) {
                 var pages = []
                     , match
                     , href;
 
                 $("#content a.internal").each(function(i, a) {
                     href = $(a).attr("href");
-                    if (match = /\/wiki\/(.+)/.exec(href)) {
+                    if (match = /\/help\/(.+)/.exec(href)) {
                         pages.push(decodeURIComponent(match[1]));
                     }
                 });
 
-                $.getJSON("/wiki/misc/existence", {data: pages}, function(result) {
+                $.getJSON("/help/misc/existence", {data: pages}, function(result) {
                     $.each(result.data, function(href, a) {
-                        $("#content a[href='\\/wiki\\/" + encodeURIComponent(a) + "']").addClass("absent");
+                        $("#content a[href='\\/help\\/" + encodeURIComponent(a) + "']").addClass("absent");
                     });
                 });
             }
@@ -158,7 +158,7 @@
 
         preview: function() {
             $("#preview").modal("show");
-            $.post("/wiki/misc/preview", {data: $("#editor").val()}, function(data) {
+            $.post("/help/misc/preview", {data: $("#editor").val()}, function(data) {
                 $("#preview .modal-body").html(data).get(0).scrollTop = 0;
             });
         },
@@ -197,7 +197,7 @@
         markdownSyntax: function() {
             $("#syntax-reference").modal({keyboard: true, show: true});
             if (!cheatsheetShown) {
-                $("#syntax-reference .modal-body").load("/wiki/misc/syntax-reference");
+                $("#syntax-reference .modal-body").load("/help/misc/syntax-reference");
                 cheatsheetShown = true;
             }
         }

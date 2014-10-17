@@ -25,8 +25,11 @@ module.exports =  {
             type: "string",
             defaultsTo: "en"
         },
+        type: {
+            type: "string"
+        },
         list: {
-            collection: 'wiki',
+            collection: 'help',
             via: 'categories'
         }
 

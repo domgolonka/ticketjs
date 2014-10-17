@@ -101,7 +101,7 @@ function evalTags(text) {
         }
         pageName = encodeURIComponent(NamerService.wikify(pageName));
 
-        tagmap[k] = "<a class=\"internal\" href=\"/wiki/" + pageName + "\">" + name + "</a>";
+        tagmap[k] = "<a class=\"internal\" href=\"/help/" + pageName + "\">" + name + "</a>";
     }
 
     for (k in tagmap) {

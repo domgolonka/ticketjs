@@ -1,9 +1,23 @@
 var async = require("async");
 module.exports = {
+        getHelp: function (req, res) {
+            DataService.getHelpList(0, function (err, helplist) {
+                if (err) {
+                    ResponseService.makeError(err, req, res);
+                } else {
+                    res.view("help/index", {
+                        user: req.user,
+                        layout: 'layout-front',
+                        site: 'help',
+                        helplist: helplist.list
+                    });
+                }
+            });
+        },
             getHistory: function(req, res)
         {
 
-            var page = new Wiki._model(req.params.page);
+            var page = new Help._model(req.params.page);
 
             page.fetch().then(function () {
 
@@ -12,11 +26,11 @@ module.exports = {
 
                 // FIXME better manage an error here
                 if (!page.error) {
-                    res.view("wiki/history", {
+                    res.view("help/history", {
                         user: req.user,
                         layout: 'layout-front',
                         items: history,
-                        site: 'wiki',
+                        site: 'help',
                         page: page
 
                     });
@@ -27,7 +41,20 @@ module.exports = {
                 }
             });
         },
-
+        getFaq: function (req, res) {
+            DataService.getHelpList(0, function (err, helplist) {
+                if (err) {
+                    ResponseService.makeError(err, req, res);
+                } else {
+                    res.view("help/faq", {
+                        user: req.user,
+                        layout: 'layout-front',
+                        site: 'help',
+                        helplist: helplist.list
+                    });
+                }
+            });
+        },
         getWiki:  function(req, res) {
 
             var items = [];
@@ -35,12 +62,12 @@ module.exports = {
 
             async.parallel(
                 {
-                    // fetch wiki list
-                    wikilinks: function (callback) {
-                        DataService.getWikiList(0, callback);
+                    // fetch help list
+                    helplinks: function (callback) {
+                        DataService.getHelpList(0, callback);
                     },
                     itemsperpage: function(callback) {
-                        DataService.getConfig('wikiitemsperpage', callback);
+                        DataService.getConfig('helpitemsperpage', callback);
                     }
                 },
 
@@ -49,7 +76,7 @@ module.exports = {
                 if (error) {
                     ResponseService.makeError(error, req, res);
                 } else {
-                    Wiki.count().exec(function (err, totalcount) {
+                    Help.count().exec(function (err, totalcount) {
                         var itemsPerPage = data.itemsperpage;
                         var total = totalcount;
                         var totalPages = Math.ceil(total / itemsPerPage);
@@ -63,11 +90,11 @@ module.exports = {
 
                         currentPage = pagen;
 
-                        res.view("wiki/list", {
+                        res.view("help/list", {
                             user: req.user,
                             layout: 'layout-front',
-                            items: data.wikilinks,
-                            site: 'wiki',
+                            items: data.helplinks,
+                            site: 'help',
                             total: total,
                             pageNumbers: Array.apply(null, Array(totalPages)).map(function (x, i) {
                              return i + 1;
@@ -81,15 +108,15 @@ module.exports = {
             );
         },
 
-        getWikiPage: function (req, res) {
+        getHelpPage: function (req, res) {
 
-            //var page = new Wiki._model(req.params.page, req.params.version);
+            //var page = new Help._model(req.params.page, req.params.version);
 
             async.parallel(
                 {
                     // Fetch single user data
                     page: function(callback) {
-                        DataService.getWikiPage(req.params.page, callback);
+                        DataService.getHelpPage(req.params.page, callback);
                     }
                 },
                 function (error, data) {
@@ -101,10 +128,10 @@ module.exports = {
                             /*if (/but not in 'HEAD'/.test(page.error)) {
                                 page.setNames(page.name.slice(0, 1).toUpperCase() + page.name.slice(1));
                             }*/
-                            res.redirect("/wiki/pages/new/"+req.params.page);
+                            res.redirect("/help/pages/new/"+req.params.page);
                         } else {
 
-                            res.redirect("/wiki/"); // NEEDS TO BE CHANGED
+                            res.redirect("/help/"); // NEEDS TO BE CHANGED
                         }
 
                     } else {
@@ -119,11 +146,11 @@ module.exports = {
                     delete req.session.notice;
                     */
                     var content = Renderer.render("#" + data.page.title + "\n" + data.page.content);
-                    res.view("wiki/show", {
+                    res.view("help/show", {
                         user: req.user,
                         layout: 'layout-front',
                         page: data.page,
-                        site: 'wiki',
+                        site: 'help',
                         title: sails.config.appName + " – " + data.page.title,
                         content: content,
                         contentitems: Renderer.matchHeader(content)
@@ -137,7 +164,7 @@ module.exports = {
 
             var revisions = req.params.revisions;
 
-            var page = new Wiki._model(req.params.page);
+            var page = new Help._model(req.params.page);
 
             page.fetch().then(function () {
 
@@ -162,7 +189,7 @@ module.exports = {
                     res.view('view/compare', {
                         user: req.session.user,
                         page: page,
-                        site: 'wiki',
+                        site: 'help',
                         lines: lines,
                         revs: revs
                     });

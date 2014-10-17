@@ -1,5 +1,7 @@
-<%- partial("index") %>
-<form name="edit" action="/wiki/pages/<%= page.name %>" method="post">
+<div class="section first">
+<div class="container p-t-30">
+    <div class="row">
+<form name="edit" action="/help/pages/<%= page.name %>" method="post">
     <div class="row">
         <div class="col-md-12">
             <div id="content" class="edit">
@@ -11,16 +13,16 @@
                         <div class="row">
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <div class="form-group">
-                                    <label class="form-label"><%= i18n('wiki-title') %></label>
-                                    <span class="help"><%= i18n("wiki-title-hint") %></span>
+                                    <label class="form-label"><%= i18n('help-title') %></label>
+                                    <span class="help"><%= i18n("help-title-hint") %></span>
                                     <div class="controls">
                                         <input type="text" class="form-control" name="pageTitle" value="<%= formData.pageTitle %>">
                                         <input type="hidden" name="_method" value="put">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label"><%= i18n("wiki-name") %></label>
-                                    <span class="help"><%= i18n("wiki-name-hint") %></span>
+                                    <label class="form-label"><%= i18n("help-name") %></label>
+                                    <span class="help"><%= i18n("help-name-hint") %></span>
                                     <div class="controls">
                                         <input type="text" class="form-control" name="pageName" value="<%=formData.pageName%>">
                                     </div>
@@ -32,18 +34,27 @@
                                 <li title="Syntax help" class="info"><span></span></li>
                                 <li title="Preview" class="preview"><span></span></li>
                             </ul>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label class="form-label"><%= i18n('help-categories') %></label>
+                                    <span class="help"><%= i18n("help-categories-hint") %></span>
+                                    <div class="controls">
+                                        <input name="categories" type="text" class="typeahead form-control"  autocomplete="off" spellcheck="false" >
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-12 col-sm-12 col-xs-12">
 
                                 <div class="form-group">
-                                    <label class="form-label"><%= i18n("wiki-content") %></label>
-                                    <span class="help"><%= i18n("wiki-content-hint") %></span>
+                                    <label class="form-label"><%= i18n("help-content") %></label>
+                                    <span class="help"><%= i18n("help-content-hint") %></span>
                                     <textarea name="content" data-widearea="enable" rows="25" id="editor" class="form-control" style="display: none;"><%=formData.content%></textarea>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
                                 <div class="form-group">
-                                    <label class="form-label"><%= i18n("wiki-message") %></label>
-                                    <span class="help"><%= i18n("wiki-message-hint") %></span>
+                                    <label class="form-label"><%= i18n("help-message") %></label>
+                                    <span class="help"><%= i18n("help-message-hint") %></span>
                                     <div class="controls">
                                         <input type="text" class="form-control" name="message" >
                                     </div>
@@ -88,6 +99,7 @@
             <div class="modal-footer"></div>
         </div>
     </div>
+</div>
 </div>
 </div>
 </div>

@@ -3,10 +3,10 @@ var sanitizer = require('sanitizer');
 module.exports = {
     deletePages: function (req, res) {
 
-        DataService.getWikiPage(req.params.page, function(error, page) {
+        DataService.getHelpPage(req.params.page, function(error, page) {
             if (!page) {
                 req.session.notice = "The page cannot be deleted.";
-                res.redirect("/wiki");
+                res.redirect("/help");
                 return;
             }
 
@@ -17,7 +17,7 @@ module.exports = {
                 LockerSerivce.unlock(page);
 
                 req.session.notice = "The page `" + page.title + "` has been deleted.";
-                res.redirect("/wiki");
+                res.redirect("/help");
             });
 
         });
@@ -30,20 +30,20 @@ module.exports = {
 
         if (req.params.page) {
             // This is not perfect, unfortunately
-            name = NamerService.unwikify(req.params.page);
-            Wiki.findOne({name:req.params.page})
+            name = NamerService.unhelpfy(req.params.page);
+            Help.findOne({name:req.params.page})
                 .exec(function(error, pageFound) {
                     if (error) {
-                        sails.log.error("Wiki Page Creation failed: " + __filename + ":" + __line);
+                        sails.log.error("Help Page Creation failed: " + __filename + ":" + __line);
                         sails.log.error(error);
 
                         req.session.notice = "The page cannot be created.";
-                        res.redirect("/wiki");
+                        res.redirect("/help");
                     } else if (!pageFound) {
                         savePage();
                     } else {
                         req.session.notice = "The page already exists.";
-                        res.redirect("/wiki/"+req.params.page);
+                        res.redirect("/help/"+req.params.page);
                         return;
                     }
                 });
@@ -57,19 +57,19 @@ module.exports = {
             res.locals.formData = req.session.formData || {};
             delete req.session.errors;
             delete req.session.formData;
-            WikiCategories
+            HelpCategories
                 .find()
                 .where()
                 .exec(function(error, list) {
                     if (error) {
-                        sails.log.error(__filename + ":" + __line + " [Failed to fetch Wiki List]");
+                        sails.log.error(__filename + ":" + __line + " [Failed to fetch Help List]");
                         sails.log.error(error);
                     }
                     else {
-                        res.view("wiki/create", {
+                        res.view("help/create", {
                             user: req.session.user,
                             pageTitle: "",
-                            site: 'wikiedit',
+                            site: 'helpedit',
                             layout: 'layout-front',
                             categories: list,
                             pageName: req.params.page ? req.params.page : ""
@@ -87,13 +87,13 @@ module.exports = {
         var errors, pageName;
 
         // pageName (from url) is more important
-        pageName = (NamerService.unwikify(req.body.pageName) || req.body.pageTitle);
+        pageName = (NamerService.unhelpfy(req.body.pageName) || req.body.pageTitle);
 
         async.parallel(
             {
                 // Fetch single user data
                 page: function(callback) {
-                    DataService.getWikiPage(pageName, callback);
+                    DataService.getHelpPage(pageName, callback);
                 }
             },
 
@@ -119,7 +119,7 @@ module.exports = {
                                 pageTitle: req.body.pageTitle
                             };
                             sails.log.error("There were a few errors when trying to create the page: " + errors);
-                            res.redirect("/wiki/pages/new/" + pageName + "?e=1");
+                            res.redirect("/help/pages/new/" + pageName + "?e=1");
                             return;
                         }
                         var pagerecord = {};
@@ -141,15 +141,15 @@ module.exports = {
                         }
                         pagerecord.name = pageName;
 
-                        WikiCategories.findOne()
+                        HelpCategories.findOne()
                             .where({name: req.body.categories})
                             .exec(function (err, cat){
                                 if (err) {
-                                    sails.log.error(__filename + ":" + __line + " [Failed to fetch Wiki List]");
+                                    sails.log.error(__filename + ":" + __line + " [Failed to fetch Help List]");
                                     sails.log.error(err);
                                 }
                                 else if(!cat) {
-                                    WikiCategories.create({
+                                    HelpCategories.create({
                                         name: req.body.categories,
                                         hidden: 1
                                     }).exec(function(err, cat) {
@@ -165,13 +165,13 @@ module.exports = {
                     } else {
                         sails.log.error("Cannot create page: ");
                         sails.log.error(error);
-                        res.redirect("/wiki/pages/new/" + pageName + "?e=1");
+                        res.redirect("/help/pages/new/" + pageName + "?e=1");
                         return;
                     }
 
                 } else {
-                        req.session.errors = [{msg: req.__('wiki-page-found')}];
-                        res.redirect("/wiki/pages/new/"+pageName);
+                        req.session.errors = [{msg: req.__('help-page-found')}];
+                        res.redirect("/help/pages/new/"+pageName);
                         return;
 
                 }
@@ -179,10 +179,10 @@ module.exports = {
                     pagerecord.categories = req.body.categories;
                     cat.list.add(pagerecord);
                     cat.save().then(function() {
-                        req.session.notice = 'The page has been created. <a href="/wiki/' + pageName +'/edit">Edit it again?</a>';
-                        res.redirect('/wiki/'+pageName);
+                        req.session.notice = 'The page has been created. <a href="/help/' + pageName +'/edit">Edit it again?</a>';
+                        res.redirect('/help/'+pageName);
                     }).catch(function (err) {
-                        sails.log.error("There was an error with adding a Wiki Page" + err);
+                        sails.log.error("There was an error with adding a Help Page" + err);
                         res.locals.title = "500 - Internal server error";
                         res.statusCode = 500;
                         console.log(err);
@@ -203,7 +203,7 @@ module.exports = {
             {
                 // Fetch single user data
                 page: function(callback) {
-                    DataService.getWikiPage(req.params.page, callback);
+                    DataService.getHelpPage(req.params.page, callback);
                 }
             },
 
@@ -211,7 +211,7 @@ module.exports = {
 
                 if (error) {
                         req.session.notice = "The page does not exist anymore.";
-                        res.redirect("/wiki");
+                        res.redirect("/help");
                         return;
                 } else {
                     if(!req.body.pageTitle) {
@@ -248,7 +248,7 @@ module.exports = {
                                 if (error) {
                                     errors = [{
                                         param: "pageTitle",
-                                        msg: __('wiki-page-found'),
+                                        msg: __('help-page-found'),
                                         value: ""
                                     }];
                                     fixErrors()
@@ -256,8 +256,8 @@ module.exports = {
                                     savePage();
                                 } else {
                                     sails.log.error("Page is already found");
-                                    req.session.notice = __('wiki-page-found');
-                                    res.redirect("/wiki/pages/" + data.page.pageName + "/edit?e=1");
+                                    req.session.notice = __('help-page-found');
+                                    res.redirect("/help/pages/" + data.page.pageName + "/edit?e=1");
                                 }
                         });
 
@@ -285,8 +285,8 @@ module.exports = {
                                 components.expire('sidebar');
                             }
 
-                            req.session.notice = 'The page has been updated. <a href="/wiki/'+data.page.name+'/edit">Edit it again?</a>';
-                            res.redirect("/wiki/"+data.page.name);
+                            req.session.notice = 'The page has been updated. <a href="/help/'+data.page.name+'/edit">Edit it again?</a>';
+                            res.redirect("/help/"+data.page.name);
 
                         }).catch(function (err) {
                             res.locals.title = "500 - Internal server error";
@@ -310,7 +310,7 @@ module.exports = {
                             pageTitle: req.body.pageTitle,
                             message: req.body.message
                         };
-                        res.redirect("/wiki/pages/" + req.body.pageName + "/edit?e=1");
+                        res.redirect("/help/pages/" + req.body.pageName + "/edit?e=1");
 
                     }
                 }
@@ -324,17 +324,17 @@ module.exports = {
             {
                 // Fetch single user data
                 page: function(callback) {
-                    DataService.getWikiPage(req.params.page, callback);
+                    DataService.getHelpPage(req.params.page, callback);
                 }
             },
             function (error, data) {
                 if (error) {
                     if (req.user) {
 
-                        res.redirect("/wiki/pages/new/"+req.params.page);
+                        res.redirect("/help/pages/new/"+req.params.page);
                     } else {
 
-                        res.redirect("/wiki/"); // NEEDS TO BE CHANGED
+                        res.redirect("/help/"); // NEEDS TO BE CHANGED
                     }
 
                 } else {
@@ -363,13 +363,25 @@ module.exports = {
 
                     delete req.session.errors;
                     delete req.session.formData;
+                    HelpCategories
+                        .find()
+                        .where()
+                        .exec(function(error, list) {
+                            if (error) {
+                                sails.log.error(__filename + ":" + __line + " [Failed to fetch Help List]");
+                                sails.log.error(error);
+                            }
+                            else {
+                                res.view('help/edit', {
+                                    page: data.page,
+                                    site: 'helpedit',
+                                    warning: warning,
+                                    layout: 'layout-front',
+                                    categories: list
+                                });
+                            }
+                        });
 
-                    res.view('wiki/edit', {
-                        page: data.page,
-                        site: 'wikiedit',
-                        warning: warning,
-                        layout: 'layout-front'
-                    });
 
 
                 }

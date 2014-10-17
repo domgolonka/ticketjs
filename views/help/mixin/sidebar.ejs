@@ -13,14 +13,14 @@
             </div>
 
     <% }) %>
-<% if (typeof user != 'undefined' && (user.isAdmin || user.wikiAdd)) {%>
+<% if (typeof user != 'undefined' && (user.isAdmin || user.helpAdd)) {%>
     <div class="grid simple vertical" id="sidebar">
         <div class="grid-title no-border">
             <h4>Menu</h4>
         </div>
         <div class="grid-body no-border">
             <ul class="nav nav-stacked">
-                <li><a href="/wiki/pages/new"><span class="semi-bold">New Page</span></a></li>
+                <li><a href="/help/pages/new"><span class="semi-bold">New Page</span></a></li>
             </ul>
         </div>
     </div>
@@ -46,8 +46,8 @@
     </div>
     <div class="grid-body no-border">
         <ul class="nav nav-stacked">
-            <li><a href="/wiki/pages/<%= page.name %>/edit"><span class="semi-bold">Edit Page</span></a></li>
-            <li><a href="/wiki/pages/new"><span class="semi-bold">New Page</span></a></li>
+            <li><a href="/help/pages/<%= page.name %>/edit"><span class="semi-bold">Edit Page</span></a></li>
+            <li><a href="/help/pages/new"><span class="semi-bold">New Page</span></a></li>
         </ul>
     </div>
 </div>
