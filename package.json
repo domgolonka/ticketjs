@@ -40,7 +40,13 @@
     "sails-disk": "~0.10.0",
     "sails-mysql": "latest",
     "ssh2": "^0.3.4",
-    "uuid-v4": "^0.1.0"
+    "uuid-v4": "^0.1.0",
+    "ensureDir": "latest",
+    "bluebird": "latest",
+    "nodemailer": "latest",
+    "iconv": "latest",
+    "marked": "latest",
+    "node-syntaxhighlighter": "latest"
   },
   "scripts": {
     "start": "node app.js",
