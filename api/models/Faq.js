@@ -12,7 +12,10 @@
 module.exports = {
     schema: true,
     attributes: {
-        // Reference to object, eg. Project, Milestone, Sprint, Story, etc.
+        name: {
+          type:       "text",
+          required:   true
+        },
         question: {
             type:       "text",
             required:   true
@@ -42,11 +45,8 @@ module.exports = {
             type:       "integer",
             required: true
         },
-        attributes: {
-            categories: {
-                collection: 'category',
-                via: 'catId'
-            }
+        categories: {
+          model: 'helpcategories'
         },
         // Dynamic data attributes
 

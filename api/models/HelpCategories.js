@@ -7,8 +7,6 @@
  */
 "use strict";
 
-
-
 module.exports =  {
     attributes: {
         name: {
@@ -28,9 +26,13 @@ module.exports =  {
         type: {
             type: "string"
         },
-        list: {
+        help: {
             collection: 'help',
             via: 'categories'
+        },
+        faq: {
+          collection: 'faq',
+          via: 'categories'
         }
 
     }

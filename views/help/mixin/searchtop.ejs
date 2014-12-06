@@ -6,29 +6,27 @@
                     <form role="form" class="visible-xs" style="margin: 10px 0 0 0;">
                         <div class="form-group">
                             <select class="form-control" id="nav-select">
-                                <option selected="" value="/us/">Overview</option>
-                                <option value="/us/get-started/">Get Started</option>
-                                <option value="/us/learn-more/guides/">Learn more</option>
-                                <option value="/us/problems/">Solutions</option>
-                                <option value="http://community.spotify.com/">Community</option>
+                                <option selected="" value="/help/">Overview</option>
+                                <option value="/help/get-started/">Get Started</option>
+                                <option value="/help/learn-more/guides/">Learn more</option>
+                                <option value="/help/">Ticket Support</option>
+                                <option value="/">Community</option>
                             </select>
                         </div>
                     </form>
                     <ul class="nav nav-tabs hidden-xs">
                         <li class="nav-item active">
-                            <a class="js-ga-event nav-link features" id="navbar-overview" href="/us/">Overview</a>
+                            <a class="js-ga-event nav-link features" id="navbar-overview" href="/help/">Overview</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="js-ga-event nav-link features" id="navbar-get-started" href="/us/get-started/">Get
-                                Started</a>
+                            <a class="js-ga-event nav-link features" id="navbar-get-started" href="/help/wiki/">Wiki</a>
                         </li>
                         <li class="nav-item ">
-                            <a class="js-ga-event nav-link features" id="navbar-guides" href="/us/learn-more/guides/">Learn
-                                more</a>
+                            <a class="js-ga-event nav-link features" id="navbar-guides" href="/help/faq/">FAQ</a>
                         </li>
                         <li class="nav-item ">
                             <a class="js-ga-event nav-link features" id="navbar-problems"
-                               href="/us/problems/">Solutions</a>
+                               href="/help/problems/">Ticket Support</a>
                         </li>
                         <li class="nav-item">
                             <a class="js-ga-event nav-link features" href="http://community.spotify.com/">Community</a>
@@ -53,7 +51,7 @@
                         </div>
                         <div class="search-bar-input-wrapper">
                             <form name="search" action="/help/search">
-                                <input name="search" type="text" class="typeahead search-bar-input"  autocomplete="off" spellcheck="false" placeholder="<%= __("help-searchbar") %>">
+                                <input name="term" type="text" class="typeahead search-bar-input"  autocomplete="off" spellcheck="false" placeholder="<%= __("help-searchbar") %>">
                                 <input type="submit" hidden="true" />
                             </form>
                         </div>

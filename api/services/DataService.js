@@ -1034,7 +1034,7 @@ exports.getHelpList = function(hidden, next) {
     HelpCategories
         .find()
         .where({where: {hidden:hidden}})
-        .populate('list')
+        .populate('help')
         //.sort("title ASC")
         .exec(function(error, list) {
             if (error) {
