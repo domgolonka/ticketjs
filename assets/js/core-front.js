@@ -1,9 +1,9 @@
-$(document).ready(function(){	
+$(document).ready(function(){
  /*** Retina Image Loader ***/
  if ($.fn.unveil){
-  $("img").unveil(); 
+  $("img").unveil();
  }
- 
+
   /**** Scroller ****/
   if ($.fn.niceScroll){
 	var mainScroller = $("html").niceScroll({
@@ -16,16 +16,16 @@ $(document).ready(function(){
 					autohidemode:false
 	});
   }
-  
+
   /**** Carousel for Testominals ****/
   if ($.fn.owlCarousel){
 	$("#testomonials").owlCarousel({
 		singleItem:true
-	});	
+	});
   }
-  
+
   /**** Mobile Side Menu ****/
-  if ($.fn.waypoint){  
+  if ($.fn.waypoint){
 	var $head = $('#ha-header');
 	$( '.ha-waypoint' ).each( function(i) {
 					var $el = $( this ),
@@ -43,7 +43,7 @@ $(document).ready(function(){
 	});
 	}
 	/**** Revolution Slider ****/
-	if ($.fn.revolution){	
+	if ($.fn.revolution){
 	revapi = $('#home').revolution(
 	{
 		delay:15000,
@@ -67,27 +67,27 @@ $(document).ready(function(){
 			forceFullWidth:"on"
 	});
 	}
-	
+
 	/**** Parrallax ****/
 	if ($.fn.parallax){
 	$('#working-section').parallax("50%", 0.1,false);
-		
+
 	$('.parrallax-element, .parrallax-background').each(function () {
 		$(this).css('background-image', 'url(' + $(this).attr("data-background-image") + ')');
 		$(this).css('height',  $(this).attr("data-background-height"));
 		$(this).css('width',  $(this).attr("data-background-width"));
 		$(this).parallax("50%", 0.1);
 	});
-	}	
-	
+	}
+
 	/**** Appear JS ****/
 	if ($.fn.appear){
 	$('[data-ride="animated"]').appear();
-    if( !$('html').hasClass('ie no-ie10') ) {		
+    if( !$('html').hasClass('ie no-ie10') ) {
         $('[data-ride="animated"]').addClass('appear');
     	$('[data-ride="animated"]').on('appear', function() {
 	        var $el = $(this), $ani = ($el.data('animation') || 'fadeIn'), $delay;
-	        if ( !$el.hasClass('animated') ) {	
+	        if ( !$el.hasClass('animated') ) {
 	        	$delay = $el.data('delay') || 0;
                 setTimeout(function(){
                     $el.removeClass('appear').addClass( $ani + " animated" );
@@ -97,27 +97,27 @@ $(document).ready(function(){
     };
 	$('.number-animator').appear();
 	$('.number-animator').on('appear', function() {
-			 $(this).animateNumbers($(this).attr("data-value"), true, parseInt($(this).attr("data-animation-duration")));	
+			 $(this).animateNumbers($(this).attr("data-value"), true, parseInt($(this).attr("data-animation-duration")));
 	});
-	
+
 	$('.animated-progress-bar').appear();
 	$('.animated-progress-bar').on('appear', function() {
 			$(this).css('width', $(this).attr("data-percentage"));
 	});
 	}
-	
+
 	/**** Animate Numbers ****/
 	if ($.fn.animateNumbers){
 	$('.animate-number').each(function(){
-		 $(this).animateNumbers($(this).attr("data-value"), true, parseInt($(this).attr("data-animation-duration")));	
+		 $(this).animateNumbers($(this).attr("data-value"), true, parseInt($(this).attr("data-animation-duration")));
 	})
 	}
-	
+
 	$('.animate-progress-bar').each(function(){
 		 $(this).css('width', $(this).attr("data-percentage"));
-		
+
 	})
-	
+
 	if ($("#thumbs").length > 0){
 		var $container = $('#thumbs');
 		$container.isotope({
@@ -128,7 +128,7 @@ $(document).ready(function(){
 				queue: false
 			}
 		});
-		 
+
 		$(window).resize(function() {
 			var $container = $('#thumbs');
 				$container.isotope({
@@ -140,30 +140,57 @@ $(document).ready(function(){
 					}
 			});
 		});
-	
-	  	
+
+
 		// filter items when filter link is clicked
 		$('#portfolio-nav a, #gallery-nav a').click(function(){
 											 //alert("CLICK")
 			  var selector = $(this).attr('data-filter');
 			  $container.isotope({ filter: selector });
-			  
+
 			  $("#portfolio-nav li, #gallery-nav li").removeClass("current");
 			  $(this).closest("li").addClass("current");
-			  
+
 			  return false;
 		});
 	}
-	
 
 
-	$(".portfolio-grid ul li").hover(function(){								
-			var imgHeight=$(this).find("img").height();			
-			$(this).find(".portfolio-image-wrapper").height(imgHeight);			
 
-	});	
+	$(".portfolio-grid ul li").hover(function(){
+			var imgHeight=$(this).find("img").height();
+			$(this).find(".portfolio-image-wrapper").height(imgHeight);
 
-});	
+	});
 
+});
 
-	
+// TABS ACCORDIAN
+$(document).ready(function() {
+  $('.panel-group').collapse({
+    toggle: false
+  })
+  $('#tab-01 a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  $('#tab-01 li:eq(0) a').tab('show');
+  $('#tab-2 a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  $('#tab-2 li:eq(1) a').tab('show');
+  $('#tab-3 a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  $('#tab-3 li:eq(2) a').tab('show');
+  $('#tab-4 a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+  $('#tab-5 a').click(function(e) {
+    e.preventDefault();
+    $(this).tab('show');
+  });
+});

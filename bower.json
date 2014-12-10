@@ -28,8 +28,9 @@
     "angular-resource": "latest",
     "angular-cookies": "latest",
     "angular-mocks": "latest",
-    "angular-route": "latest",
+    "angular-ui-router": "latest",
     "angular-ui-utils": "latest",
+    "oclazyload": "latest",
     "requirejs": "~2.1.10",
     "requirejs-domready": "~2.0.1",
     "requirejs-text": "~2.0.10",
@@ -48,6 +49,7 @@
     "socket.io-client": "~1.0.6",
     "domReady": "~2.0.1",
     "markitup": "latest",
-    "codemirror": "latest"
+    "codemirror": "latest",
+    "noty": "~2.2.2"
   }
 }

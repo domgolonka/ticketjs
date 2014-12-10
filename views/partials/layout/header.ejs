@@ -122,4 +122,4 @@
     <!-- END TOP NAVIGATION BAR -->
 </div>
 <!-- END HEADER -->
-<%- partial("navclient") %>
+<% if (currentuser.isAdmin) { %><%- partial("navadmin") %> <% } else { %> <%- partial("navclient") %><% } %>

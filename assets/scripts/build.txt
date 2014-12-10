@@ -401,6 +401,14 @@ vendor/modernizr/test/qunit/qunit.css
 ----------------
 vendor/modernizr/test/qunit/qunit.css
 
+vendor/noty/demo/buttons.css
+----------------
+vendor/noty/demo/buttons.css
+
+vendor/oclazyload/examples/example2/css/ng-grid.css
+----------------
+vendor/oclazyload/examples/example2/css/ng-grid.css
+
 vendor/queryloader2/demo/css/queryLoader.css
 ----------------
 vendor/queryloader2/demo/css/queryLoader.css
@@ -412,15 +420,10 @@ vendor/queryloader2/demo/css/style.css
 main.js
 ----------------
 vendor/angular/angular.min.js
-vendor/angular-route/angular-route.min.js
-vendor/socket.io-client/socket.io.js
-vendor/sails.io.js/dist/sails.io.js
-vendor/angular-sails-bind/dist/angular-sails-bind.js
-vendor/angular-sails/dist/angular-sails.js
-controllers/module.js
-controllers/ChatController.js
-controllers/index.js
+services/services.js
+controllers/controllers.js
+directives/directives.js
+factory/factory.js
+extra/custom.js
 app.js
-routes.js
-bootstrap.js
 main.js

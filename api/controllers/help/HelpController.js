@@ -42,15 +42,16 @@ module.exports = {
             });
         },
         getFaq: function (req, res) {
-            DataService.getHelpList(0, function (err, helplist) {
+            DataService.getFaqList(0, function (err, faqlist) {
                 if (err) {
                     ResponseService.makeError(err, req, res);
                 } else {
+                    //sails.log.error(faqlist);
                     res.view("help/faq", {
                         user: req.user,
                         layout: 'layout-front',
                         site: 'help',
-                        helplist: helplist.list
+                        faqlist: faqlist
                     });
                 }
             });

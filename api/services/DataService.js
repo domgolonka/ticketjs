@@ -1045,6 +1045,26 @@ exports.getHelpList = function(hidden, next) {
         });
 };
 /**
+ * Service to fetch FAQ List from database.
+ *
+ * @param   {{}}        where   Used query conditions
+ * @param   {Function}  next    Callback function to call after query
+ */
+exports.getFaqList = function(hidden, next) {
+  HelpCategories
+    .find()
+    .where({where: {hidden:hidden}})
+    .populate('faq')
+    //.sort("title ASC")
+    .exec(function(error, list) {
+      if (error) {
+        sails.log.error(__filename + ":" + __line + " [Failed to fetch Help List]");
+        sails.log.error(error);
+      }
+      next(error, list);
+    });
+};
+/**
  * Service to fetch Config from database.
  *
  * @param   {{}}        where   Used query conditions

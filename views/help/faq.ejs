@@ -13,67 +13,45 @@
     <div class="container">
         <div class="p-t-60">
             <div class="row">
-                <div class="col-md-12 feature-list ">
-                    <div class="col-md-4 fadeIn animated" data-ride="animated" data-animation="fadeIn" data-delay="300">
-                        <h4 class="title">FULL PACKAGE</h4>
+              <div class="col-md-12">
+                <!-- Tabs -->
+                <ul class="nav nav-tabs" id="tab-01">
+                  <% if (faqlist.length >0 ) { faqlist.forEach(function(item) { %>
+                    <li class><a href="#<%=item.name %>"><%=item.name %></a></li>
+                  <% }) } %>
+                </ul>
+                <!-- FAQ List -->
+                <div class="tab-content">
+                  <% if (faqlist.length >0 ) { faqlist.forEach(function(item) { %>
+                  <div class="tab-pane" id="<%=item.name %>">
+                    <div class="row">
+                      <div class="panel-group" id="accordion" data-toggle="collapse">
 
-                        <p>
-                            We combine intelligent thinking with stimulating design to keep your brand engaging and help
-                            challenging brands find their clarity.
-                        </p>
-                    </div>
-                    <div class="col-md-4 fadeIn animated" data-ride="animated" data-animation="fadeIn" data-delay="600">
-                        <h4 class="title">CUSTOMIZATION</h4>
-
-                        <p>
-                            Make any design your own using the Style Editor. Personalize fonts, colors, and layouts to
-                            create the custom look you want.
-                        </p>
-                    </div>
-                    <div class="col-md-4 fadeIn animated" data-ride="animated" data-animation="fadeIn" data-delay="900">
-                        <h4 class="title">SOCIAL</h4>
-
-                        <p>
-                            Import. Sync. Publish. Make your website the center of your online identity on the web with
-                            our powerful social integrations.
-                        </p>
-                    </div>
+                        <% item.faq.forEach(function(faq) { %>
+                        <div class="panel panel-default">
+                          <div class="panel-heading collapsed">
+                            <h4 class="panel-title">
+                              <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#<%=faq.name%>">
+                                <%=faq.question%>
+                              </a>
+                            </h4>
+                          </div>
+                          <div id="<%=faq.name%>" class="panel-collapse collapse" style="height: 0px;">
+                            <div class="panel-body">
+                              <%=faq.answer%>
+                            </div>
+                          </div>
+                        </div>
+                        <% })  %>
+                      </div>
+                      </div>
+                  </div>
+                  <% }) } %>
                 </div>
+              </div>
             </div>
             <br>
 
-            <div class="row">
-                <div class="col-md-12 feature-list">
-                    <div class="col-md-4 fadeIn animated" data-ride="animated" data-animation="fadeIn"
-                         data-delay="1200">
-                        <h4 class="title">TEMPLATES</h4>
-
-                        <p>
-                            Squarespace websites are created with modern browsers and mobile devices in mind. They
-                            employ the latest HTML, CSS and Javascript techniques.
-                        </p>
-                    </div>
-                    <div class="col-md-4 fadeIn animated" data-ride="animated" data-animation="fadeIn"
-                         data-delay="1500">
-                        <h4 class="title">CUSTOMIZATION</h4>
-
-                        <p>
-                            Make any design your own using the Style Editor. Personalize fonts, colors, and layouts to
-                            create the custom look you want.
-                        </p>
-                    </div>
-                    <div class="col-md-4 fadeIn animated" data-ride="animated" data-animation="fadeIn"
-                         data-delay="1800">
-                        <h4 class="title">SOCIAL</h4>
-
-                        <p>
-                            Import. Sync. Publish. Make your website the center of your online identity on the web with
-                            our powerful social integrations.
-                        </p>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
         </div>
     </div>
 

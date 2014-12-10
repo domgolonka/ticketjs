@@ -3,17 +3,46 @@
         <div class="col-md-7 col-md-offset-2 tiles white no-padding">
             <div class="p-t-30 p-l-40 p-b-20 xs-p-t-10 xs-p-l-10 xs-p-b-10">
                 <h2 class="normal">Please sign in or register an account with Seedmybox</h2>
-                <% if (typeof messages !== 'undefined') { %>
+                <% if (typeof flashMessages !== 'undefined' && flashMessages.length > 0) { %>
+                 <!-- <div class="alert alert-block alert-error fade in">
+                      <h4 class="alert-heading"><i class="icon-warning-sign"></i> Error!</h4> -->
+                      <script>
+                              jQuery(document).ready(function() {
+                                var messages = <%- JSON.stringify(flashMessages) %>;
+                                function makeMessage(text, type, options) {
+                                  type = type || "success";
+                                  options = options || {};
 
-                <div class="alert alert-block alert-error fade in">
-                    <h4 class="alert-heading"><i class="icon-warning-sign"></i> Error!</h4>
-                    <p><script>;
-                            jQuery(messages).each(function() {
-                                alert(this.message);
-                            });</script></p>
-                </div>
-                </div>
-                <%} %>
+                                  var timeout = 6000;
+
+                                  switch (type) {
+                                    case "success":
+                                      timeout = 3000;
+                                      break;
+                                  }
+                                  String.prototype.nl2br = function() {
+                                    return this.replace(/\n/g, "<br />");
+                                  };
+                                  // Create noty
+                                  noty(jQuery.extend({}, {
+                                    text: text.nl2br(),
+                                    type: type,
+                                    layout: "top",
+                                    timeout: timeout
+                                  }, options));
+                                }
+                                if (messages && typeof messages == "object") {
+                                  // Iterate messages and make messages
+                                  $.each(messages, function (i, message) {
+                                    //console.log(message);
+                                    makeMessage(message.message, message.type, message.options);
+                                  });
+                                }
+
+                              });
+                        </script>
+                  <!-- </div> -->
+                <% } %>
                 <button type="button" class="btn btn-primary btn-cons" id="login_toggle">Login</button> or&nbsp;&nbsp;<button type="button" class="btn btn-info btn-cons" id="register_toggle"> Register an Account</button>
             </div>
             <div class="tiles grey p-t-20 p-b-20 text-black">

@@ -6,23 +6,5 @@
  * Version: 0.3.1 (2011/12/07)
  * Released under the MIT license
  */
-define(function(){
 
-    var QUERY_PARAM = 'noext';
-
-    //API
-    return {
-        load : function(name, req, onLoad, config){
-            req([req.toUrl(name)], function(mod){
-                onLoad(mod);
-            });
-        },
-        normalize : function(name, norm){
-            //append query string to avoid adding .js extension
-            //needs to be on normalize otherwise it won't work after build
-            name += (name.indexOf('?') < 0)? '?' : '&';
-            return name + QUERY_PARAM +'=1';
-        }
-
-    };
-});
+define([],function(){var QUERY_PARAM="noext";return{load:function(name,req,onLoad){req([req.toUrl(name)],function(mod){onLoad(mod)})},normalize:function(name){return name+=name.indexOf("?")<0?"?":"&",name+QUERY_PARAM+"=1"}}});

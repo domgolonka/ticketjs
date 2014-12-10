@@ -716,3 +716,4 @@ exports.hasExternalLinkAdmin = function(user, linkId, next) {
 exports.isAdministrator = function(user, next) {
     next(null, user.isAdmin);
 };
+

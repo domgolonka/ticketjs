@@ -1,0 +1,1 @@
+define(["angular","app"],function(angular,app){"use strict";app.config(["$routeProvider","$locationProvider",function($routeProvider,$locationProvider){$routeProvider.when("/panel",{controller:"IndexController"}),$routeProvider.otherwise({redirectTo:"/panel"}),$locationProvider.html5Mode(!0)}])});

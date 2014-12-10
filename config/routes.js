@@ -88,7 +88,8 @@ module.exports.routes = {
     'get /help/:page/:version': { controller:'help/help', action: 'getHelpPage' },
     'get /help/:page/compare/:revisions': { controller:'help/help', action: 'getCompare' },
 
-
+    /* Admin */
+    'get /panel/admin': { controller: 'admin/admin', action: 'index'}
 
 
 

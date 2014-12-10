@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html>
-<head ng-app="application">
+<html ng-app="app">>
+<head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -25,19 +25,32 @@
     <link href="/plugins/boostrapv3/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
     <link href="/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
     <!-- END CORE CSS FRAMEWORK -->
-
     <!-- BEGIN CSS TEMPLATE -->
     <link href="/styles/style.css" rel="stylesheet" type="text/css"/>
     <link href="/styles/responsive.css" rel="stylesheet" type="text/css"/>
     <!-- END CSS TEMPLATE -->
     <%- partial("partials/layout/header_javascript") %>
+    <!-- angular -->
+    <script>
+      var appHelper = {
+        // Vars (paths without trailing slash)
+        templatesDir: '/scripts/templates/default',
+        //assetsDir: '/',
+        // Methods
+        templatePath: function(view_name) {
+          return this.templatesDir + '/' + view_name + '.html';
+        },
+        assetPath: function(file_path) {
+          return '/' + file_path;
+        }
+      };
+    </script>
 </head>
 <!-- END HEAD -->
 <!-- BEGIN BODY -->
-<body class="">
+<body class=""   ng-controller="MainCtrl" ng-controller="MainCtrl" ng-class="{'settings-pane-open': layoutOptions.settingsPane.isOpen, 'chat-open': layoutOptions.chat.isOpen, 'login-page': isLoginPage && isMainPage == false, 'login-light': isLightLoginPage && isMainPage == false, 'lockscreen-page': isLockscreenPage && isMainPage == false, 'right-sidebar': layoutOptions.sidebar.isRight, 'boxed-container': layoutOptions.container.isBoxed}">
 <%- partial("partials/layout/header") %>
-<%- body %>
-<div data-ng-view></div>
+<div class="page-content" ui-view></div>
 <%- partial("partials/layout/chat") %>
 
 <!-- BEGIN CORE JS FRAMEWORK-->
@@ -48,44 +61,14 @@
 
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
-<script src="/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.js" type="text/javascript"></script>
-<script src="/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="/plugins/breakpoints.js" type="text/javascript"></script>
-<script src="/plugins/jquery-unveil/jquery.unveil.min.js" type="text/javascript"></script>
-<script src="/plugins/jquery-block-ui/jqueryblockui.js" type="text/javascript"></script>
-<script src="/plugins/jquery-lazyload/jquery.lazyload.min.js" type="text/javascript"></script>
-<script src="/plugins/jquery.cookie.js" type="text/javascript"></script>
 <!-- END CORE JS FRAMEWORK -->
-<!-- BEGIN PAGE LEVEL JS -->
-<script src="/plugins/jquery-slider/jquery.sidr.min.js" type="text/javascript"></script>
-<script src="/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-<script src="/plugins/pace/pace.min.js" type="text/javascript"></script>
-<script src="/plugins/jquery-numberAnimate/jquery.animateNumbers.js" type="text/javascript"></script>
-<script src="/plugins/jquery-ricksaw-chart/js/raphael-min.js"></script>
-<script src="/plugins/jquery-ricksaw-chart/js/d3.v2.js"></script>
-<script src="/plugins/jquery-ricksaw-chart/js/rickshaw.min.js"></script>
-<script src="/plugins/jquery-sparkline/jquery-sparkline.js"></script>
-<script src="/plugins/skycons/skycons.js"></script>
-<script src="/plugins/owl-carousel/owl.carousel.min.js" type="text/javascript"></script>
-<script src="/plugins/jquery-polymaps/polymaps.min.js" type="text/javascript"></script>
-
-
-<script src="/plugins/jquery-flot/jquery.flot.js" type="text/javascript"></script>
-<script src="/plugins/jquery-flot/jquery.flot.resize.min.js" type="text/javascript"></script>
-<script src="/plugins/jquery-metrojs/MetroJs.min.js" type="text/javascript" ></script>
-<!-- END PAGE LEVEL PLUGINS -->
-<!-- BEGIN CORE TEMPLATE JS -->
-<script src="/js/core.js" type="text/javascript"></script>
-<script src="/js/chat.js" type="text/javascript"></script>
-<script src="/js/demo.js" type="text/javascript"></script>
-<script src="/js/dashboard_v2.js" type="text/javascript"></script>
 <script data-main="/scripts/main" src="/scripts/vendor/requirejs/require.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $(".live-tile,.flip-list").liveTile();
     });
 </script>
-
+<script src="//localhost:35729/livereload.js"></script>
 <!-- END CORE TEMPLATE JS -->
 </body>
 </html>

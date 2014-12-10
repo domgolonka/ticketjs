@@ -26,9 +26,17 @@ module.exports = {
      * @param   {Response}  response    Response object
      */
     login: function(request, response) {
-        // If user is already signed in redirect to main page
+        // If user is already signed in redirect to panel
         if (request.user) {
-            response.redirect("/");
+          AuthService.isAdministrator(request.user, function(error, hasRight) {
+            if (error) { // Error occurred
+              return ErrorService.makeErrorResponse(error.status ? error.status : 500, error, request, response);
+            } else if (!hasRight) { // redirect to panel
+              response.redirect("/panel");
+            } else { // Otherwise all is ok
+              response.redirect("/panel/admin");
+            }
+          })
         }
         response.view({
             layout: 'layout-extra',
@@ -107,10 +115,20 @@ module.exports = {
                                 });
                             }
 
-                            request.flash.message("Successfully sign in", "success");
 
-                            response.cookie("message", {message: "Successfully sign in", type: "success", options: {}});
-                            response.redirect("/panel");
+                            AuthService.isAdministrator(user, function(error, hasRight) {
+                              if (error) { // Error occurred
+                                return ErrorService.makeErrorResponse(error.status ? error.status : 500, error);
+                              } else if (!hasRight) { // redirect to panel
+                                request.flash.message("Successfully sign in", "success");
+                                response.cookie("message", {message: "Successfully sign in", type: "success", options: {}});
+                                response.redirect("/panel");
+                              } else { // Otherwise all is ok
+                                request.flash.message("Successfully sign in", "success");
+                                response.cookie("message", {message: "Successfully sign in", type: "success", options: {}});
+                                response.redirect("/panel/admin");
+                              }
+                            })
                         }
                     });
                 }

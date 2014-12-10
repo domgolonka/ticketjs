@@ -1,15 +1,12 @@
 /**
- * bootstraps angular onto the window.document node
- */
-define([
-    'require',
-    'angular',
-    'app',
-    'routes'
-], function (require, ng) {
-    'use strict';
+ * bootstrap.js
+ **/
 
-    require(['domReady!'], function (document) {
-        ng.bootstrap(document, ['app']);
-    });
+define(['require', 'angular', 'app'], function(require, angular) { //app refers to file
+
+  'use strict';
+
+  return require(['domReady!'], function(document) {
+    return angular.bootstrap(document, ['app']); //in html
+  });
 });

@@ -58,6 +58,10 @@ module.exports.policies = {
         projects:       ["flashMessage", "authenticated", "isAjax", "hasUserAdminOrItself"],
         changePassword: ["flashMessage", "authenticated", "isAjax", "hasUserAdminOrItself"]
     },
+    "admin/admin": {
+        "*":        false,
+        index: [ "flashMessage", "authenticated", "isAdministrator" ]
+    },
     "home": {
         "*": true,
         // Register
@@ -75,5 +79,5 @@ module.exports.policies = {
 
         // Custom actions
         index:          ["flashMessage", "authenticated"]
-    },
+    }
 };

@@ -18,7 +18,19 @@
 var async = require('async');
 
 module.exports = {
-
+    /**
+     * Index page
+     *
+     * @param   {Request}   request     Request object
+     * @param   {Response}  response    Response object
+     */
+    index: function(req, res) {
+        res.view("admin/index", {
+          keywords: "seedbox, seedbox hosting",
+          description: "Seedmybox",
+          user: req.user
+      });
+    },
     users: function(req, res) {
         // TODO: Use pages with jsonp
         var data = {};

@@ -1,2 +1,1 @@
-/*global angular */
-angular.module('ngSails', ['ng']);
+angular.module("ngSails",["ng"]);

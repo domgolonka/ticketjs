@@ -33,7 +33,6 @@ module.exports = function flashMessage(request, response, next) {
 
     // Get messages from session or initialize message session
     var messages = request.session.messages || (request.session.messages = []);
-
     if (request.cookies && request.cookies.message) {
         // Store message to session
         request.session.messages.push(request.cookies.message);

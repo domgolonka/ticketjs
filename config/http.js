@@ -8,10 +8,7 @@
  * For more information on configuration, check out:
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.http.html
  */
-var passport = require("passport");
-var moment = require("moment-timezone");
-var numeral = require("numeral");
-var fs = require("fs");
+
 
 
 module.exports.http = {
@@ -89,50 +86,6 @@ module.exports.http = {
   ***************************************************************************/
 
   // cache: 31557600000
-    /**
-     * /config/express.js
-     *
-     * This file contains all custom middlewares for Taskboard application.
-     *
-     * @type {*}
-     */
 
-
-    customMiddleware: function(app) {
-        // Add passport middleware and initialize it
-        app.use(passport.initialize());
-        app.use(passport.session());
-        app.use(passport.authenticate("remember-me"));
-
-        // Add some basic data for all views
-        app.use(function(req, res, next) {
-            if (req.user && req.user.language) {
-                // Change moment language
-                moment.locale(req.user.language);
-
-                try {
-                    // Change numeral language
-                    numeral.language(req.user.language, require("../node_modules/numeral/languages/" + req.user.language + ".js"));
-                    numeral.language(req.user.language);
-                } catch (error) {
-                    // Just silently ignore this error...
-                }
-            }
-
-            // Set data to response locals, so those are accessible by any view
-            res.locals.currentUser = req.user;
-            res.locals.moment = moment;
-            res.locals.numeral = numeral;
-            res.locals.packageJson = JSON.parse(fs.readFileSync("package.json", "utf8"));
-            res.locals.inspect = require("util").inspect;
-            /* https://github.com/kasperisager/sails-generate-auth/issues/11 */
-            if (req.isSocket) {
-                for (var i = 0; i < methods.length; i++) {
-                    req[methods[i]] = http.IncomingMessage.prototype[methods[i]].bind(req);
-                }
-            }
-            next();
-        });
-    }
 };
 
