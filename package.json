@@ -60,6 +60,7 @@
   "author": "domz",
   "license": "",
   "devDependencies": {
-    "grunt-contrib-less": "^0.11.1"
+    "grunt-contrib-less": "^0.11.1",
+    "grunt-forever": "^0.4.5"
   }
 }

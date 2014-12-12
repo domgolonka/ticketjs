@@ -17,4 +17,416 @@
  * Date: Mon Nov 21 21:11:03 2011 -0500
  */
 
-!function(){function createFlags(flags){var i,length,object=flagsCache[flags]={};for(flags=flags.split(/\s+/),i=0,length=flags.length;length>i;i++)object[flags[i]]=!0;return object}function handleQueueMarkDefer(elem,type,src){var deferDataKey=type+"defer",queueDataKey=type+"queue",markDataKey=type+"mark",defer=jQuery._data(elem,deferDataKey);!defer||"queue"!==src&&jQuery._data(elem,queueDataKey)||"mark"!==src&&jQuery._data(elem,markDataKey)||setTimeout(function(){jQuery._data(elem,queueDataKey)||jQuery._data(elem,markDataKey)||(jQuery.removeData(elem,deferDataKey,!0),defer.fire())},0)}var flagsCache={};jQuery.extend({_mark:function(elem,type){elem&&(type=(type||"fx")+"mark",jQuery.data(elem,type,(jQuery.data(elem,type,void 0,!0)||0)+1,!0))},_unmark:function(force,elem,type){if(force!==!0&&(type=elem,elem=force,force=!1),elem){type=type||"fx";var key=type+"mark",count=force?0:(jQuery.data(elem,key,void 0,!0)||1)-1;count?jQuery.data(elem,key,count,!0):(jQuery.removeData(elem,key,!0),handleQueueMarkDefer(elem,type,"mark"))}},queue:function(elem,type,data){if(elem){type=(type||"fx")+"queue";var q=jQuery.data(elem,type,void 0,!0);return data&&(!q||jQuery.isArray(data)?q=jQuery.data(elem,type,jQuery.makeArray(data),!0):q.push(data)),q||[]}},dequeue:function(elem,type){type=type||"fx";var queue=jQuery.queue(elem,type),fn=queue.shift();"inprogress"===fn&&(fn=queue.shift()),fn&&("fx"===type&&queue.unshift("inprogress"),fn.call(elem,function(){jQuery.dequeue(elem,type)})),queue.length||(jQuery.removeData(elem,type+"queue",!0),handleQueueMarkDefer(elem,type,"queue"))}}),jQuery.fn.extend({queue:function(type,data){return"string"!=typeof type&&(data=type,type="fx"),void 0===data?jQuery.queue(this[0],type):this.each(function(){var queue=jQuery.queue(this,type,data);"fx"===type&&"inprogress"!==queue[0]&&jQuery.dequeue(this,type)})},dequeue:function(type){return this.each(function(){jQuery.dequeue(this,type)})},delay:function(time,type){return time=jQuery.fx?jQuery.fx.speeds[time]||time:time,type=type||"fx",this.queue(type,function(){var elem=this;setTimeout(function(){jQuery.dequeue(elem,type)},time)})},clearQueue:function(type){return this.queue(type||"fx",[])},promise:function(type,object){function resolve(){--count||defer.resolveWith(elements,[elements])}"string"!=typeof type&&(object=type,type=void 0),type=type||"fx";for(var tmp,defer=jQuery.Deferred(),elements=this,i=elements.length,count=1,deferDataKey=type+"defer",queueDataKey=type+"queue",markDataKey=type+"mark";i--;)(tmp=jQuery.data(elements[i],deferDataKey,void 0,!0)||(jQuery.data(elements[i],queueDataKey,void 0,!0)||jQuery.data(elements[i],markDataKey,void 0,!0))&&jQuery.data(elements[i],deferDataKey,jQuery._Deferred(),!0))&&(count++,tmp.done(resolve));return resolve(),defer.promise()}}),jQuery.Callbacks=function(flags){flags=flags?createFlags(flags):{};var memory,firing,firingStart,firingLength,firingIndex,list=[],stack=[],add=function(args){var i,length,elem,type;for(i=0,length=args.length;length>i;i++)elem=args[i],type=jQuery.type(elem),"array"===type?add(elem):"function"===type&&(flags.unique&&self.has(elem)||list.push(elem))},fire=function(context,args){for(args=args||[],memory=!flags.memory||[context,args],firing=!0,firingIndex=firingStart||0,firingStart=0,firingLength=list.length;list&&firingLength>firingIndex;firingIndex++)if(list[firingIndex].apply(context,args)===!1&&flags.stopOnFalse){memory=!0;break}firing=!1,list&&(flags.once?memory===!0?self.disable():list=[]:stack&&stack.length&&(memory=stack.shift(),self.fireWith(memory[0],memory[1])))},self={add:function(){if(list){var length=list.length;add(arguments),firing?firingLength=list.length:memory&&memory!==!0&&(firingStart=length,fire(memory[0],memory[1]))}return this},remove:function(){if(list)for(var args=arguments,argIndex=0,argLength=args.length;argLength>argIndex;argIndex++)for(var i=0;i<list.length&&(args[argIndex]!==list[i]||(firing&&firingLength>=i&&(firingLength--,firingIndex>=i&&firingIndex--),list.splice(i--,1),!flags.unique));i++);return this},has:function(fn){if(list)for(var i=0,length=list.length;length>i;i++)if(fn===list[i])return!0;return!1},empty:function(){return list=[],this},disable:function(){return list=stack=memory=void 0,this},disabled:function(){return!list},lock:function(){return stack=void 0,memory&&memory!==!0||self.disable(),this},locked:function(){return!stack},fireWith:function(context,args){return stack&&(firing?flags.once||stack.push([context,args]):flags.once&&memory||fire(context,args)),this},fire:function(){return self.fireWith(this,arguments),this},fired:function(){return!!memory}};return self},jQuery.fn.extend({promise:function(type,object){function resolve(){--count||defer.resolveWith(elements,[elements])}"string"!=typeof type&&(object=type,type=void 0),type=type||"fx";for(var tmp,defer=jQuery.Deferred(),elements=this,i=elements.length,count=1,deferDataKey=type+"defer",queueDataKey=type+"queue",markDataKey=type+"mark";i--;)(tmp=jQuery.data(elements[i],deferDataKey,void 0,!0)||(jQuery.data(elements[i],queueDataKey,void 0,!0)||jQuery.data(elements[i],markDataKey,void 0,!0))&&jQuery.data(elements[i],deferDataKey,jQuery.Callbacks("once memory"),!0))&&(count++,tmp.add(resolve));return resolve(),defer.promise()}})}();
+
+(function(){
+
+  // String to Object flags format cache
+var flagsCache = {};
+
+// Convert String-formatted flags into Object-formatted ones and store in cache
+function createFlags( flags ) {
+  var object = flagsCache[ flags ] = {},
+    i, length;
+  flags = flags.split( /\s+/ );
+  for ( i = 0, length = flags.length; i < length; i++ ) {
+    object[ flags[i] ] = true;
+  }
+  return object;
+}
+
+jQuery.extend({
+
+  _mark: function( elem, type ) {
+    if ( elem ) {
+      type = (type || "fx") + "mark";
+      jQuery.data( elem, type, (jQuery.data(elem,type,undefined,true) || 0) + 1, true );
+    }
+  },
+
+  _unmark: function( force, elem, type ) {
+    if ( force !== true ) {
+      type = elem;
+      elem = force;
+      force = false;
+    }
+    if ( elem ) {
+      type = type || "fx";
+      var key = type + "mark",
+        count = force ? 0 : ( (jQuery.data( elem, key, undefined, true) || 1 ) - 1 );
+      if ( count ) {
+        jQuery.data( elem, key, count, true );
+      } else {
+        jQuery.removeData( elem, key, true );
+        handleQueueMarkDefer( elem, type, "mark" );
+      }
+    }
+  },
+
+  queue: function( elem, type, data ) {
+    if ( elem ) {
+      type = (type || "fx") + "queue";
+      var q = jQuery.data( elem, type, undefined, true );
+      // Speed up dequeue by getting out quickly if this is just a lookup
+      if ( data ) {
+        if ( !q || jQuery.isArray(data) ) {
+          q = jQuery.data( elem, type, jQuery.makeArray(data), true );
+        } else {
+          q.push( data );
+        }
+      }
+      return q || [];
+    }
+  },
+
+  dequeue: function( elem, type ) {
+    type = type || "fx";
+
+    var queue = jQuery.queue( elem, type ),
+      fn = queue.shift(),
+      defer;
+
+    // If the fx queue is dequeued, always remove the progress sentinel
+    if ( fn === "inprogress" ) {
+      fn = queue.shift();
+    }
+
+    if ( fn ) {
+      // Add a progress sentinel to prevent the fx queue from being
+      // automatically dequeued
+      if ( type === "fx" ) {
+        queue.unshift("inprogress");
+      }
+
+      fn.call(elem, function() {
+        jQuery.dequeue(elem, type);
+      });
+    }
+
+    if ( !queue.length ) {
+      jQuery.removeData( elem, type + "queue", true );
+      handleQueueMarkDefer( elem, type, "queue" );
+    }
+  }
+});
+
+jQuery.fn.extend({
+  queue: function( type, data ) {
+    if ( typeof type !== "string" ) {
+      data = type;
+      type = "fx";
+    }
+
+    if ( data === undefined ) {
+      return jQuery.queue( this[0], type );
+    }
+    return this.each(function() {
+      var queue = jQuery.queue( this, type, data );
+
+      if ( type === "fx" && queue[0] !== "inprogress" ) {
+        jQuery.dequeue( this, type );
+      }
+    });
+  },
+  dequeue: function( type ) {
+    return this.each(function() {
+      jQuery.dequeue( this, type );
+    });
+  },
+  // Based off of the plugin by Clint Helfers, with permission.
+  // http://blindsignals.com/index.php/2009/07/jquery-delay/
+  delay: function( time, type ) {
+    time = jQuery.fx ? jQuery.fx.speeds[time] || time : time;
+    type = type || "fx";
+
+    return this.queue( type, function() {
+      var elem = this;
+      setTimeout(function() {
+        jQuery.dequeue( elem, type );
+      }, time );
+    });
+  },
+  clearQueue: function( type ) {
+    return this.queue( type || "fx", [] );
+  },
+  // Get a promise resolved when queues of a certain type
+  // are emptied (fx is the type by default)
+  promise: function( type, object ) {
+    if ( typeof type !== "string" ) {
+      object = type;
+      type = undefined;
+    }
+    type = type || "fx";
+    var defer = jQuery.Deferred(),
+      elements = this,
+      i = elements.length,
+      count = 1,
+      deferDataKey = type + "defer",
+      queueDataKey = type + "queue",
+      markDataKey = type + "mark",
+      tmp;
+    function resolve() {
+      if ( !( --count ) ) {
+        defer.resolveWith( elements, [ elements ] );
+      }
+    }
+    while( i-- ) {
+      if (( tmp = jQuery.data( elements[ i ], deferDataKey, undefined, true ) ||
+          ( jQuery.data( elements[ i ], queueDataKey, undefined, true ) ||
+            jQuery.data( elements[ i ], markDataKey, undefined, true ) ) &&
+          jQuery.data( elements[ i ], deferDataKey, jQuery._Deferred(), true ) )) {
+        count++;
+        tmp.done( resolve );
+      }
+    }
+    resolve();
+    return defer.promise();
+  }
+});
+
+function handleQueueMarkDefer( elem, type, src ) {
+  var deferDataKey = type + "defer",
+    queueDataKey = type + "queue",
+    markDataKey = type + "mark",
+    defer = jQuery._data( elem, deferDataKey );
+  if ( defer &&
+    ( src === "queue" || !jQuery._data(elem, queueDataKey) ) &&
+    ( src === "mark" || !jQuery._data(elem, markDataKey) ) ) {
+    // Give room for hard-coded callbacks to fire first
+    // and eventually mark/queue something else on the element
+    setTimeout( function() {
+      if ( !jQuery._data( elem, queueDataKey ) &&
+        !jQuery._data( elem, markDataKey ) ) {
+        jQuery.removeData( elem, deferDataKey, true );
+        defer.fire();
+      }
+    }, 0 );
+  }
+}
+
+
+
+jQuery.Callbacks = function( flags ) {
+
+  // Convert flags from String-formatted to Object-formatted
+  // (we check in cache first)
+  flags = flags ? ( /*flagsCache[ flags ] || */createFlags( flags ) ) : {};
+
+  var // Actual callback list
+    list = [],
+    // Stack of fire calls for repeatable lists
+    stack = [],
+    // Last fire value (for non-forgettable lists)
+    memory,
+    // Flag to know if list is currently firing
+    firing,
+    // First callback to fire (used internally by add and fireWith)
+    firingStart,
+    // End of the loop when firing
+    firingLength,
+    // Index of currently firing callback (modified by remove if needed)
+    firingIndex,
+    // Add one or several callbacks to the list
+    add = function( args ) {
+      var i,
+        length,
+        elem,
+        type,
+        actual;
+      for ( i = 0, length = args.length; i < length; i++ ) {
+        elem = args[ i ];
+        type = jQuery.type( elem );
+        if ( type === "array" ) {
+          // Inspect recursively
+          add( elem );
+        } else if ( type === "function" ) {
+          // Add if not in unique mode and callback is not in
+          if ( !flags.unique || !self.has( elem ) ) {
+            list.push( elem );
+          }
+        }
+      }
+    },
+    // Fire callbacks
+    fire = function( context, args ) {
+      args = args || [];
+      memory = !flags.memory || [ context, args ];
+      firing = true;
+      firingIndex = firingStart || 0;
+      firingStart = 0;
+      firingLength = list.length;
+      for ( ; list && firingIndex < firingLength; firingIndex++ ) {
+        if ( list[ firingIndex ].apply( context, args ) === false && flags.stopOnFalse ) {
+          memory = true; // Mark as halted
+          break;
+        }
+      }
+      firing = false;
+      if ( list ) {
+        if ( !flags.once ) {
+          if ( stack && stack.length ) {
+            memory = stack.shift();
+            self.fireWith( memory[ 0 ], memory[ 1 ] );
+          }
+        } else if ( memory === true ) {
+          self.disable();
+        } else {
+          list = [];
+        }
+      }
+    },
+    // Actual Callbacks object
+    self = {
+      // Add a callback or a collection of callbacks to the list
+      add: function() {
+        if ( list ) {
+          var length = list.length;
+          add( arguments );
+          // Do we need to add the callbacks to the
+          // current firing batch?
+          if ( firing ) {
+            firingLength = list.length;
+          // With memory, if we're not firing then
+          // we should call right away, unless previous
+          // firing was halted (stopOnFalse)
+          } else if ( memory && memory !== true ) {
+            firingStart = length;
+            fire( memory[ 0 ], memory[ 1 ] );
+          }
+        }
+        return this;
+      },
+      // Remove a callback from the list
+      remove: function() {
+        if ( list ) {
+          var args = arguments,
+            argIndex = 0,
+            argLength = args.length;
+          for ( ; argIndex < argLength ; argIndex++ ) {
+            for ( var i = 0; i < list.length; i++ ) {
+              if ( args[ argIndex ] === list[ i ] ) {
+                // Handle firingIndex and firingLength
+                if ( firing ) {
+                  if ( i <= firingLength ) {
+                    firingLength--;
+                    if ( i <= firingIndex ) {
+                      firingIndex--;
+                    }
+                  }
+                }
+                // Remove the element
+                list.splice( i--, 1 );
+                // If we have some unicity property then
+                // we only need to do this once
+                if ( flags.unique ) {
+                  break;
+                }
+              }
+            }
+          }
+        }
+        return this;
+      },
+      // Control if a given callback is in the list
+      has: function( fn ) {
+        if ( list ) {
+          var i = 0,
+            length = list.length;
+          for ( ; i < length; i++ ) {
+            if ( fn === list[ i ] ) {
+              return true;
+            }
+          }
+        }
+        return false;
+      },
+      // Remove all callbacks from the list
+      empty: function() {
+        list = [];
+        return this;
+      },
+      // Have the list do nothing anymore
+      disable: function() {
+        list = stack = memory = undefined;
+        return this;
+      },
+      // Is it disabled?
+      disabled: function() {
+        return !list;
+      },
+      // Lock the list in its current state
+      lock: function() {
+        stack = undefined;
+        if ( !memory || memory === true ) {
+          self.disable();
+        }
+        return this;
+      },
+      // Is it locked?
+      locked: function() {
+        return !stack;
+      },
+      // Call all callbacks with the given context and arguments
+      fireWith: function( context, args ) {
+        if ( stack ) {
+          if ( firing ) {
+            if ( !flags.once ) {
+              stack.push( [ context, args ] );
+            }
+          } else if ( !( flags.once && memory ) ) {
+            fire( context, args );
+          }
+        }
+        return this;
+      },
+      // Call all the callbacks with the given arguments
+      fire: function() {
+        self.fireWith( this, arguments );
+        return this;
+      },
+      // To know if the callbacks have already been called at least once
+      fired: function() {
+        return !!memory;
+      }
+    };
+
+  return self;
+};
+
+
+
+jQuery.fn.extend({
+  // Get a promise resolved when queues of a certain type
+  // are emptied (fx is the type by default)
+  promise: function( type, object ) {
+    if ( typeof type !== "string" ) {
+      object = type;
+      type = undefined;
+    }
+    type = type || "fx";
+    var defer = jQuery.Deferred(),
+      elements = this,
+      i = elements.length,
+      count = 1,
+      deferDataKey = type + "defer",
+      queueDataKey = type + "queue",
+      markDataKey = type + "mark",
+      tmp;
+    function resolve() {
+      if ( !( --count ) ) {
+        defer.resolveWith( elements, [ elements ] );
+      }
+    }
+    while( i-- ) {
+      if (( tmp = jQuery.data( elements[ i ], deferDataKey, undefined, true ) ||
+          ( jQuery.data( elements[ i ], queueDataKey, undefined, true ) ||
+            jQuery.data( elements[ i ], markDataKey, undefined, true ) ) &&
+          jQuery.data( elements[ i ], deferDataKey, jQuery.Callbacks( "once memory" ), true ) )) {
+        count++;
+        tmp.add( resolve );
+      }
+    }
+    resolve();
+    return defer.promise();
+  }
+});
+})();

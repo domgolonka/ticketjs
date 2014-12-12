@@ -1,23 +1,37 @@
-define(function (require) {
-  'use strict';
-  var angular = require("angular");
-  var services = require('./services/services');
-  var controllers = require('./controllers/controllers');
-  var directives = require('./directives/directives');
-  var factory = require('./factory/factory');
-  var custom = require('./extra/custom');
+/*define([
+
+  'angular.ui.bootstrap',
+  'lazyload',
+  'angular.router',
+  'angular.sails',
+  'angular',
+  'angular.cookies',
+  './services/services',
+  './controllers/controllers',
+  './directives/directives',
+  './factory/factory',
+  //'./extra/custom'
+
+  ], function (require) {
+*/    'use strict';
+
 
   var app =  angular.module('app', [
-    'controllers',
-    'directives',
-    'factory',
-    'services',
-    'custom'
+    'ngSails',
+    'ui.router',
+    'ui.bootstrap',
+    'ngCookies',
+dsa
+    'oc.lazyLoad',
+    'FBAngular', // fullscreen
+
+    'app.controllers',
+    'app.directives',
+    'app.factory',
+    'app.services'
 
   ]);
-  app.init = function () {
-    angular.bootstrap(document, ['app']);
-  };
+
   app.run(['$rootScope', '$state', '$stateParams',
     function ($rootScope, $state, $stateParams) {
       $rootScope.$state = $state;
@@ -45,7 +59,7 @@ define(function (require) {
       state('admin', {
         abstract: true,
         url: '/admin',
-        templateUrl: appHelper.templatePath('layout/app-body'),
+        templateUrl: appHelper.templatePath('admin/app-body'),
         controller: function ($rootScope) {
           $rootScope.isLoginPage = false;
           $rootScope.isLightLoginPage = false;
@@ -57,62 +71,17 @@ define(function (require) {
       // Dashboards
       state('admin.home', {
         url: '/home',
-        templateUrl: appHelper.templatePath('dashboards/variant-1'),
+        templateUrl: appHelper.templatePath('admin/dashboard'),
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.charts.dxGlobalize,
-              ASSETS.extra.toastr,
+              ASSETS.extra.toastr
             ]);
           },
           dxCharts: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
-            ]);
-          },
-        }
-      }).
-      state('app.dashboard-variant-2', {
-        url: '/dashboard-variant-2',
-        templateUrl: appHelper.templatePath('dashboards/variant-2'),
-        resolve: {
-          resources: function ($ocLazyLoad) {
-            return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
-            ]);
-          },
-          dxCharts: function ($ocLazyLoad) {
-            return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
-            ]);
-          },
-        }
-      }).
-      state('app.dashboard-variant-3', {
-        url: '/dashboard-variant-3',
-        templateUrl: appHelper.templatePath('dashboards/variant-3'),
-        resolve: {
-          resources: function ($ocLazyLoad) {
-            return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
-              ASSETS.maps.vectorMaps,
-            ]);
-          },
-          dxCharts: function ($ocLazyLoad) {
-            return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
-            ]);
-          },
-        }
-      }).
-      state('app.dashboard-variant-4', {
-        url: '/dashboard-variant-4',
-        templateUrl: appHelper.templatePath('dashboards/variant-4'),
-        resolve: {
-          resources: function ($ocLazyLoad) {
-            return $ocLazyLoad.load([
-              ASSETS.icons.meteocons,
-              ASSETS.maps.vectorMaps,
+              ASSETS.charts.dxCharts
             ]);
           }
         }
@@ -121,19 +90,19 @@ define(function (require) {
       // Update Highlights
       state('app.update-highlights', {
         url: '/update-highlights',
-        templateUrl: appHelper.templatePath('update-highlights'),
+        templateUrl: appHelper.templatePath('update-highlights')
       }).
 
       // Layouts
       state('app.layout-and-skins', {
         url: '/layout-and-skins',
-        templateUrl: appHelper.templatePath('layout-and-skins'),
+        templateUrl: appHelper.templatePath('layout-and-skins')
       }).
 
       // UI Elements
       state('app.ui-panels', {
         url: '/ui-panels',
-        templateUrl: appHelper.templatePath('ui/panels'),
+        templateUrl: appHelper.templatePath('ui/panels')
       }).
       state('app.ui-buttons', {
         url: '/ui-buttons',
@@ -198,7 +167,7 @@ define(function (require) {
       // Mailbox
       state('app.mailbox-inbox', {
         url: '/mailbox-inbox',
-        templateUrl: appHelper.templatePath('mailbox/inbox'),
+        templateUrl: appHelper.templatePath('mailbox/inbox')
       }).
       state('app.mailbox-compose', {
         url: '/mailbox-compose',
@@ -206,25 +175,25 @@ define(function (require) {
         resolve: {
           bootstrap: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.bootstrap,
+              ASSETS.core.bootstrap
             ]);
           },
           bootstrapWysihtml5: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.bootstrapWysihtml5,
+              ASSETS.forms.bootstrapWysihtml5
             ]);
-          },
+          }
         }
       }).
       state('app.mailbox-message', {
         url: '/mailbox-message',
-        templateUrl: appHelper.templatePath('mailbox/message'),
+        templateUrl: appHelper.templatePath('mailbox/message')
       }).
 
       // Tables
       state('app.tables-basic', {
         url: '/tables-basic',
-        templateUrl: appHelper.templatePath('tables/basic'),
+        templateUrl: appHelper.templatePath('tables/basic')
       }).
       state('app.tables-responsive', {
         url: '/tables-responsive',
@@ -232,7 +201,7 @@ define(function (require) {
         resolve: {
           deps: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.tables.rwd,
+              ASSETS.tables.rwd
             ]);
           }
         }
@@ -243,16 +212,16 @@ define(function (require) {
         resolve: {
           deps: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.tables.datatables,
+              ASSETS.tables.datatables
             ]);
-          },
+          }
         }
       }).
 
       // Forms
       state('app.forms-native', {
         url: '/forms-native',
-        templateUrl: appHelper.templatePath('forms/native-elements'),
+        templateUrl: appHelper.templatePath('forms/native-elements')
       }).
       state('app.forms-advanced', {
         url: '/forms-advanced',
@@ -265,50 +234,50 @@ define(function (require) {
           },
           select2: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.select2,
+              ASSETS.forms.select2
             ]);
           },
           selectboxit: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.selectboxit,
+              ASSETS.forms.selectboxit
             ]);
           },
           tagsinput: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.tagsinput,
+              ASSETS.forms.tagsinput
             ]);
           },
           multiSelect: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.multiSelect,
+              ASSETS.forms.multiSelect
             ]);
           },
           typeahead: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.typeahead,
+              ASSETS.forms.typeahead
             ]);
           },
           datepicker: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.datepicker,
+              ASSETS.forms.datepicker
             ]);
           },
           timepicker: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.timepicker,
+              ASSETS.forms.timepicker
             ]);
           },
           daterangepicker: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.core.moment,
-              ASSETS.forms.daterangepicker,
+              ASSETS.forms.daterangepicker
             ]);
           },
           colorpicker: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.colorpicker,
+              ASSETS.forms.colorpicker
             ]);
-          },
+          }
         }
       }).
       state('app.forms-wizard', {
@@ -324,13 +293,13 @@ define(function (require) {
               ASSETS.forms.multiSelect,
               ASSETS.forms.datepicker,
               ASSETS.forms.selectboxit,
-              ASSETS.forms.formWizard,
+              ASSETS.forms.formWizard
             ]);
           },
           formWizard: function ($ocLazyLoad) {
             return $ocLazyLoad.load([]);
-          },
-        },
+          }
+        }
       }).
       state('app.forms-validation', {
         url: '/forms-validation',
@@ -338,10 +307,10 @@ define(function (require) {
         resolve: {
           jQueryValidate: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.jQueryValidate,
+              ASSETS.forms.jQueryValidate
             ]);
-          },
-        },
+          }
+        }
       }).
       state('app.forms-input-masks', {
         url: '/forms-input-masks',
@@ -349,10 +318,10 @@ define(function (require) {
         resolve: {
           inputmask: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.inputmask,
+              ASSETS.forms.inputmask
             ]);
-          },
-        },
+          }
+        }
       }).
       state('app.forms-file-upload', {
         url: '/forms-file-upload',
@@ -360,9 +329,9 @@ define(function (require) {
         resolve: {
           dropzone: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.dropzone,
+              ASSETS.forms.dropzone
             ]);
-          },
+          }
         }
       }).
       state('app.forms-wysiwyg', {
@@ -371,26 +340,26 @@ define(function (require) {
         resolve: {
           bootstrap: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.bootstrap,
+              ASSETS.core.bootstrap
             ]);
           },
           bootstrapWysihtml5: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.bootstrapWysihtml5,
+              ASSETS.forms.bootstrapWysihtml5
             ]);
           },
           uikit: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.uikit.base,
               ASSETS.uikit.codemirror,
-              ASSETS.uikit.marked,
+              ASSETS.uikit.marked
             ]);
           },
           uikitHtmlEditor: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.uikit.htmleditor,
+              ASSETS.uikit.htmleditor
             ]);
-          },
+          }
         }
       }).
       state('app.forms-sliders', {
@@ -399,10 +368,10 @@ define(function (require) {
         resolve: {
           sliders: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.jQueryUI,
+              ASSETS.core.jQueryUI
             ]);
-          },
-        },
+          }
+        }
       }).
       state('app.forms-icheck', {
         url: '/forms-icheck',
@@ -410,9 +379,9 @@ define(function (require) {
         resolve: {
           iCheck: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.icheck,
+              ASSETS.forms.icheck
             ]);
-          },
+          }
         }
       }).
 
@@ -424,9 +393,9 @@ define(function (require) {
           fontAwesome: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.core.jQueryUI,
-              ASSETS.extra.tocify,
+              ASSETS.extra.tocify
             ]);
-          },
+          }
         }
       }).
       state('app.extra-icons-linecons', {
@@ -436,9 +405,9 @@ define(function (require) {
           linecons: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.core.jQueryUI,
-              ASSETS.extra.tocify,
+              ASSETS.extra.tocify
             ]);
-          },
+          }
         }
       }).
       state('app.extra-icons-elusive', {
@@ -449,9 +418,9 @@ define(function (require) {
             return $ocLazyLoad.load([
               ASSETS.core.jQueryUI,
               ASSETS.extra.tocify,
-              ASSETS.icons.elusive,
+              ASSETS.icons.elusive
             ]);
-          },
+          }
         }
       }).
       state('app.extra-icons-meteocons', {
@@ -462,9 +431,9 @@ define(function (require) {
             return $ocLazyLoad.load([
               ASSETS.core.jQueryUI,
               ASSETS.extra.tocify,
-              ASSETS.icons.meteocons,
+              ASSETS.icons.meteocons
             ]);
-          },
+          }
         }
       }).
       state('app.extra-profile', {
@@ -474,9 +443,9 @@ define(function (require) {
           profile: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.core.googleMapsLoader,
-              ASSETS.icons.elusive,
+              ASSETS.icons.elusive
             ]);
-          },
+          }
         }
       }).
       state('app.extra-timeline', {
@@ -485,9 +454,9 @@ define(function (require) {
         resolve: {
           timeline: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.googleMapsLoader,
+              ASSETS.core.googleMapsLoader
             ]);
-          },
+          }
         }
       }).
       state('app.extra-timeline-centered', {
@@ -496,9 +465,9 @@ define(function (require) {
         resolve: {
           elusive: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.googleMapsLoader,
+              ASSETS.core.googleMapsLoader
             ]);
-          },
+          }
         }
       }).
       state('app.extra-calendar', {
@@ -509,9 +478,9 @@ define(function (require) {
             return $ocLazyLoad.load([
               ASSETS.core.jQueryUI,
               ASSETS.core.moment,
-              ASSETS.extra.fullCalendar,
+              ASSETS.extra.fullCalendar
             ]);
-          },
+          }
         }
       }).
       state('app.extra-gallery', {
@@ -520,9 +489,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.jQueryUI,
+              ASSETS.core.jQueryUI
             ]);
-          },
+          }
         }
       }).
       state('app.extra-notes', {
@@ -531,9 +500,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.xenonLib.notes,
+              ASSETS.xenonLib.notes
             ]);
-          },
+          }
         }
       }).
       state('app.extra-image-crop', {
@@ -542,9 +511,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.extra.cropper,
+              ASSETS.extra.cropper
             ]);
-          },
+          }
         }
       }).
       state('app.extra-portlets', {
@@ -553,9 +522,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.jQueryUI,
+              ASSETS.core.jQueryUI
             ]);
-          },
+          }
         }
       }).
       state('app.extra-search', {
@@ -577,9 +546,9 @@ define(function (require) {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.core.jQueryUI,
-              ASSETS.extra.tocify,
+              ASSETS.extra.tocify
             ]);
-          },
+          }
         }
       }).
       state('app.extra-loading-progress', {
@@ -592,9 +561,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.extra.toastr,
+              ASSETS.extra.toastr
             ]);
-          },
+          }
         }
       }).
       state('app.extra-nestable-lists', {
@@ -604,9 +573,9 @@ define(function (require) {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.uikit.base,
-              ASSETS.uikit.nestable,
+              ASSETS.uikit.nestable
             ]);
-          },
+          }
         }
       }).
       state('app.extra-scrollable', {
@@ -623,9 +592,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.googleMapsLoader,
+              ASSETS.core.googleMapsLoader
             ]);
-          },
+          }
         }
       }).
       state('app.extra-maps-advanced', {
@@ -634,9 +603,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.core.googleMapsLoader,
+              ASSETS.core.googleMapsLoader
             ]);
-          },
+          }
         }
       }).
       state('app.extra-maps-vector', {
@@ -645,9 +614,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.maps.vectorMaps,
+              ASSETS.maps.vectorMaps
             ]);
-          },
+          }
         }
       }).
 
@@ -664,9 +633,9 @@ define(function (require) {
             return $ocLazyLoad.load([
               ASSETS.forms.datepicker,
               ASSETS.forms.multiSelect,
-              ASSETS.forms.select2,
+              ASSETS.forms.select2
             ]);
-          },
+          }
           //sssss
         }
       }).
@@ -678,14 +647,14 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
+              ASSETS.charts.dxGlobalize
             ]);
           },
           dxCharts: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
+              ASSETS.charts.dxCharts
             ]);
-          },
+          }
         }
       }).
       state('app.charts-range-selector', {
@@ -694,14 +663,14 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
+              ASSETS.charts.dxGlobalize
             ]);
           },
           dxCharts: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
+              ASSETS.charts.dxCharts
             ]);
-          },
+          }
         }
       }).
       state('app.charts-sparklines', {
@@ -710,14 +679,14 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
+              ASSETS.charts.dxGlobalize
             ]);
           },
           dxCharts: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
+              ASSETS.charts.dxCharts
             ]);
-          },
+          }
         }
       }).
       state('app.charts-gauges', {
@@ -726,14 +695,14 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
+              ASSETS.charts.dxGlobalize
             ]);
           },
           dxCharts: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
+              ASSETS.charts.dxCharts
             ]);
-          },
+          }
         }
       }).
       state('app.charts-bar-gauges', {
@@ -742,14 +711,14 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
+              ASSETS.charts.dxGlobalize
             ]);
           },
           dxCharts: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
+              ASSETS.charts.dxCharts
             ]);
-          },
+          }
         }
       }).
       state('app.charts-linear-gauges', {
@@ -758,14 +727,14 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
+              ASSETS.charts.dxGlobalize
             ]);
           },
           dxCharts: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxCharts,
+              ASSETS.charts.dxCharts
             ]);
-          },
+          }
         }
       }).
       state('app.charts-map-charts', {
@@ -774,15 +743,15 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.charts.dxGlobalize,
+              ASSETS.charts.dxGlobalize
             ]);
           },
           dxCharts: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.charts.dxCharts,
-              ASSETS.charts.dxVMWorld,
+              ASSETS.charts.dxVMWorld
             ]);
-          },
+          }
         }
       }).
 
@@ -795,9 +764,9 @@ define(function (require) {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.forms.jQueryValidate,
-              ASSETS.extra.toastr,
+              ASSETS.extra.toastr
             ]);
-          },
+          }
         }
       }).
       state('login-light', {
@@ -807,9 +776,9 @@ define(function (require) {
         resolve: {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
-              ASSETS.forms.jQueryValidate,
+              ASSETS.forms.jQueryValidate
             ]);
-          },
+          }
         }
       }).
       state('lockscreen', {
@@ -820,9 +789,9 @@ define(function (require) {
           resources: function ($ocLazyLoad) {
             return $ocLazyLoad.load([
               ASSETS.forms.jQueryValidate,
-              ASSETS.extra.toastr,
+              ASSETS.extra.toastr
             ]);
-          },
+          }
         }
       });
   });
@@ -886,6 +855,7 @@ define(function (require) {
 
 
   });
-
+/*
   return app;
 });
+*/

@@ -1,4 +1,274 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
-!function(mod){"object"==typeof exports&&"object"==typeof module?mod(require("../../lib/codemirror")):"function"==typeof define&&define.amd?define(["../../lib/codemirror"],mod):mod(CodeMirror)}(function(CodeMirror){"use strict";CodeMirror.defineMode("vb",function(conf,parserConf){function wordRegexp(words){return new RegExp("^(("+words.join(")|(")+"))\\b","i")}function indent(_stream,state){state.currentIndent++}function dedent(_stream,state){state.currentIndent--}function tokenBase(stream,state){if(stream.eatSpace())return null;var ch=stream.peek();if("'"===ch)return stream.skipToEnd(),"comment";if(stream.match(/^((&H)|(&O))?[0-9\.a-f]/i,!1)){var floatLiteral=!1;if(stream.match(/^\d*\.\d+F?/i)?floatLiteral=!0:stream.match(/^\d+\.\d*F?/)?floatLiteral=!0:stream.match(/^\.\d+F?/)&&(floatLiteral=!0),floatLiteral)return stream.eat(/J/i),"number";var intLiteral=!1;if(stream.match(/^&H[0-9a-f]+/i)?intLiteral=!0:stream.match(/^&O[0-7]+/i)?intLiteral=!0:stream.match(/^[1-9]\d*F?/)?(stream.eat(/J/i),intLiteral=!0):stream.match(/^0(?![\dx])/i)&&(intLiteral=!0),intLiteral)return stream.eat(/L/i),"number"}return stream.match(stringPrefixes)?(state.tokenize=tokenStringFactory(stream.current()),state.tokenize(stream,state)):stream.match(tripleDelimiters)||stream.match(doubleDelimiters)?null:stream.match(doubleOperators)||stream.match(singleOperators)||stream.match(wordOperators)?"operator":stream.match(singleDelimiters)?null:stream.match(doOpening)?(indent(stream,state),state.doInCurrentLine=!0,"keyword"):stream.match(opening)?(state.doInCurrentLine?state.doInCurrentLine=!1:indent(stream,state),"keyword"):stream.match(middle)?"keyword":stream.match(doubleClosing)?(dedent(stream,state),dedent(stream,state),"keyword"):stream.match(closing)?(dedent(stream,state),"keyword"):stream.match(types)?"keyword":stream.match(keywords)?"keyword":stream.match(identifiers)?"variable":(stream.next(),ERRORCLASS)}function tokenStringFactory(delimiter){var singleline=1==delimiter.length,OUTCLASS="string";return function(stream,state){for(;!stream.eol();){if(stream.eatWhile(/[^'"]/),stream.match(delimiter))return state.tokenize=tokenBase,OUTCLASS;stream.eat(/['"]/)}if(singleline){if(parserConf.singleLineStringErrors)return ERRORCLASS;state.tokenize=tokenBase}return OUTCLASS}}function tokenLexer(stream,state){var style=state.tokenize(stream,state),current=stream.current();if("."===current)return style=state.tokenize(stream,state),current=stream.current(),"variable"===style?"variable":ERRORCLASS;var delimiter_index="[({".indexOf(current);return-1!==delimiter_index&&indent(stream,state),"dedent"===indentInfo&&dedent(stream,state)?ERRORCLASS:(delimiter_index="])}".indexOf(current),-1!==delimiter_index&&dedent(stream,state)?ERRORCLASS:style)}var ERRORCLASS="error",singleOperators=new RegExp("^[\\+\\-\\*/%&\\\\|\\^~<>!]"),singleDelimiters=new RegExp("^[\\(\\)\\[\\]\\{\\}@,:`=;\\.]"),doubleOperators=new RegExp("^((==)|(<>)|(<=)|(>=)|(<>)|(<<)|(>>)|(//)|(\\*\\*))"),doubleDelimiters=new RegExp("^((\\+=)|(\\-=)|(\\*=)|(%=)|(/=)|(&=)|(\\|=)|(\\^=))"),tripleDelimiters=new RegExp("^((//=)|(>>=)|(<<=)|(\\*\\*=))"),identifiers=new RegExp("^[_A-Za-z][_A-Za-z0-9]*"),openingKeywords=["class","module","sub","enum","select","while","if","function","get","set","property","try"],middleKeywords=["else","elseif","case","catch"],endKeywords=["next","loop"],wordOperators=wordRegexp(["and","or","not","xor","in"]),commonkeywords=["as","dim","break","continue","optional","then","until","goto","byval","byref","new","handles","property","return","const","private","protected","friend","public","shared","static","true","false"],commontypes=["integer","string","double","decimal","boolean","short","char","float","single"],keywords=wordRegexp(commonkeywords),types=wordRegexp(commontypes),stringPrefixes='"',opening=wordRegexp(openingKeywords),middle=wordRegexp(middleKeywords),closing=wordRegexp(endKeywords),doubleClosing=wordRegexp(["end"]),doOpening=wordRegexp(["do"]),indentInfo=null,external={electricChars:"dDpPtTfFeE ",startState:function(){return{tokenize:tokenBase,lastToken:null,currentIndent:0,nextLineIndent:0,doInCurrentLine:!1}},token:function(stream,state){stream.sol()&&(state.currentIndent+=state.nextLineIndent,state.nextLineIndent=0,state.doInCurrentLine=0);var style=tokenLexer(stream,state);return state.lastToken={style:style,content:stream.current()},style},indent:function(state,textAfter){var trueText=textAfter.replace(/^\s+|\s+$/g,"");return trueText.match(closing)||trueText.match(doubleClosing)||trueText.match(middle)?conf.indentUnit*(state.currentIndent-1):state.currentIndent<0?0:state.currentIndent*conf.indentUnit}};return external}),CodeMirror.defineMIME("text/x-vb","vb")});
+(function(mod) {
+  if (typeof exports == "object" && typeof module == "object") // CommonJS
+    mod(require("../../lib/codemirror"));
+  else if (typeof define == "function" && define.amd) // AMD
+    define(["../../lib/codemirror"], mod);
+  else // Plain browser env
+    mod(CodeMirror);
+})(function(CodeMirror) {
+"use strict";
+
+CodeMirror.defineMode("vb", function(conf, parserConf) {
+    var ERRORCLASS = 'error';
+
+    function wordRegexp(words) {
+        return new RegExp("^((" + words.join(")|(") + "))\\b", "i");
+    }
+
+    var singleOperators = new RegExp("^[\\+\\-\\*/%&\\\\|\\^~<>!]");
+    var singleDelimiters = new RegExp('^[\\(\\)\\[\\]\\{\\}@,:`=;\\.]');
+    var doubleOperators = new RegExp("^((==)|(<>)|(<=)|(>=)|(<>)|(<<)|(>>)|(//)|(\\*\\*))");
+    var doubleDelimiters = new RegExp("^((\\+=)|(\\-=)|(\\*=)|(%=)|(/=)|(&=)|(\\|=)|(\\^=))");
+    var tripleDelimiters = new RegExp("^((//=)|(>>=)|(<<=)|(\\*\\*=))");
+    var identifiers = new RegExp("^[_A-Za-z][_A-Za-z0-9]*");
+
+    var openingKeywords = ['class','module', 'sub','enum','select','while','if','function',  'get','set','property', 'try'];
+    var middleKeywords = ['else','elseif','case', 'catch'];
+    var endKeywords = ['next','loop'];
+
+    var wordOperators = wordRegexp(['and', 'or', 'not', 'xor', 'in']);
+    var commonkeywords = ['as', 'dim', 'break',  'continue','optional', 'then',  'until',
+                          'goto', 'byval','byref','new','handles','property', 'return',
+                          'const','private', 'protected', 'friend', 'public', 'shared', 'static', 'true','false'];
+    var commontypes = ['integer','string','double','decimal','boolean','short','char', 'float','single'];
+
+    var keywords = wordRegexp(commonkeywords);
+    var types = wordRegexp(commontypes);
+    var stringPrefixes = '"';
+
+    var opening = wordRegexp(openingKeywords);
+    var middle = wordRegexp(middleKeywords);
+    var closing = wordRegexp(endKeywords);
+    var doubleClosing = wordRegexp(['end']);
+    var doOpening = wordRegexp(['do']);
+
+    var indentInfo = null;
+
+
+
+
+    function indent(_stream, state) {
+      state.currentIndent++;
+    }
+
+    function dedent(_stream, state) {
+      state.currentIndent--;
+    }
+    // tokenizers
+    function tokenBase(stream, state) {
+        if (stream.eatSpace()) {
+            return null;
+        }
+
+        var ch = stream.peek();
+
+        // Handle Comments
+        if (ch === "'") {
+            stream.skipToEnd();
+            return 'comment';
+        }
+
+
+        // Handle Number Literals
+        if (stream.match(/^((&H)|(&O))?[0-9\.a-f]/i, false)) {
+            var floatLiteral = false;
+            // Floats
+            if (stream.match(/^\d*\.\d+F?/i)) { floatLiteral = true; }
+            else if (stream.match(/^\d+\.\d*F?/)) { floatLiteral = true; }
+            else if (stream.match(/^\.\d+F?/)) { floatLiteral = true; }
+
+            if (floatLiteral) {
+                // Float literals may be "imaginary"
+                stream.eat(/J/i);
+                return 'number';
+            }
+            // Integers
+            var intLiteral = false;
+            // Hex
+            if (stream.match(/^&H[0-9a-f]+/i)) { intLiteral = true; }
+            // Octal
+            else if (stream.match(/^&O[0-7]+/i)) { intLiteral = true; }
+            // Decimal
+            else if (stream.match(/^[1-9]\d*F?/)) {
+                // Decimal literals may be "imaginary"
+                stream.eat(/J/i);
+                // TODO - Can you have imaginary longs?
+                intLiteral = true;
+            }
+            // Zero by itself with no other piece of number.
+            else if (stream.match(/^0(?![\dx])/i)) { intLiteral = true; }
+            if (intLiteral) {
+                // Integer literals may be "long"
+                stream.eat(/L/i);
+                return 'number';
+            }
+        }
+
+        // Handle Strings
+        if (stream.match(stringPrefixes)) {
+            state.tokenize = tokenStringFactory(stream.current());
+            return state.tokenize(stream, state);
+        }
+
+        // Handle operators and Delimiters
+        if (stream.match(tripleDelimiters) || stream.match(doubleDelimiters)) {
+            return null;
+        }
+        if (stream.match(doubleOperators)
+            || stream.match(singleOperators)
+            || stream.match(wordOperators)) {
+            return 'operator';
+        }
+        if (stream.match(singleDelimiters)) {
+            return null;
+        }
+        if (stream.match(doOpening)) {
+            indent(stream,state);
+            state.doInCurrentLine = true;
+            return 'keyword';
+        }
+        if (stream.match(opening)) {
+            if (! state.doInCurrentLine)
+              indent(stream,state);
+            else
+              state.doInCurrentLine = false;
+            return 'keyword';
+        }
+        if (stream.match(middle)) {
+            return 'keyword';
+        }
+
+        if (stream.match(doubleClosing)) {
+            dedent(stream,state);
+            dedent(stream,state);
+            return 'keyword';
+        }
+        if (stream.match(closing)) {
+            dedent(stream,state);
+            return 'keyword';
+        }
+
+        if (stream.match(types)) {
+            return 'keyword';
+        }
+
+        if (stream.match(keywords)) {
+            return 'keyword';
+        }
+
+        if (stream.match(identifiers)) {
+            return 'variable';
+        }
+
+        // Handle non-detected items
+        stream.next();
+        return ERRORCLASS;
+    }
+
+    function tokenStringFactory(delimiter) {
+        var singleline = delimiter.length == 1;
+        var OUTCLASS = 'string';
+
+        return function(stream, state) {
+            while (!stream.eol()) {
+                stream.eatWhile(/[^'"]/);
+                if (stream.match(delimiter)) {
+                    state.tokenize = tokenBase;
+                    return OUTCLASS;
+                } else {
+                    stream.eat(/['"]/);
+                }
+            }
+            if (singleline) {
+                if (parserConf.singleLineStringErrors) {
+                    return ERRORCLASS;
+                } else {
+                    state.tokenize = tokenBase;
+                }
+            }
+            return OUTCLASS;
+        };
+    }
+
+
+    function tokenLexer(stream, state) {
+        var style = state.tokenize(stream, state);
+        var current = stream.current();
+
+        // Handle '.' connected identifiers
+        if (current === '.') {
+            style = state.tokenize(stream, state);
+            current = stream.current();
+            if (style === 'variable') {
+                return 'variable';
+            } else {
+                return ERRORCLASS;
+            }
+        }
+
+
+        var delimiter_index = '[({'.indexOf(current);
+        if (delimiter_index !== -1) {
+            indent(stream, state );
+        }
+        if (indentInfo === 'dedent') {
+            if (dedent(stream, state)) {
+                return ERRORCLASS;
+            }
+        }
+        delimiter_index = '])}'.indexOf(current);
+        if (delimiter_index !== -1) {
+            if (dedent(stream, state)) {
+                return ERRORCLASS;
+            }
+        }
+
+        return style;
+    }
+
+    var external = {
+        electricChars:"dDpPtTfFeE ",
+        startState: function() {
+            return {
+              tokenize: tokenBase,
+              lastToken: null,
+              currentIndent: 0,
+              nextLineIndent: 0,
+              doInCurrentLine: false
+
+
+          };
+        },
+
+        token: function(stream, state) {
+            if (stream.sol()) {
+              state.currentIndent += state.nextLineIndent;
+              state.nextLineIndent = 0;
+              state.doInCurrentLine = 0;
+            }
+            var style = tokenLexer(stream, state);
+
+            state.lastToken = {style:style, content: stream.current()};
+
+
+
+            return style;
+        },
+
+        indent: function(state, textAfter) {
+            var trueText = textAfter.replace(/^\s+|\s+$/g, '') ;
+            if (trueText.match(closing) || trueText.match(doubleClosing) || trueText.match(middle)) return conf.indentUnit*(state.currentIndent-1);
+            if(state.currentIndent < 0) return 0;
+            return state.currentIndent * conf.indentUnit;
+        }
+
+    };
+    return external;
+});
+
+CodeMirror.defineMIME("text/x-vb", "vb");
+
+});

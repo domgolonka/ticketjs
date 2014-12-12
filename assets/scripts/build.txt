@@ -420,10 +420,6 @@ vendor/queryloader2/demo/css/style.css
 main.js
 ----------------
 vendor/angular/angular.min.js
-services/services.js
-controllers/controllers.js
-directives/directives.js
-factory/factory.js
-extra/custom.js
 app.js
+bootstrap.js
 main.js

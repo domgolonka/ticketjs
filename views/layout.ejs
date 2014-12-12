@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app">>
+<html ng-app="app">
 <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta charset="utf-8" />
@@ -34,7 +34,7 @@
     <script>
       var appHelper = {
         // Vars (paths without trailing slash)
-        templatesDir: '/scripts/templates/default',
+        templatesDir: '/scripts/templates',
         //assetsDir: '/',
         // Methods
         templatePath: function(view_name) {
@@ -62,13 +62,32 @@
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="http://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 <!-- END CORE JS FRAMEWORK -->
-<script data-main="/scripts/main" src="/scripts/vendor/requirejs/require.js"></script>
+<script src="/scripts/vendor/angular/angular.js"></script>
+<script src="/scripts/vendor/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="/scripts/vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+
+<script src="/scripts/vendor/socket.io-client/socket.io.js"></script>
+<script src="/scripts/vendor/sails.io.js/sails.io.js"></script>
+<script src="/scripts/vendor/angular-sails-bind/dist/angular-sails-bind.min.js"></script>
+<script src="/scripts/vendor/angular-sails/dist/angular-sails.min.js"></script>
+<script src="/scripts/vendor/oclazyload/dist/ocLazyLoad.js"></script>
+<script src="/scripts/vendor/angular-cookies/angular-cookies.js"></script>
+
+<!-- cHNAGE THINGS -->
+<script src="http://themes.laborator.co/xenon/assets/app/js/angular-fullscreen.js"></script>
+
+<script src="/scripts/app.js"></script>
+<script src="/scripts/controllers/controllers.js"></script>
+<script src="/scripts/services/services.js"></script>
+<script src="/scripts/factory/factory.js"></script>
+<script src="/scripts/directives/directives.js"></script>
+
+<!-- <script data-main="/scripts/main" src="/scripts/vendor/requirejs/require.js"></script> -->
 <script type="text/javascript">
     $(document).ready(function () {
         $(".live-tile,.flip-list").liveTile();
     });
 </script>
-<script src="//localhost:35729/livereload.js"></script>
 <!-- END CORE TEMPLATE JS -->
 </body>
 </html>

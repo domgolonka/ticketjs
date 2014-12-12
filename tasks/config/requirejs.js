@@ -8,13 +8,13 @@ module.exports = function(grunt) {
                 uglify2: {
                   mangle: false
                 },
-               optimize: 'uglify2',
+               optimize: 'none', //uglify2
                 mainConfigFile: "scripts/main.js",
                 //wrap: true,
-                removeCombined: true,
+                removeCombined: false, // make it true
                 inlineText: true,
-                useStrict: true,
-                dir: "./assets/scripts",
+                useStrict: true, // already set?
+                dir: "./assets/scripts"
                 //out: "scripts/output.js"
             }
         }

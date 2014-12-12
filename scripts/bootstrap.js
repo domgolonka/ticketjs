@@ -1,12 +1,22 @@
 /**
- * bootstrap.js
- **/
-
-define(['require', 'angular', 'app'], function(require, angular) { //app refers to file
-
+ * bootstraps angular onto the window.document node
+ */
+define([
+  'require',
+  'angular',
+  'app'
+], function (require, ng) {
   'use strict';
 
-  return require(['domReady!'], function(document) {
-    return angular.bootstrap(document, ['app']); //in html
+  //io.sails.useCORSRouteToGetCookie = false;
+  //io.sails.url = 'http://localhost:1337';
+
+  /*ng.element(document).ready(function() {
+   ng.bootstrap(document, ['app']);
+   });*/
+  require(['domReady!'], function (document) {
+
+    ng.bootstrap(document, ['app']);
+
   });
 });

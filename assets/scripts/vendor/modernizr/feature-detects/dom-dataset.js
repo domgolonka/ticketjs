@@ -1,1 +1,9 @@
-Modernizr.addTest("dataset",function(){var n=document.createElement("div");return n.setAttribute("data-a-b","c"),!(!n.dataset||"c"!==n.dataset.aB)});
+
+// dataset API for data-* attributes
+// test by @phiggins42
+
+Modernizr.addTest('dataset', function(){
+  var n = document.createElement("div");
+  n.setAttribute("data-a-b", "c");
+  return !!(n.dataset && n.dataset.aB === "c");
+});

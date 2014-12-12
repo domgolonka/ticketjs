@@ -1,1 +1,9 @@
-define(["../var/support"],function(support){return support.focusinBubbles="onfocusin"in window,support});
+define([
+	"../var/support"
+], function( support ) {
+
+support.focusinBubbles = "onfocusin" in window;
+
+return support;
+
+});

@@ -30,6 +30,7 @@
     "angular-mocks": "latest",
     "angular-ui-router": "latest",
     "angular-ui-utils": "latest",
+    "angular-fullscreen": "latest",
     "oclazyload": "latest",
     "requirejs": "~2.1.10",
     "requirejs-domready": "~2.0.1",
