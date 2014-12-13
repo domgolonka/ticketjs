@@ -14,7 +14,7 @@ module.exports = function(grunt) {
                 removeCombined: false, // make it true
                 inlineText: true,
                 useStrict: true, // already set?
-                dir: "./assets/scripts"
+                dir: "./.tmp/public/scripts" // change to ./assets/scripts  for production??
                 //out: "scripts/output.js"
             }
         }

@@ -21,7 +21,7 @@
     'ui.router',
     'ui.bootstrap',
     'ngCookies',
-dsa
+
     'oc.lazyLoad',
     'FBAngular', // fullscreen
 

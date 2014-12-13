@@ -30,10 +30,10 @@ module.exports = function(grunt) {
         server: {
             files: [
               'scripts/**/*',
-              'config/**/*',
-              'api/**/*'
+              //'config/**/*',
+              //'api/**/*'
             ],
-          tasks: ['forever:server:restart']
+          tasks: ['syncScripts']
         }
 	});
 
